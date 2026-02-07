@@ -10,7 +10,7 @@
     <header>
       <div class="header-inner">
         <div class="brand">Arbahara</div>
-        <nav class="nav-links">
+        <nav class="nav-links" data-mobile-nav>
           <a href="#vision">Vision</a>
           <a href="#timeline">Timeline</a>
           <a href="#contact">Contact</a>
@@ -29,6 +29,11 @@
             Facebook
           </a>
         </nav>
+        <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
     <main>
@@ -207,6 +212,24 @@
         document.querySelectorAll('.grid .card, .timeline-list li, .contact-card').forEach((el) => {
           observer.observe(el);
         });
+
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileNav = document.querySelector('.nav-links[data-mobile-nav]');
+
+        if (menuToggle && mobileNav) {
+          const toggleMenu = () => {
+            const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', String(!expanded));
+            mobileNav.classList.toggle('is-open');
+          };
+          menuToggle.addEventListener('click', toggleMenu);
+          mobileNav.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+              menuToggle.setAttribute('aria-expanded', 'false');
+              mobileNav.classList.remove('is-open');
+            });
+          });
+        }
       });
     </script>
   </body>
