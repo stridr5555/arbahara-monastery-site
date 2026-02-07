@@ -6,7 +6,7 @@
     <title>Arbahara • Monastery of Abuna Hara Dengeel</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="home">
     <header>
       <div class="header-inner">
         <div class="brand">Arbahara</div>
@@ -209,7 +209,7 @@
           });
         }, { threshold: 0.2 });
 
-        document.querySelectorAll('.grid .card, .timeline-list li, .contact-card').forEach((el) => {
+        document.querySelectorAll('.home .grid .card, .home .timeline-list li, .home .contact-card').forEach((el) => {
           observer.observe(el);
         });
 
