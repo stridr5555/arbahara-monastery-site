@@ -9,61 +9,104 @@
   <body>
     <main>
       <section class="hero">
-        <p>Arbahara Sequel / Dallas • Winter 2026</p>
-        <h1>Build the Monastery of Abuna Hara Dengeel</h1>
-        <p>
-          We are crafting a modern Ethiopian Orthodox sanctuary in Dallas with frosted glass serenity, cream
-          linen backdrops, and dark orange accents. Support the construction, join membership circles, and activate
-          the WhatsApp prayer line at every milestone.
-        </p>
-        <div class="cta-row">
-          <button class="button primary">Donate via Zelle</button>
-          <button class="button secondary">Membership Brief</button>
-          <button class="button secondary">WhatsApp Call</button>
-        </div>
-        <div>
-          <span class="badge">Zelle QR</span>
-          <span class="badge">Membership QR</span>
-          <span class="badge">Twilio reminders ready</span>
+        <div class="hero-content">
+          <p>Arbahara Dallas • Ethiopian Orthodox Sanctuary</p>
+          <h1>Crafting a modern monastery in the heart of Dallas</h1>
+          <p>
+            Frosted glass serenity, cream linen canvases, and dark orange halos. The Monastery of Abuna Hara Dengeel will host
+            weekly liturgies, education, and diaspora gatherings with an immersive prayer line and membership circles.
+          </p>
+          <div class="hero-actions">
+            <button class="button primary" onclick="window.open('https://tinyurl.com/Zelle27','_blank')">Donate via Zelle</button>
+            <button class="button secondary" onclick="window.open('https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit','_blank')">Register Membership</button>
+            <button class="button secondary" onclick="window.open('https://chat.whatsapp.com/Bh6EHtBTAe9EM21DXug1CB?mode=gi_t','_blank')">WhatsApp Prayer Line</button>
+          </div>
+          <div style="margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap;">
+            <span class="badge">Dallas Build</span>
+            <span class="badge">Twilio Reminders</span>
+            <span class="badge">Community Stories</span>
+          </div>
         </div>
       </section>
 
-      <section class="grid">
-        <article class="card">
-          <div class="badge">Hero Sequence</div>
-          <h3>Frosted glass serenity &amp; spiritual motion</h3>
-          <p>Hero renders weave cream &amp; dark orange, micro-animations recall the Dallas horizon, and the CTA brings visitors directly to the Zelle donation.</p>
-          <button class="button secondary">Preview Hero</button>
-        </article>
-        <article class="card">
-          <div class="badge">Donation Journey</div>
-          <h3>Donation form &amp; QR landing</h3>
-          <p>Every CTA links to a Zelle QR plus optional membership tier (Pilgrim, Patron, Benefactor). Each tier triggers a Twilio reminder text slot.</p>
-          <button class="button secondary">See Donation</button>
-        </article>
-        <article class="card">
-          <div class="badge">Membership Base</div>
-          <h3>Membership tracker &amp; WhatsApp join</h3>
-          <p>Membership form captures diaspora city, preferred benevolence, and real-time WhatsApp reminder preferences. Form submissions queue to Twilio and PagerDuty for follow-up.</p>
-          <button class="button secondary">Join Membership</button>
-        </article>
+      <section class="donation">
+        <h2>Donation Journey &amp; Membership Flow</h2>
+        <div class="grid">
+          <article class="card">
+            <div class="badge">Hero CTA</div>
+            <h3>Frosted hero &amp; micro-interactions</h3>
+            <p>The hero uses the monastery image (from Arbahara.info) with light shimmer animation and floating CTA buttons that open Zelle, membership, and WhatsApp modals.</p>
+            <button class="button secondary" onclick="window.open('https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user','_blank')">Feature Facebook</button>
+          </article>
+          <article class="card">
+            <div class="badge">Donation</div>
+            <h3>Zelle donation tiers</h3>
+            <p>Three level cards show Patron ($750), Benefactor ($1,500), and Sanctuary Guide ($3,000) contributions and link to Twilio/SMS reminder calls. Each button simulates the pledge flow.</p>
+            <button class="button secondary">See Donation Tiers</button>
+          </article>
+          <article class="card">
+            <div class="badge">Membership</div>
+            <h3>Active membership tracker</h3>
+            <p>List of city chapters, WhatsApp prayer schedule, and Twilio reminder toggles. The form data is captured via the Google membership RSVP.</p>
+            <button class="button secondary">Open Tracker</button>
+          </article>
+        </div>
       </section>
 
       <section class="membership">
-        <article class="membership-card">
-          <h4>Construction Timeline</h4>
-          <p>Phase 1: Foundation + rockwork (completed). Phase 2: Sanctuary shell, roof, and stained halo windows.</p>
-          <button class="button primary">View Timeline</button>
-        </article>
-        <article class="membership-card">
-          <h4>Community Story &amp; Growth Loop</h4>
-          <p>Month-by-month reports, Twilio-based reminder windows, and WhatsApp prayer gatherings keep the diaspora connected.</p>
-          <button class="button primary">Listen to Updates</button>
-        </article>
+        <h2>Community &amp; Timeline</h2>
+        <div class="grid">
+          <article class="membership-card">
+            <h4>Membership Circle</h4>
+            <p>Members receive monthly WhatsApp check-ins, invitations to livestream prayers, and Twilio reminders when the sanctuary crosses milestones.</p>
+            <button class="button primary" onclick="window.open('https://youtube.com/@Arbaharadallas?feature=shared','_blank')">Watch Community Updates</button>
+          </article>
+          <article class="membership-card">
+            <h4>Prayer &amp; Timeline</h4>
+            <p>Current milestone: roof completion. Next: interior iconostasis installation and lighting. Timeline events connect donors to progress in real time.</p>
+            <button class="button primary" onclick="alert('Prayer line activated')">Launch Prayer Line</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="timeline">
+        <h2>Construction Timeline</h2>
+        <ol class="timeline-list">
+          <li>
+            <time>2025 • Foundation &amp; Pilgrimage</time>
+            <p>Lay the structural slab, stonework, and pilgrim welcome hall with cream terrazzo floors and dark orange accent lighting.</p>
+          </li>
+          <li>
+            <time>2025 Q4 • Sanctum Assembly</time>
+            <p>Raise the main sanctuary, install stained halo windows, set the nave lighting, and tune acoustics for Zema chanting.</p>
+          </li>
+          <li>
+            <time>2026 • Community Launch</time>
+            <p>Open the sanctuary for Monday prayers, install the iconostasis, and schedule monthly diaspora gala dinners.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="contact">
+        <h2>Contact &amp; Engagement</h2>
+        <div class="contact-grid">
+          <article class="contact-card">
+            <h3>Visit the site</h3>
+            <p>Monastery of Abuna Hara Dengeel, Dallas. The site blends Ethiopian architecture with modern resonance.</p>
+            <p><strong>Phone:</strong> 214 803 1347 / 469 212 6370</p>
+            <a href="mailto:arbahara27@gmail.com">arbahara27@gmail.com</a>
+          </article>
+          <article class="contact-card">
+            <h3>Stay connected</h3>
+            <p>Register for membership, join the WhatsApp prayer room, and follow the Dallas updates on YouTube or Facebook.</p>
+            <p><strong>Register:</strong> <a href="https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit" target="_blank" rel="noreferrer">Membership Form</a></p>
+            <p><strong>WhatsApp:</strong> <a href="https://chat.whatsapp.com/Bh6EHtBTAe9EM21DXug1CB?mode=gi_t" target="_blank" rel="noreferrer">Join Prayer Line</a></p>
+          </article>
+        </div>
       </section>
     </main>
-    <footer>
-      Arbahara Dallas Project • Source: <a href="https://github.com/stridr5555/arbahara-monastery-site">github.com/stridr5555/arbahara-monastery-site</a>
+    <footer class="footer">
+      Arbahara Dallas • P.O. Box 850721, Richardson, TX 75085-0721 • Produced from the Arbahara website
     </footer>
   </body>
 </html>
