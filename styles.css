@@ -743,3 +743,35 @@ main {
 .construction-doc .button {
   margin-top: 1rem;
 }
+
+
+.construction-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.construction-gallery img {
+  width: 100%;
+  border-radius: 16px;
+  height: 220px;
+  object-fit: cover;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+}
+
+.construction-gallery div {
+  background: #fff8f1;
+  border-radius: 18px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.checklist {
+  margin-top: 2rem;
+}
+
+.checklist ul {
+  list-style: disc;
+  margin-left: 1.25rem;
+}
