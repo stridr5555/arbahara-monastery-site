@@ -64,7 +64,7 @@
         </div>
       </section>
 
-      <section id="vision" class="section">
+      <section id="vision" class="section" data-animate="true">
         <h2 class="section-title">Vision &amp; Sanctuary</h2>
         <p>
           The Dallas campus centers on prayer, hospitality, and culture. There will be spacious hallways for communal cooking,
@@ -98,7 +98,7 @@
         </div>
       </section>
 
-      <section id="timeline" class="section">
+      <section id="timeline" class="section" data-animate="true">
         <h2 class="section-title">Planning Timeline</h2>
         <p>These are the planning phases we are tracking for the next five years.</p>
         <ol class="timeline-list">
@@ -117,7 +117,7 @@
         </ol>
       </section>
 
-      <section id="contact" class="section">
+      <section id="contact" class="section" data-animate="true">
         <h2 class="section-title">Contact &amp; Social</h2>
         <div class="contact-grid">
           <article class="contact-card">
@@ -160,6 +160,7 @@
         </a>
       </div>
     </footer>
+
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const slides = document.querySelectorAll('.hero-slider .slide');
@@ -192,6 +193,19 @@
         indicators.addEventListener('mouseenter', () => clearInterval(sliderInterval));
         indicators.addEventListener('mouseleave', () => {
           sliderInterval = setInterval(cycle, 4500);
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.grid .card, .timeline-list li, .contact-card').forEach((el) => {
+          observer.observe(el);
         });
       });
     </script>

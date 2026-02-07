@@ -205,6 +205,78 @@ main {
   gap: 0.75rem;
 }
 
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% -10%, rgba(255, 255, 255, 0.08), transparent 45%),
+    radial-gradient(circle at 80% 0, rgba(198, 91, 37, 0.2), transparent 50%);
+  mix-blend-mode: screen;
+  animation: heroGlow 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(198, 91, 37, 0.2), rgba(0, 0, 0, 0));
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+}
+
+.hero-slider .slide {
+  will-change: transform, opacity;
+}
+
+.section[data-animate="true"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(198, 91, 37, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.grid .card,
+.timeline-list li,
+.contact-card,
+.qr-card,
+.membership-card {
+  transform: translateY(25px);
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+.grid .card.is-visible,
+.timeline-list li.is-visible,
+.contact-card.is-visible,
+.qr-card.is-visible,
+.membership-card.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.hero-actions .button.primary {
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.hero-actions .button.secondary {
+  animation: floatButton 4s ease-in-out infinite;
+}
+
+@keyframes heroGlow {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.4; }
+  100% { opacity: 0.6; }
+}
+
+@keyframes floatButton {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+
 .button {
   border-radius: 999px;
   padding: 0.95rem 1.9rem;
