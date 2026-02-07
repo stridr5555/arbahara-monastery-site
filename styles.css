@@ -53,6 +53,7 @@ header {
 
 .nav-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   font-size: 0.95rem;
   align-items: center;
@@ -348,6 +349,40 @@ main {
   color: var(--ink);
 }
 
+.policy {
+  padding: 2rem 1.25rem 4rem;
+}
+
+.policy-card {
+  background: #fff;
+  border-radius: 28px;
+  padding: 2.5rem;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+  margin: 2rem auto;
+  max-width: 950px;
+}
+
+.policy-card h1 {
+  font-family: 'Merriweather', serif;
+  font-size: clamp(2.4rem, 3vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+.policy-card h2 {
+  font-family: 'Merriweather', serif;
+  margin-top: 1.5rem;
+}
+
+.policy-card p {
+  line-height: 1.6;
+  color: #3d2e22;
+}
+
+.policy-card ul {
+  padding-left: 1.2rem;
+  color: #3d2e22;
+}
+
 .footer {
   margin-top: 4rem;
   padding: 2rem 1rem;
@@ -356,12 +391,39 @@ main {
   color: #5c4d42;
 }
 
-.footer a {
-  color: var(--clay);
-  font-weight: 600;
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
-/* Donation page styles (shared) */
+.footer-icon-group {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.footer-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.footer-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.footer-icon:hover {
+  background: var(--soft-clay);
+}
+
 .donation-hero {
   background: #0f0b0d;
   color: #fff;
@@ -425,18 +487,8 @@ main {
   box-shadow: 0 35px 70px rgba(0, 0, 0, 0.35);
 }
 
-.membership-card ul {
-  list-style: none;
-  margin-top: 0.75rem;
-  padding-left: 0;
-}
-
-.membership-card li {
-  margin-bottom: 0.4rem;
-}
-
-.qr-card button,
-.membership-card button {
+.membership-card button,
+.qr-card button {
   margin-top: 0.8rem;
   border-radius: 999px;
   padding: 0.65rem 1.4rem;
@@ -448,8 +500,8 @@ main {
   transition: transform 0.2s ease;
 }
 
-.qr-card button:hover,
-.membership-card button:hover {
+.membership-card button:hover,
+.qr-card button:hover {
   transform: translateY(-1px);
 }
 
