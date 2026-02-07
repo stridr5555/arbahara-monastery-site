@@ -21,40 +21,29 @@
     });
   };
 
-  const applyTextTranslations = (lang, translatedTexts) => {
+  const applyTextTranslations = (translations) => {
     modules.forEach((el, idx) => {
-      el.textContent = translatedTexts?.[idx] ?? originalTexts[idx] ?? el.textContent;
+      el.textContent = translations?.texts?.[idx] ?? originalTexts[idx] ?? el.textContent;
     });
     altElements.forEach((el, idx) => {
-      const altText = translatedTexts?.[idx] ?? originalAlts[idx] ?? el.getAttribute('alt');
+      const altText = translations?.alts?.[idx] ?? originalAlts[idx] ?? el.getAttribute('alt');
       if (altText) {
         el.setAttribute('alt', altText);
       }
     });
   };
 
-  const applyAltTranslations = (translations) => {
-    altElements.forEach((el, idx) => {
-      const altText = translations?.[idx] ?? originalAlts[idx];
-      if (altText) el.setAttribute('alt', altText);
-    });
-  };
-
   const fetchTranslations = async (items) => {
-    if (!items.length) return [];
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    if (!items?.length) return [];
     try {
       const response = await fetch(translationEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ texts: items, target: targetLang }),
-        signal: controller.signal,
       });
-      clearTimeout(timeout);
       if (!response.ok) throw new Error('Translation request failed');
       const data = await response.json();
-      return data?.data?.translations?.map((t) => t.translatedText) ?? [];
+      return data.translated ?? items;
     } catch (error) {
       console.error('Translation error', error);
       return items;
@@ -64,16 +53,13 @@
   const setLanguage = async (lang) => {
     highlightButtons(lang);
     if (lang === defaultLang) {
-      applyTextTranslations(lang, null);
-      applyAltTranslations(null);
+      applyTextTranslations({ texts: originalTexts, alts: originalAlts });
       localStorage.setItem(storageKey, lang);
       return;
     }
 
     if (cache.has(lang)) {
-      const { texts, alts } = cache.get(lang);
-      applyTextTranslations(lang, texts);
-      applyAltTranslations(alts);
+      applyTextTranslations(cache.get(lang));
       localStorage.setItem(storageKey, lang);
       return;
     }
@@ -83,9 +69,9 @@
       fetchTranslations(originalAlts),
     ]);
 
-    cache.set(lang, { texts: textTranslations, alts: altTranslations });
-    applyTextTranslations(lang, textTranslations);
-    applyAltTranslations(altTranslations);
+    const payload = { texts: textTranslations, alts: altTranslations };
+    cache.set(lang, payload);
+    applyTextTranslations(payload);
     localStorage.setItem(storageKey, lang);
   };
 
