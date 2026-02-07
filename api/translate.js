@@ -1,15 +1,5 @@
-import { TranslateClient, TranslateTextCommand } from '@aws-sdk/client-translate';
-
-const client = new TranslateClient({
-  region: (process.env.AWS_REGION ?? 'us-east-1').trim(),
-  credentials: {
-    accessKeyId: (process.env.AWS_ACCESS_KEY_ID ?? '').trim(),
-    secretAccessKey: (process.env.AWS_SECRET_ACCESS_KEY ?? '').trim(),
-  },
-});
-
+const TRANSLATE_URL = 'https://translation.googleapis.com/language/translate/v2';
 const DEFAULT_TARGET = 'am';
-const DEFAULT_SOURCE = 'auto';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -21,20 +11,28 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'No texts provided' });
   }
 
+  const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Missing Google Translate API key' });
+  }
+
   try {
-    const command = new TranslateTextCommand({
-      SourceLanguageCode: DEFAULT_SOURCE,
-      TargetLanguageCode: target,
-      Text: texts.join('\n'),
-      Settings: { Formality: 'FORMAL' },
+    const response = await fetch(`${TRANSLATE_URL}?key=${encodeURIComponent(apiKey)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q: texts, target, format: 'text' }),
     });
-    const response = await client.send(command);
-    const translated = (response.TranslatedText ?? '').split('\n');
-    return res.status(200).json({ translated });
+
+    const data = await response.json();
+    if (!response.ok) {
+      console.error('Google Translate error', data);
+      return res.status(response.status).json({ error: data.error?.message ?? 'Translation failed' });
+    }
+
+    const translations = data?.data?.translations?.map((entry) => entry.translatedText) ?? [];
+    return res.status(200).json({ translations });
   } catch (error) {
-    console.error('Translate error', error);
-    return res
-      .status(500)
-      .json({ error: error.message ?? 'Translation failed' });
+    console.error('Translation request failed', error);
+    return res.status(500).json({ error: 'Translation request failed' });
   }
 }
