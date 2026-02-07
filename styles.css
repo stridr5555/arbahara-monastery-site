@@ -148,6 +148,8 @@ main {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 1;
 }
 
 .hero-spirits span {
