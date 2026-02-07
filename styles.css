@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+* { box-sizing: border-box; }
+body { margin: 0; background: #f7f4ee; font-family: 'Inter', system-ui, sans-serif; color: #1b1b1b; }
+main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+.hero { border-radius: 32px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 233, 0.8)); padding: 3rem; box-shadow: 0 25px 55px rgba(15, 15, 15, 0.1); border: 1px solid rgba(0,0,0,0.05); display: grid; gap: 1.5rem; }
+.hero h1 { font-family: 'Merriweather', serif; font-size: clamp(3rem, 4vw, 3.8rem); margin: 0; }
+.hero p { font-size: 1.1rem; color: #3c2b24; line-height: 1.6; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.button { border-radius: 999px; padding: 0.95rem 1.8rem; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.button.primary { background: #d66d3a; color: white; box-shadow: 0 15px 25px rgba(214,109,58,0.3); }
+.button.secondary { background: transparent; border: 1px solid rgba(0,0,0,0.2); color: #1f1f1f; }
+.button:hover { transform: translateY(-3px); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.card { background: white; border-radius: 24px; padding: 1.5rem; box-shadow: 0 15px 35px rgba(20, 20, 20, 0.08); border: 1px solid rgba(0,0,0,0.04); }
+.card h3 { margin-top: 0; font-family: 'Merriweather', serif; }
+.card p { margin: 0.6rem 0 1rem; color: #4b3b31; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 0.3rem 0.8rem; border-radius: 999px; font-size: 0.75rem; background: rgba(214,109,58,0.12); color: #d66d3a; }
+.membership { margin-top: 3rem; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); }
+.membership-card { background: #120b0d; color: #f6efe2; border-radius: 24px; padding: 2rem; box-shadow: 0 25px 45px rgba(6,6,6,0.5); }
+.membership-card h4 { margin-top: 0; font-family: 'Merriweather', serif; }
+.membership-card p { color: rgba(246,239,226,0.8); }
+.grid .card button { width: 100%; }
+footer { text-align: center; padding: 2rem 1rem 1rem; font-size: 0.9rem; color: #55493e; }
+@media (max-width: 600px) { .hero, .membership-card { padding: 1.6rem; } }
