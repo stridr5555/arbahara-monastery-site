@@ -59,6 +59,27 @@ header {
   align-items: center;
 }
 
+.language-switcher {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.language-switcher button {
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.35rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.language-switcher button.active {
+  background: var(--clay);
+  color: #fff;
+  border-color: var(--clay);
+}
+
 .nav-links a {
   padding: 0.65rem 0.85rem;
   border-radius: 999px;

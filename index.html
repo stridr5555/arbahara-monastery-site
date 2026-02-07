@@ -11,12 +11,12 @@
       <div class="header-inner">
         <div class="brand">Arbahara</div>
         <nav class="nav-links" data-mobile-nav>
-          <a href="#vision">Vision</a>
-          <a href="#timeline">Timeline</a>
-          <a href="#contact">Contact</a>
-          <a href="donate.html">Donate &amp; Membership</a>
-          <a href="terms.html">Terms</a>
-          <a href="privacy.html">Privacy</a>
+          <a data-i18n-key="nav-vision" href="#vision">Vision</a>
+          <a data-i18n-key="nav-timeline" href="#timeline">Timeline</a>
+          <a data-i18n-key="nav-contact" href="#contact">Contact</a>
+          <a data-i18n-key="nav-donate" href="donate.html">Donate &amp; Membership</a>
+          <a data-i18n-key="nav-terms" href="terms.html">Terms</a>
+          <a data-i18n-key="nav-privacy" href="privacy.html">Privacy</a>
           <a
             href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user"
             class="social-link"
@@ -29,6 +29,10 @@
             Facebook
           </a>
         </nav>
+        <div class="language-switcher" data-language-switcher>
+          <button data-lang="en">EN</button>
+          <button data-lang="am">አማ</button>
+        </div>
         <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">
           <span></span>
           <span></span>
@@ -55,99 +59,103 @@
         </div>
         <div class="hero-indicators" aria-label="Hero slider controls"></div>
         <div class="hero-content">
-          <p>Monastery of Abuna Hara Dengeel • Dallas, Texas</p>
-          <h1>Monastery of Abuna Hara Dengeel</h1>
-          <p class="hero-subheading">Monastery of Abuna Hara Dengeel to be Established in the Dallas, Texas Area In collaboration with Miskabe Qidusan Arbahara Medhanealem Gedam in Menz Ethiopia</p>
+          <p data-i18n-key="hero-location">Monastery of Abuna Hara Dengeel • Dallas, Texas</p>
+          <h1 data-i18n-key="hero-title">Monastery of Abuna Hara Dengeel</h1>
+          <p class="hero-subheading" data-i18n-key="hero-subheading">Monastery of Abuna Hara Dengeel to be Established in the Dallas, Texas Area In collaboration with Miskabe Qidusan Arbahara Medhanealem Gedam in Menz Ethiopia</p>
           <div class="hero-actions">
-            <button class="button primary" onclick="window.open('https://tinyurl.com/Zelle27', '_blank')">Donate via Zelle</button>
-            <button class="button secondary" onclick="window.open('donate.html', '_self')">See Donation &amp; Membership</button>
-            <button class="button secondary" onclick="window.open('mailto:arbahara27@gmail.com', '_self')">Contact the Team</button>
+            <button class="button primary" onclick="window.open('https://tinyurl.com/Zelle27', '_blank')" data-i18n-key="hero-cta-donate">Donate via Zelle</button>
+            <button class="button secondary" onclick="window.open('donate.html', '_self')" data-i18n-key="hero-cta-membership">See Donation &amp; Membership</button>
+            <button class="button secondary" onclick="window.open('mailto:support@haramonastery.org', '_self')" data-i18n-key="hero-cta-contact">Contact the Team</button>
           </div>
         </div>
       </section>
 
       <section id="vision" class="section" data-animate="true">
-        <h2 class="section-title">Vision &amp; Sanctuary</h2>
-        <p>
+        <h2 class="section-title" data-i18n-key="vision-title">Vision &amp; Sanctuary</h2>
+        <p data-i18n-key="vision-para">
           The Dallas campus centers on prayer, hospitality, and culture. There will be spacious hallways for communal cooking,
           light-filled iconography, and a listing of monthly planning sessions for supporters from the diaspora.
         </p>
         <div class="grid">
           <article class="card">
-            <h3>Spaces of stillness</h3>
-            <p>
+            <h3 data-i18n-key="card-stillness-title">Spaces of stillness</h3>
+            <p data-i18n-key="card-stillness-text">
               The nave will integrate halo lighting, stone floors, and seating tuned to Zema chanting so families feel grounded in the rituals.
             </p>
           </article>
           <article class="card">
-            <h3>Community pulse</h3>
-            <p>
+            <h3 data-i18n-key="card-community-title">Community pulse</h3>
+            <p data-i18n-key="card-community-text">
               Circles gather for prayer, crafts, and stewardship. Each update is shared via the mailing list in the P.O. Box notice and partner communications.
             </p>
           </article>
           <article class="card">
-            <h3>Sanctuary services</h3>
-            <p>
+            <h3 data-i18n-key="card-services-title">Sanctuary services</h3>
+            <p data-i18n-key="card-services-text">
               Weekly liturgies, youth education, cultural programs, and diaspora fundraisers keep the project advancing through 2030 and beyond.
             </p>
           </article>
         </div>
         <div class="gallery">
-          <img src="https://static.wixstatic.com/media/11062b_24693744a2114dd68e6808179cf6a1ca~mv2.jpg" alt="Arbahara Sanctuary" />
-          <img src="https://static.wixstatic.com/media/47e9fb_8897721bae844320b54eb68267da4d8f~mv2.jpg" alt="Iconography" />
-          <img src="https://static.wixstatic.com/media/47e9fb_6d86ca13e55e422c805025082ea1bb7c~mv2.png" alt="Community details" />
-          <img src="https://static.wixstatic.com/media/47e9fb_046e68e5902f4789b277e995299ca29e~mv2.png" alt="Sacred motifs" />
+          <img data-i18n-alt="gallery-1" src="https://static.wixstatic.com/media/11062b_24693744a2114dd68e6808179cf6a1ca~mv2.jpg" alt="Arbahara Sanctuary" />
+          <img data-i18n-alt="gallery-2" src="https://static.wixstatic.com/media/47e9fb_8897721bae844320b54eb68267da4d8f~mv2.jpg" alt="Iconography" />
+          <img data-i18n-alt="gallery-3" src="https://static.wixstatic.com/media/47e9fb_6d86ca13e55e422c805025082ea1bb7c~mv2.png" alt="Community details" />
+          <img data-i18n-alt="gallery-4" src="https://static.wixstatic.com/media/47e9fb_046e68e5902f4789b277e995299ca29e~mv2.png" alt="Sacred motifs" />
         </div>
       </section>
 
       <section id="timeline" class="section" data-animate="true">
-        <h2 class="section-title">Planning Timeline</h2>
-        <p>These are the planning phases we are tracking for the next five years.</p>
+        <h2 class="section-title" data-i18n-key="timeline-title">Planning Timeline</h2>
+        <p data-i18n-key="timeline-intro">These are the planning phases we are tracking for the next five years.</p>
         <ol class="timeline-list">
           <li>
-            <time>2029 • Planning &amp; Site Development</time>
-            <p>Finalize land acquisition, engineering studies, and zoning approvals while inviting design partners to share proposals.</p>
+            <time data-i18n-key="timeline-2029">2029 • Planning &amp; Site Development</time>
+            <p data-i18n-key="timeline-2029-text">Finalize land acquisition, engineering studies, and zoning approvals while inviting design partners to share proposals.</p>
           </li>
           <li>
-            <time>2030 • Design &amp; Community Workshops</time>
-            <p>Detail the sanctuary layout, gather feedback during monthly Dallas liaison meetings, and align fundraising milestones.</p>
+            <time data-i18n-key="timeline-2030">2030 • Design &amp; Community Workshops</time>
+            <p data-i18n-key="timeline-2030-text">Detail the sanctuary layout, gather feedback during monthly Dallas liaison meetings, and align fundraising milestones.</p>
           </li>
           <li>
-            <time>2031 • Construction &amp; Cultural Programming</time>
-            <p>Break ground on the main nave, install lighting, and schedule cultural residencies ahead of the grand opening planning.</p>
+            <time data-i18n-key="timeline-2031">2031 • Construction &amp; Cultural Programming</time>
+            <p data-i18n-key="timeline-2031-text">Break ground on the main nave, install lighting, and schedule cultural residencies ahead of the grand opening planning.</p>
           </li>
         </ol>
       </section>
 
       <section id="contact" class="section" data-animate="true">
-        <h2 class="section-title">Contact &amp; Social</h2>
+        <h2 class="section-title" data-i18n-key="contact-title">Contact &amp; Social</h2>
         <div class="contact-grid">
           <article class="contact-card">
-            <h3>Visit or write</h3>
-            <p>Monastery of Abuna Hara Dengeel • Dallas, Texas (Planning stage)</p>
-            <p><strong>P.O. Box:</strong> 850721, Richardson, TX 75085-0721</p>
-            <p><strong>Phone:</strong> 214 803 1347 / 469 212 6370</p>
-            <p><strong>Email:</strong> <a href="mailto:arbahara27@gmail.com">arbahara27@gmail.com</a></p>
+            <h3 data-i18n-key="contact-visit">Visit or write</h3>
+            <p data-i18n-key="contact-visit-text">Monastery of Abuna Hara Dengeel • Dallas, Texas (Planning stage)</p>
+            <p data-i18n-key="contact-po"> <strong>P.O. Box:</strong> 850721, Richardson, TX 75085-0721</p>
+            <p data-i18n-key="contact-phone"><strong>Phone:</strong> 214 803 1347 / 469 212 6370</p>
+            <p data-i18n-key="contact-email"><strong>Email:</strong> <a href="mailto:support@haramonastery.org">support@haramonastery.org</a></p>
           </article>
           <article class="contact-card">
-            <h3>Stay informed</h3>
-            <p><strong>Facebook:</strong> <a href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user" target="_blank" rel="noreferrer">Arbahara Facebook</a></p>
-            <p><strong>YouTube:</strong> <a href="https://youtube.com/@Arbaharadallas?feature=shared" target="_blank" rel="noreferrer">Arbahara Dallas channel</a></p>
+            <h3 data-i18n-key="contact-stay">Stay informed</h3>
+            <p data-i18n-key="contact-facebook"><strong>Facebook:</strong> <a href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user" target="_blank" rel="noreferrer">Arbahara Facebook</a></p>
+            <p data-i18n-key="contact-youtube"><strong>YouTube:</strong> <a href="https://youtube.com/@Arbaharadallas?feature=shared" target="_blank" rel="noreferrer">Arbahara Dallas channel</a></p>
           </article>
         </div>
       </section>
     </main>
     <footer class="footer">
       <div>
-        <p>P.O. Box 850721, Richardson, TX 75085-0721</p>
-        <p>© 2026 Arbahara.</p>
+        <p data-i18n-key="footer-address">P.O. Box 850721, Richardson, TX 75085-0721</p>
+        <p data-i18n-key="footer-copy">© 2026 Arbahara.</p>
       </div>
       <div class="footer-links">
         <a href="donate.html">Donate</a>
         <a href="terms.html">Terms &amp; Conditions</a>
         <a href="privacy.html">Privacy Policy</a>
       </div>
-      <div class="footer-icon-group">
+            <div class="language-switcher" data-language-switcher>
+        <button data-lang="en">EN</button>
+        <button data-lang="am">አማ</button>
+      </div>
+<div class="footer-icon-group">
         <a class="footer-icon" href="https://tinyurl.com/Zelle27" target="_blank" rel="noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 4h16v2l-12 8h10v2H4V4z" />
