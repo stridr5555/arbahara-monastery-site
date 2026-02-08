@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gallery • Haramonastery</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="brand">Arbahara</div>
+        <nav class="nav-links" data-mobile-nav>
+          <a data-i18n-key="nav-home" href="index.html">Home</a>
+          <a data-i18n-key="nav-donate" href="donate.html">Donate &amp; Membership</a>
+          <a data-i18n-key="nav-future" href="future-construction.html">Future Construction</a>
+          <a data-i18n-key="nav-gallery" href="gallery.html" class="active">Gallery</a>
+        </nav>
+        <div class="language-switcher" data-language-switcher>
+          <button data-lang="en">EN</button>
+          <button data-lang="am">አማ</button>
+        </div>
+      </div>
+    </header>
+    <main class="policy">
+      <section class="policy-card">
+        <h1 data-i18n-key="gallery-title">Gallery &amp; Media</h1>
+        <p data-i18n-key="gallery-intro">
+          Explore the full image archive, video reflections, and construction snapshots from the Haramonastery journey.
+        </p>
+        <div class="construction-gallery">
+          <div>
+            <img src="assets/images/jesus-icon.png" alt="Icon of Christ" />
+            <p>Icon of Christ</p>
+          </div>
+          <div>
+            <img src="assets/images/saint-portrait.jpg" alt="Saint portrait" />
+            <p>Saint Portrait</p>
+          </div>
+          <div>
+            <img src="assets/images/announcement.jpg" alt="Program announcement" />
+            <p>Community Announcement</p>
+          </div>
+          <div>
+            <img src="assets/images/view-terrace.jpg" alt="Dallas hillside" />
+            <p>Terrace Preview</p>
+          </div>
+          <div>
+            <img src="assets/images/flowers.jpg" alt="Sanctuary flowers" />
+            <p>Sanctuary Flowers</p>
+          </div>
+        </div>
+        <div class="video-grid">
+          <article>
+            <h2 data-i18n-key="gallery-video-title-1">Community Blessing</h2>
+            <video controls poster="assets/images/jesus-icon.png">
+              <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+          <article>
+            <h2 data-i18n-key="gallery-video-title-2">Pilgrimage Highlights</h2>
+            <video controls poster="assets/images/view-terrace.jpg">
+              <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/bee.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div>
+        <p data-i18n-key="footer-address">P.O. Box 850721, Richardson, TX 75085-0721</p>
+        <p data-i18n-key="footer-copy">© 2026 Arbahara.</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate</a>
+        <a href="future-construction.html">Future Construction</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+      <div class="language-switcher" data-language-switcher>
+        <button data-lang="en">EN</button>
+        <button data-lang="am">አማ</button>
+      </div>
+    </footer>
+    <script src="/scripts/translation.js" defer></script>
+    <script src="/scripts/gallery.js" defer></script>
+  </body>
+</html>
