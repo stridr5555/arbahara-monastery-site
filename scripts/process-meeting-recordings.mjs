@@ -12,6 +12,7 @@ const SILENCE_TRIM_FILTER =
   'silenceremove=start_periods=1:start_duration=0.25:start_threshold=-40dB:stop_periods=1:stop_duration=0.4:stop_threshold=-40dB';
 
 const MIN_DURATION_SECONDS = 20;
+const MIN_TRIM_RATIO = 0.25; // if trim keeps less than 25% of original, fallback to original
 
 function run(cmd, args, options = {}) {
   return new Promise((resolve, reject) => {
@@ -131,11 +132,28 @@ async function processAll() {
     const trimmedPath = path.join(tmpDir, `${path.basename(name, '.mp3')}.trimmed.mp3`);
 
     try {
+      const originalDuration = await probeDuration(rawPath);
+
+      if (!Number.isFinite(originalDuration) || originalDuration <= 0) {
+        skipped.push({ file: name, reason: 'Invalid source duration' });
+        continue;
+      }
+
       await trimSilence(rawPath, trimmedPath);
-      const duration = await probeDuration(trimmedPath);
+      const trimmedDuration = await probeDuration(trimmedPath);
+
+      let chosenPath = trimmedPath;
+      let duration = trimmedDuration;
+      let trimMode = 'trimmed';
+
+      if (!Number.isFinite(trimmedDuration) || trimmedDuration < MIN_DURATION_SECONDS || trimmedDuration / originalDuration < MIN_TRIM_RATIO) {
+        chosenPath = rawPath;
+        duration = originalDuration;
+        trimMode = 'fallback-original';
+      }
 
       if (duration < MIN_DURATION_SECONDS) {
-        skipped.push({ file: name, reason: `Near-empty after trim (${duration.toFixed(1)}s)` });
+        skipped.push({ file: name, reason: `Near-empty (${duration.toFixed(1)}s)` });
         continue;
       }
 
@@ -143,12 +161,13 @@ async function processAll() {
 
       accepted.push({
         originalPath: rawPath,
-        trimmedPath,
+        trimmedPath: chosenPath,
         file: name,
         date: parsed.date,
         hashOrder: parsed.hashOrder,
         modifiedMs: stat.mtimeMs,
         duration,
+        trimMode,
       });
     } catch (error) {
       skipped.push({ file: name, reason: `Trim failed: ${error.message}` });
@@ -199,6 +218,7 @@ async function processAll() {
       durationSeconds: Number(mergedDuration.toFixed(2)),
       sourceCount: items.length,
       sources: items.map((i) => i.file),
+      trimModes: items.map((i) => ({ file: i.file, mode: i.trimMode })),
     });
   }
 
