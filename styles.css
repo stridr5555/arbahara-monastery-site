@@ -842,3 +842,46 @@ main {
   border-radius: 12px;
   margin-top: 0.5rem;
 }
+
+.recordings-container {
+  display: grid;
+  gap: 1rem;
+}
+
+.recordings-card audio {
+  width: 100%;
+  margin-top: 0.6rem;
+}
+
+.recordings-admin-card {
+  max-width: 760px;
+}
+
+.recordings-form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.recordings-form label {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 600;
+}
+
+.recordings-form input[type='password'],
+.recordings-form input[type='file'] {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+}
+
+.recordings-status {
+  font-weight: 600;
+}
+
+.recordings-list {
+  margin-top: 0.75rem;
+  padding-left: 1.2rem;
+  color: #3c2b25;
+}

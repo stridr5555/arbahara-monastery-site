@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arbahara • Meeting Recordings</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="brand">Arbahara</div>
+        <nav class="nav-links">
+          <a href="/">Home</a>
+          <a href="/meeting-recordings">Meeting Recordings</a>
+          <a href="/admin-recordings">Admin Upload</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <h1 class="section-title">Meeting Recordings</h1>
+        <p>Published meeting audio is organized by date after silence trimming and stitch processing.</p>
+      </section>
+
+      <section class="section">
+        <div id="recordings-container" class="recordings-container">
+          <p id="recordings-status">Loading recordings...</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="/scripts/meeting-recordings.js" defer></script>
+  </body>
+</html>

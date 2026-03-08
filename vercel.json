@@ -3,6 +3,14 @@
     {
       "source": "/gallery",
       "destination": "/gallery.html"
+    },
+    {
+      "source": "/meeting-recordings",
+      "destination": "/meeting-recordings.html"
+    },
+    {
+      "source": "/admin-recordings",
+      "destination": "/admin-recordings.html"
     }
   ]
 }

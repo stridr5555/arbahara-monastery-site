@@ -1,5 +1,8 @@
 {
   "name": "haramonastery-site",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "process:recordings": "node scripts/process-meeting-recordings.mjs"
+  }
 }

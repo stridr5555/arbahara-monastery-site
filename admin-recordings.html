@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arbahara • Admin Uploads</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="brand">Arbahara Admin</div>
+        <nav class="nav-links">
+          <a href="/">Home</a>
+          <a href="/meeting-recordings">Meeting Recordings</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <h1 class="section-title">Meeting Upload Console</h1>
+        <p>Login, upload raw MP3 files, then run the processing script locally to trim, stitch, and publish.</p>
+      </section>
+
+      <section class="section">
+        <div class="card recordings-admin-card">
+          <h3>1) Admin login</h3>
+          <form id="admin-login-form" class="recordings-form">
+            <label>
+              Admin Password
+              <input id="admin-password" type="password" required autocomplete="current-password" />
+            </label>
+            <button class="button primary" type="submit">Login</button>
+          </form>
+          <p id="login-status" class="recordings-status"></p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="card recordings-admin-card">
+          <h3>2) Upload MP3 files</h3>
+          <form id="upload-form" class="recordings-form">
+            <label>
+              Select one or more MP3 files
+              <input id="recording-files" type="file" accept="audio/mpeg,.mp3" multiple required />
+            </label>
+            <button class="button secondary" type="submit">Upload to GitHub</button>
+          </form>
+          <p id="upload-status" class="recordings-status"></p>
+          <ul id="upload-results" class="recordings-list"></ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="/scripts/admin-recordings.js" defer></script>
+  </body>
+</html>
