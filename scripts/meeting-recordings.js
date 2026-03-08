@@ -7,7 +7,7 @@ function formatDuration(totalSeconds) {
   return `${m}:${String(sec).padStart(2, '0')}`;
 }
 
-function renderRecordings(items) {
+function renderRecordings(items, titles = {}) {
   container.innerHTML = '';
 
   if (!items.length) {
@@ -20,7 +20,7 @@ function renderRecordings(items) {
     card.className = 'card recordings-card';
 
     const title = document.createElement('h3');
-    title.textContent = item.displayDate || item.date;
+    title.textContent = titles[item.date] || item.displayDate || item.date;
 
     const meta = document.createElement('p');
     meta.textContent = `${formatDuration(item.durationSeconds)} • ${item.sourceCount} source file(s)`;
@@ -44,7 +44,16 @@ async function init() {
       throw new Error('Manifest not found yet');
     }
     const manifest = await response.json();
-    renderRecordings(manifest.recordings || []);
+
+    let titles = {};
+    try {
+      const titlesResp = await fetch('/assets/audio/processed/titles.json', { cache: 'no-store' });
+      if (titlesResp.ok) {
+        titles = await titlesResp.json();
+      }
+    } catch {}
+
+    renderRecordings(manifest.recordings || [], titles);
   } catch (error) {
     container.innerHTML = `<p>${error.message}</p>`;
   }

@@ -12,6 +12,7 @@ This static site previews the Arbahara Dallas initiative: a frosted-glass hero, 
   - Raw uploads land in Google Drive (resumable)
   - Drive sync downloads to `assets/audio/raw/`
   - Processed stitched output + manifest: `assets/audio/processed/`
+  - Admin can rename playback titles (saved in `assets/audio/processed/titles.json`)
 
 ## Deployment
 1. Use the Vercel project connected to `github.com/stridr5555/arbahara-monastery-site`.

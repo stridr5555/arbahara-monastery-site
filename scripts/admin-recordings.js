@@ -14,7 +14,12 @@ const filesInput = document.getElementById('recording-files');
 const uploadStatus = document.getElementById('upload-status');
 const uploadResults = document.getElementById('upload-results');
 
+const titleForm = document.getElementById('title-form');
+const saveTitlesButton = document.getElementById('save-titles');
+const titleStatus = document.getElementById('title-status');
+
 function setStatus(el, text, isError = false) {
+  if (!el) return;
   el.textContent = text;
   el.style.color = isError ? '#b42318' : '#1f6f43';
 }
@@ -95,6 +100,76 @@ async function uploadToDriveResumable(uploadUrl, file) {
   }
 }
 
+async function loadTitleEditor() {
+  if (!titleForm) return;
+
+  titleForm.innerHTML = '<p>Loading recordings…</p>';
+
+  try {
+    const [manifestResp, titlesResp] = await Promise.all([
+      fetch('/assets/audio/processed/manifest.json', { cache: 'no-store' }),
+      fetch('/assets/audio/processed/titles.json', { cache: 'no-store' }),
+    ]);
+
+    if (!manifestResp.ok) {
+      throw new Error('No processed manifest found yet. Run sync/process first.');
+    }
+
+    const manifest = await manifestResp.json();
+    const titles = titlesResp.ok ? await titlesResp.json() : {};
+
+    const recordings = manifest.recordings || [];
+    titleForm.innerHTML = '';
+
+    if (!recordings.length) {
+      titleForm.innerHTML = '<p>No processed recordings available yet.</p>';
+      return;
+    }
+
+    recordings.forEach((rec) => {
+      const wrap = document.createElement('label');
+      wrap.className = 'recordings-title-row';
+      wrap.innerHTML = `
+        <span>${rec.date}</span>
+        <input data-date="${rec.date}" type="text" value="${(titles[rec.date] || rec.displayDate || rec.date).replace(/"/g, '&quot;')}" maxlength="120" />
+      `;
+      titleForm.appendChild(wrap);
+    });
+  } catch (error) {
+    titleForm.innerHTML = `<p>${error.message}</p>`;
+  }
+}
+
+async function saveTitles() {
+  const token = getToken();
+  if (!token) {
+    setStatus(titleStatus, 'Login required before saving titles.', true);
+    return;
+  }
+
+  const inputs = Array.from(titleForm.querySelectorAll('input[data-date]'));
+  const payload = {};
+  for (const input of inputs) {
+    payload[input.dataset.date] = input.value.trim();
+  }
+
+  setStatus(titleStatus, 'Saving titles to GitHub...');
+
+  const response = await fetch('/api/github-update-recording-titles', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, titles: payload }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    setStatus(titleStatus, data?.error || 'Failed to save titles.', true);
+    return;
+  }
+
+  setStatus(titleStatus, 'Titles saved. Website will reflect update after deploy cache refresh.');
+}
+
 window.addEventListener('message', (event) => {
   if (event.origin !== window.location.origin) return;
   const data = event.data || {};
@@ -113,6 +188,10 @@ googleConnectButton?.addEventListener('click', () => {
 
   const url = `/api/google-oauth-start?token=${encodeURIComponent(token)}&origin=${encodeURIComponent(window.location.origin)}`;
   window.open(url, 'google_oauth', 'width=520,height=700');
+});
+
+saveTitlesButton?.addEventListener('click', () => {
+  saveTitles().catch((error) => setStatus(titleStatus, error.message || 'Failed to save titles.', true));
 });
 
 loginForm?.addEventListener('submit', async (event) => {
@@ -198,3 +277,4 @@ uploadForm?.addEventListener('submit', async (event) => {
 });
 
 updateGoogleStatus();
+loadTitleEditor();
