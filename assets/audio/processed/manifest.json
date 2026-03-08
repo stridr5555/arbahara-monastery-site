@@ -1,5 +1,50 @@
 {
-  "generatedAt": "2026-03-08T03:17:46.085Z",
+  "generatedAt": "2026-03-08T04:09:26.749Z",
   "recordings": [],
-  "skipped": []
+  "skipped": [
+    {
+      "file": "2026-02-06-#1.mp3",
+      "reason": "Near-empty after trim (0.5s)"
+    },
+    {
+      "file": "2026-02-11-#2.mp3",
+      "reason": "Near-empty after trim (0.5s)"
+    },
+    {
+      "file": "2026-02-14-#4.mp3",
+      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x5a21027e0400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-02-14-#4.trimmed.mp3: Invalid data found when processing input\n"
+    },
+    {
+      "file": "2026-02-21-#5.mp3",
+      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x5b27315ee400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-02-21-#5.trimmed.mp3: Invalid data found when processing input\n"
+    },
+    {
+      "file": "2026-02-21-#6.mp3",
+      "reason": "Near-empty after trim (2.1s)"
+    },
+    {
+      "file": "2026-03-02-#7.mp3",
+      "reason": "Near-empty after trim (0.9s)"
+    },
+    {
+      "file": "2026-03-06-#8.mp3",
+      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x6155134aa400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-03-06-#8.trimmed.mp3: Invalid data found when processing input\n"
+    },
+    {
+      "file": "2026-03-07 #1.mp3",
+      "reason": "Trim failed: ffmpeg failed (183)\nffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers\n  built with gcc 12 (Ubuntu 12.3.0-1ubuntu1~22.04.2)\n  configuration: --prefix=/home/linuxbrew/.linuxbrew/Cellar/ffmpeg/8.0.1_4 --enable-shared --enable-pthreads --enable-version3 --cc=gcc-12 --host-cflags= --host-ldflags= --enable-ffplay --enable-gpl --enable-libsvtav1 --enable-libopus --enable-libx264 --enable-libmp3lame --enable-libdav1d --enable-libvpx --enable-libx265 --enable-openssl\n  libavutil      60.  8.100 / 60.  8.100\n  libavcodec     62. 11.100 / 62. 11.100\n  libavformat    62.  3.100 / 62.  3.100\n  libavdevice    62.  1.100 / 62.  1.100\n  libavfilter    11.  4.100 / 11.  4.100\n  libswscale      9.  1.100 /  9.  1.100\n  libswresample   6.  1.100 /  6.  1.100\n[mp3 @ 0x5ad3aff36280] Format mp3 detected only with low score of 12, misdetection possible!\n[mp3 @ 0x5ad3aff36280] Failed to find two consecutive MPEG audio frames.\n[in#0 @ 0x5ad3aff35fc0] Error opening input: Invalid data found when processing input\nError opening input file /home/strid3r/Projects/arbahara-monastery-site/assets/audio/raw/2026-03-07 #1.mp3.\nError opening input files: Invalid data found when processing input\n"
+    },
+    {
+      "file": "2026-03-07-#10.mp3",
+      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x632fa9712400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-03-07-#10.trimmed.mp3: Invalid data found when processing input\n"
+    },
+    {
+      "file": "2026-03-07-#11.mp3",
+      "reason": "Near-empty after trim (0.9s)"
+    },
+    {
+      "file": "2026-03-07-#12.mp3",
+      "reason": "Near-empty after trim (1.3s)"
+    }
+  ]
 }
