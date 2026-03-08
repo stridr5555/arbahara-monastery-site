@@ -9,7 +9,8 @@ This static site previews the Arbahara Dallas initiative: a frosted-glass hero, 
 - Meeting recordings system:
   - Public listening page: `/meeting-recordings`
   - Admin upload page with login: `/admin-recordings`
-  - Raw uploads stored in GitHub: `assets/audio/raw/`
+  - Raw uploads land in Google Drive (resumable)
+  - Drive sync downloads to `assets/audio/raw/`
   - Processed stitched output + manifest: `assets/audio/processed/`
 
 ## Deployment
@@ -22,6 +23,9 @@ Set these in Vercel project settings:
 
 - `RECORDINGS_ADMIN_PASSWORD` — password used on `/admin-recordings`.
 - `RECORDINGS_SESSION_SECRET` — long random secret to sign admin session tokens.
+- `GOOGLE_DRIVE_FOLDER_ID` — destination folder for uploaded MP3 files.
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL` — service account client email.
+- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` — service account private key (PEM; keep newlines escaped in env).
 - `GITHUB_TOKEN` — GitHub PAT with `repo` scope for this repo.
 - `GITHUB_OWNER` — default `stridr5555`.
 - `GITHUB_REPO` — default `arbahara-monastery-site`.
@@ -32,19 +36,27 @@ Set these in Vercel project settings:
 ### Upload raw files
 1. Open `/admin-recordings`.
 2. Login with `RECORDINGS_ADMIN_PASSWORD`.
-3. Upload MP3 files. Naming convention:
+3. Upload MP3 files directly to Google Drive folder (`GOOGLE_DRIVE_FOLDER_ID`).
+4. Naming convention:
    - `YYYY-MM-DD #1.mp3`
    - `YYYY-MM-DD #2.mp3`
    - `YYYYMMDD #1.mp3` (also supported)
 
-### Process + stitch by date
+### Sync Drive → process → publish to GitHub
 Run locally in the repo root:
 
 ```bash
-npm run process:recordings
+npm run sync:drive
 ```
 
-The script will:
+To auto-commit and push after processing:
+
+```bash
+npm run sync:drive:publish
+```
+
+The pipeline will:
+- download MP3 files from Drive folder into `assets/audio/raw/`
 - trim leading/trailing silence for each clip
 - skip near-empty clips (<20s after trim)
 - group clips by parsed date
@@ -52,7 +64,6 @@ The script will:
 - output one file per date in `assets/audio/processed/`
 - write `assets/audio/processed/manifest.json` used by `/meeting-recordings`
 
-Commit and push processed outputs to publish on the site.
-
 ## Notes
+- Share your Drive folder with the service account email so uploads and sync can access files.
 - Keep this repo separate from the `addis-digital-y0` site and the `ethiomarketplace` project.

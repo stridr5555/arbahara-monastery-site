@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "process:recordings": "node scripts/process-meeting-recordings.mjs"
+    "process:recordings": "node scripts/process-meeting-recordings.mjs",
+    "sync:drive": "node scripts/sync-drive-recordings.mjs",
+    "sync:drive:publish": "node scripts/sync-drive-recordings.mjs --commit"
   }
 }

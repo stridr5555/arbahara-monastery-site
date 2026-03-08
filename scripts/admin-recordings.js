@@ -1,4 +1,5 @@
 const storageKey = 'arbahara_admin_token';
+const MAX_SINGLE_FILE_MB = 500;
 
 const loginForm = document.getElementById('admin-login-form');
 const passwordInput = document.getElementById('admin-password');
@@ -32,15 +33,46 @@ function addResult(text) {
   uploadResults.appendChild(li);
 }
 
-async function fileToBase64(file) {
-  const arrayBuffer = await file.arrayBuffer();
-  let binary = '';
-  const bytes = new Uint8Array(arrayBuffer);
-  const chunk = 0x8000;
-  for (let i = 0; i < bytes.length; i += chunk) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+async function initDriveUpload({ token, file }) {
+  const response = await fetch('/api/drive-upload-init', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      token,
+      filename: file.name,
+      contentType: file.type || 'audio/mpeg',
+      sizeBytes: file.size,
+    }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data?.error || 'Drive init failed');
   }
-  return btoa(binary);
+
+  return data;
+}
+
+async function uploadToDriveResumable(uploadUrl, file) {
+  const response = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': file.type || 'audio/mpeg',
+      'Content-Length': String(file.size),
+    },
+    body: file,
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Drive upload failed (${response.status}): ${text.slice(0, 200)}`);
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { ok: true };
+  }
 }
 
 loginForm?.addEventListener('submit', async (event) => {
@@ -82,7 +114,7 @@ uploadForm?.addEventListener('submit', async (event) => {
     return;
   }
 
-  setStatus(uploadStatus, `Uploading ${files.length} file(s)...`);
+  setStatus(uploadStatus, `Uploading ${files.length} file(s) to Google Drive...`);
 
   let success = 0;
   for (const file of files) {
@@ -90,26 +122,16 @@ uploadForm?.addEventListener('submit', async (event) => {
       if (!file.name.toLowerCase().endsWith('.mp3')) {
         throw new Error('Only MP3 files are allowed');
       }
-
-      const dataBase64 = await fileToBase64(file);
-      const response = await fetch('/api/github-upload-recording', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token,
-          filename: file.name,
-          dataBase64,
-          contentType: file.type || 'audio/mpeg',
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.error || 'Upload failed');
+      const maxBytes = MAX_SINGLE_FILE_MB * 1024 * 1024;
+      if (file.size > maxBytes) {
+        throw new Error(`File too large (> ${MAX_SINGLE_FILE_MB} MB)`);
       }
 
+      const { uploadUrl, filename } = await initDriveUpload({ token, file });
+      const uploadResult = await uploadToDriveResumable(uploadUrl, file);
+
       success += 1;
-      addResult(`✅ ${file.name} → ${data.path}`);
+      addResult(`✅ ${filename} uploaded to Drive (id: ${uploadResult.id || 'ok'})`);
     } catch (error) {
       addResult(`❌ ${file.name} → ${error.message}`);
     }
