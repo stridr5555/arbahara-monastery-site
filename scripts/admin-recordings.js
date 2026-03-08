@@ -112,7 +112,7 @@ googleConnectButton?.addEventListener('click', () => {
     return;
   }
 
-  const url = `/api/google-oauth-start?token=${encodeURIComponent(token)}`;
+  const url = `/api/google-oauth-start?token=${encodeURIComponent(token)}&origin=${encodeURIComponent(window.location.origin)}`;
   window.open(url, 'google_oauth', 'width=520,height=700');
 });
 

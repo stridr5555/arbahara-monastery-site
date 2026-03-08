@@ -63,12 +63,19 @@ export default async function handler(req, res) {
       token: parsedState.token,
     };
 
+    const targetOrigin = parsedState?.origin || 'https://www.haramonastery.org';
+
     return res.status(200).send(`<!doctype html>
 <html><body><script>
 (function(){
   const payload = ${JSON.stringify(payload)};
+  const targetOrigin = ${JSON.stringify(targetOrigin)};
   if (window.opener && window.opener !== window) {
-    window.opener.postMessage(payload, window.location.origin);
+    try {
+      window.opener.postMessage(payload, targetOrigin);
+    } catch (e) {
+      window.opener.postMessage(payload, '*');
+    }
     window.close();
   } else {
     document.body.innerText = 'Google connected. You can close this tab.';

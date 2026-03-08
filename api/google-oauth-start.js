@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     return res.status(500).send('Missing Google OAuth configuration');
   }
 
-  const { token } = req.query ?? {};
+  const { token, origin } = req.query ?? {};
   const verified = verifyAdminToken(token, adminPassword, sessionSecret);
   if (!verified.ok) {
     return res.status(401).send('Unauthorized');
@@ -20,6 +20,7 @@ export default async function handler(req, res) {
 
   const stateObj = {
     token,
+    origin: typeof origin === 'string' ? origin : 'https://www.haramonastery.org',
     nonce: Math.random().toString(36).slice(2),
     t: Date.now(),
   };
