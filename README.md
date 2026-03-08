@@ -62,7 +62,7 @@ The pipeline will:
 - trim leading/trailing silence for each clip
 - skip near-empty clips (<20s after trim)
 - group clips by parsed date
-- stitch all clips from the same date together (ignores `#` numbering)
+- stitch all clips from the same date together using `#` number as file order (fallback: modified time)
 - output one file per date in `assets/audio/processed/`
 - write `assets/audio/processed/manifest.json` used by `/meeting-recordings`
 
