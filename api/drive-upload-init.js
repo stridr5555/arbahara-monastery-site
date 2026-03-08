@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Missing Drive upload configuration' });
   }
 
-  const { token, filename, contentType = 'audio/mpeg', sizeBytes } = req.body ?? {};
+  const { token, filename, contentType = 'audio/mpeg', sizeBytes, googleAccessToken } = req.body ?? {};
   const verified = verifyAdminToken(token, adminPassword, sessionSecret);
   if (!verified.ok) {
     return res.status(401).json({ error: 'Unauthorized' });
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const accessToken = await getGoogleAccessToken('https://www.googleapis.com/auth/drive');
+    const accessToken = googleAccessToken || (await getGoogleAccessToken('https://www.googleapis.com/auth/drive'));
     const initResp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true', {
       method: 'POST',
       headers: {

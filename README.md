@@ -24,8 +24,10 @@ Set these in Vercel project settings:
 - `RECORDINGS_ADMIN_PASSWORD` — password used on `/admin-recordings`.
 - `RECORDINGS_SESSION_SECRET` — long random secret to sign admin session tokens.
 - `GOOGLE_DRIVE_FOLDER_ID` — destination folder for uploaded MP3 files.
-- `GOOGLE_SERVICE_ACCOUNT_EMAIL` — service account client email.
-- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` — service account private key (PEM; keep newlines escaped in env).
+- `GOOGLE_OAUTH_CLIENT_ID` — Google OAuth web client id.
+- `GOOGLE_OAUTH_CLIENT_SECRET` — Google OAuth web client secret.
+- `GOOGLE_OAUTH_REDIRECT_URI` — set to `https://www.haramonastery.org/api/google-oauth-callback`.
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL` / `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` — optional fallback path (not required for user OAuth uploads).
 - `GITHUB_TOKEN` — GitHub PAT with `repo` scope for this repo.
 - `GITHUB_OWNER` — default `stridr5555`.
 - `GITHUB_REPO` — default `arbahara-monastery-site`.

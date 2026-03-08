@@ -1,9 +1,13 @@
 const storageKey = 'arbahara_admin_token';
+const googleTokenKey = 'arbahara_google_access_token';
 const MAX_SINGLE_FILE_MB = 500;
 
 const loginForm = document.getElementById('admin-login-form');
 const passwordInput = document.getElementById('admin-password');
 const loginStatus = document.getElementById('login-status');
+
+const googleConnectButton = document.getElementById('google-connect');
+const googleStatus = document.getElementById('google-status');
 
 const uploadForm = document.getElementById('upload-form');
 const filesInput = document.getElementById('recording-files');
@@ -23,6 +27,14 @@ function setToken(token) {
   localStorage.setItem(storageKey, token);
 }
 
+function getGoogleAccessToken() {
+  return localStorage.getItem(googleTokenKey) || '';
+}
+
+function setGoogleAccessToken(token) {
+  localStorage.setItem(googleTokenKey, token);
+}
+
 function clearResults() {
   uploadResults.innerHTML = '';
 }
@@ -33,7 +45,15 @@ function addResult(text) {
   uploadResults.appendChild(li);
 }
 
-async function initDriveUpload({ token, file }) {
+function updateGoogleStatus() {
+  if (getGoogleAccessToken()) {
+    setStatus(googleStatus, 'Google Drive connected.');
+  } else {
+    setStatus(googleStatus, 'Google Drive not connected yet.', true);
+  }
+}
+
+async function initDriveUpload({ token, file, googleAccessToken }) {
   const response = await fetch('/api/drive-upload-init', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -42,12 +62,13 @@ async function initDriveUpload({ token, file }) {
       filename: file.name,
       contentType: file.type || 'audio/mpeg',
       sizeBytes: file.size,
+      googleAccessToken,
     }),
   });
 
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data?.error || 'Drive init failed');
+    throw new Error(data?.detail || data?.error || 'Drive init failed');
   }
 
   return data;
@@ -75,6 +96,26 @@ async function uploadToDriveResumable(uploadUrl, file) {
   }
 }
 
+window.addEventListener('message', (event) => {
+  if (event.origin !== window.location.origin) return;
+  const data = event.data || {};
+  if (data.type === 'google-oauth-success' && data.accessToken) {
+    setGoogleAccessToken(data.accessToken);
+    updateGoogleStatus();
+  }
+});
+
+googleConnectButton?.addEventListener('click', () => {
+  const token = getToken();
+  if (!token) {
+    setStatus(googleStatus, 'Login first, then connect Google.', true);
+    return;
+  }
+
+  const url = `/api/google-oauth-start?token=${encodeURIComponent(token)}`;
+  window.open(url, 'google_oauth', 'width=520,height=700');
+});
+
 loginForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   setStatus(loginStatus, 'Authenticating...');
@@ -91,7 +132,7 @@ loginForm?.addEventListener('submit', async (event) => {
     }
 
     setToken(data.token);
-    setStatus(loginStatus, 'Authenticated. You can now upload files.');
+    setStatus(loginStatus, 'Authenticated. Now connect Google Drive.');
     passwordInput.value = '';
   } catch (error) {
     setStatus(loginStatus, error.message, true);
@@ -105,6 +146,12 @@ uploadForm?.addEventListener('submit', async (event) => {
   const token = getToken();
   if (!token) {
     setStatus(uploadStatus, 'Login required before upload.', true);
+    return;
+  }
+
+  const googleAccessToken = getGoogleAccessToken();
+  if (!googleAccessToken) {
+    setStatus(uploadStatus, 'Connect Google Drive before uploading.', true);
     return;
   }
 
@@ -127,7 +174,7 @@ uploadForm?.addEventListener('submit', async (event) => {
         throw new Error(`File too large (> ${MAX_SINGLE_FILE_MB} MB)`);
       }
 
-      const { uploadUrl, filename } = await initDriveUpload({ token, file });
+      const { uploadUrl, filename } = await initDriveUpload({ token, file, googleAccessToken });
       const uploadResult = await uploadToDriveResumable(uploadUrl, file);
 
       success += 1;
@@ -144,3 +191,5 @@ uploadForm?.addEventListener('submit', async (event) => {
     setStatus(uploadStatus, `Upload finished with errors. ${success}/${files.length} succeeded.`, true);
   }
 });
+
+updateGoogleStatus();
