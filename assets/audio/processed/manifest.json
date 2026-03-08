@@ -1,23 +1,18 @@
 {
-  "generatedAt": "2026-03-08T04:18:24.862Z",
+  "generatedAt": "2026-03-08T04:23:38.038Z",
   "recordings": [
     {
       "date": "2026-03-07",
       "displayDate": "March 7, 2026",
       "path": "/assets/audio/processed/2026-03-07.mp3",
-      "durationSeconds": 5181.12,
-      "sourceCount": 2,
+      "durationSeconds": 5114.02,
+      "sourceCount": 1,
       "sources": [
-        "2026-03-07-#11.mp3",
-        "2026-03-07-#12.mp3"
+        "2026-03-07-#11.mp3"
       ],
       "trimModes": [
         {
           "file": "2026-03-07-#11.mp3",
-          "mode": "fallback-original"
-        },
-        {
-          "file": "2026-03-07-#12.mp3",
           "mode": "fallback-original"
         }
       ]
@@ -53,60 +48,40 @@
           "mode": "fallback-original"
         }
       ]
-    },
-    {
-      "date": "2026-02-11",
-      "displayDate": "February 11, 2026",
-      "path": "/assets/audio/processed/2026-02-11.mp3",
-      "durationSeconds": 26.07,
-      "sourceCount": 1,
-      "sources": [
-        "2026-02-11-#2.mp3"
-      ],
-      "trimModes": [
-        {
-          "file": "2026-02-11-#2.mp3",
-          "mode": "fallback-original"
-        }
-      ]
-    },
-    {
-      "date": "2026-02-06",
-      "displayDate": "February 6, 2026",
-      "path": "/assets/audio/processed/2026-02-06.mp3",
-      "durationSeconds": 46.08,
-      "sourceCount": 1,
-      "sources": [
-        "2026-02-06-#1.mp3"
-      ],
-      "trimModes": [
-        {
-          "file": "2026-02-06-#1.mp3",
-          "mode": "fallback-original"
-        }
-      ]
     }
   ],
   "skipped": [
     {
+      "file": "2026-02-06-#1.mp3",
+      "reason": "Discarded: below 10MB (0.35MB)"
+    },
+    {
+      "file": "2026-02-11-#2.mp3",
+      "reason": "Discarded: below 10MB (0.20MB)"
+    },
+    {
       "file": "2026-02-14-#4.mp3",
-      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x5ad74bd5c400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-02-14-#4.trimmed.mp3: Invalid data found when processing input\n"
+      "reason": "Discarded: below 10MB (0.08MB)"
     },
     {
       "file": "2026-02-21-#5.mp3",
-      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x65108ed5d400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-02-21-#5.trimmed.mp3: Invalid data found when processing input\n"
+      "reason": "Discarded: below 10MB (0.03MB)"
     },
     {
       "file": "2026-03-06-#8.mp3",
-      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x59feb12f6400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-03-06-#8.trimmed.mp3: Invalid data found when processing input\n"
+      "reason": "Discarded: below 10MB (0.04MB)"
     },
     {
       "file": "2026-03-07 #1.mp3",
-      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x5b4ccebc0400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/raw/2026-03-07 #1.mp3: Invalid data found when processing input\n"
+      "reason": "Discarded: below 10MB (0.00MB)"
     },
     {
       "file": "2026-03-07-#10.mp3",
-      "reason": "Trim failed: ffprobe failed (1)\n[mp3 @ 0x634e7c67c400] Failed to find two consecutive MPEG audio frames.\n/home/strid3r/Projects/arbahara-monastery-site/assets/audio/.tmp-processing/2026-03-07-#10.trimmed.mp3: Invalid data found when processing input\n"
+      "reason": "Discarded: below 10MB (0.12MB)"
+    },
+    {
+      "file": "2026-03-07-#12.mp3",
+      "reason": "Discarded: below 10MB (0.51MB)"
     }
   ]
 }

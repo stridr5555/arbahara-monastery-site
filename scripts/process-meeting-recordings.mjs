@@ -12,6 +12,7 @@ const SILENCE_TRIM_FILTER =
   'silenceremove=start_periods=1:start_duration=0.25:start_threshold=-40dB:stop_periods=1:stop_duration=0.4:stop_threshold=-40dB';
 
 const MIN_DURATION_SECONDS = 20;
+const MIN_SOURCE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB minimum source file size
 const MIN_TRIM_RATIO = 0.25; // if trim keeps less than 25% of original, fallback to original
 
 function run(cmd, args, options = {}) {
@@ -132,6 +133,12 @@ async function processAll() {
     const trimmedPath = path.join(tmpDir, `${path.basename(name, '.mp3')}.trimmed.mp3`);
 
     try {
+      const stat = await fs.stat(rawPath);
+      if (stat.size < MIN_SOURCE_SIZE_BYTES) {
+        skipped.push({ file: name, reason: `Discarded: below 10MB (${(stat.size / 1024 / 1024).toFixed(2)}MB)` });
+        continue;
+      }
+
       const originalDuration = await probeDuration(rawPath);
 
       if (!Number.isFinite(originalDuration) || originalDuration <= 0) {
@@ -156,8 +163,6 @@ async function processAll() {
         skipped.push({ file: name, reason: `Near-empty (${duration.toFixed(1)}s)` });
         continue;
       }
-
-      const stat = await fs.stat(rawPath);
 
       accepted.push({
         originalPath: rawPath,
