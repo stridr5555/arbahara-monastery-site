@@ -79,7 +79,6 @@ async function uploadToDriveResumable(uploadUrl, file) {
     method: 'PUT',
     headers: {
       'Content-Type': file.type || 'audio/mpeg',
-      'Content-Length': String(file.size),
     },
     body: file,
   });
@@ -180,7 +179,8 @@ uploadForm?.addEventListener('submit', async (event) => {
       success += 1;
       addResult(`✅ ${filename} uploaded to Drive (id: ${uploadResult.id || 'ok'})`);
     } catch (error) {
-      addResult(`❌ ${file.name} → ${error.message}`);
+      const msg = error?.message || 'Unknown upload error';
+      addResult(`❌ ${file.name} → ${msg}`);
     }
   }
 
