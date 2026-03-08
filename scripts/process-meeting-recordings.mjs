@@ -48,10 +48,7 @@ function parseRecordingName(filename) {
   const day = dateMatch[3];
   const date = `${year}-${month}-${day}`;
 
-  const sequenceMatch = normalized.match(/#\s*(\d+)/i);
-  const sequence = sequenceMatch ? Number(sequenceMatch[1]) : 1;
-
-  return { date, sequence };
+  return { date };
 }
 
 async function probeDuration(filePath) {
@@ -139,12 +136,14 @@ async function processAll() {
         continue;
       }
 
+      const stat = await fs.stat(rawPath);
+
       accepted.push({
         originalPath: rawPath,
         trimmedPath,
         file: name,
         date: parsed.date,
-        sequence: parsed.sequence,
+        modifiedMs: stat.mtimeMs,
         duration,
       });
     } catch (error) {
@@ -161,7 +160,9 @@ async function processAll() {
   const recordings = [];
 
   for (const [date, items] of grouped.entries()) {
-    items.sort((a, b) => a.sequence - b.sequence || a.file.localeCompare(b.file));
+    // Hash numbers like #1/#2 are global upload counters, not reliable per-day sequence.
+    // Stitch by date grouping, then order by file modified time (fallback: filename).
+    items.sort((a, b) => a.modifiedMs - b.modifiedMs || a.file.localeCompare(b.file));
 
     const concatListPath = path.join(tmpDir, `${date}.concat.txt`);
     const concatLines = items.map((item) => `file '${item.trimmedPath.replace(/'/g, "'\\''")}'`).join('\n');
