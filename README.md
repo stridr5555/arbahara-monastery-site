@@ -72,4 +72,5 @@ The pipeline will:
 ## Notes
 - Share your Drive folder with the service account email so uploads and sync can access files.
 - Keep this repo separate from the `addis-digital-y0` site and the `ethiomarketplace` project.
-- Zillow strongly blocks automated scraping from this environment; for property-listing photos, expect to provide manual screenshots/uploads or another approved media source.
+- Zillow and Realtor strongly block automated scraping from this environment.
+- A compatible public source for this property was found via Coldwell Banker Homes, and listing images were successfully pulled from there for site use.
