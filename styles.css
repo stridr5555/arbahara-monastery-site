@@ -664,6 +664,13 @@ main {
   border: 0;
 }
 
+.hero-map-image-shell img {
+  display: block;
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
 @media (max-width: 980px) {
   .hero-with-map {
     grid-template-columns: 1fr;
