@@ -1,12 +1,13 @@
-# Arbahara Monastery of Abuna Hara Dengeel
+# Hara Monastery Website
 
-This static site previews the Arbahara Dallas initiative: a frosted-glass hero, donation/membership forms, community storytelling, and meeting recordings.
+This static site now centers the monastery's new reality: land has been purchased in Texas, and the website should lead with the construction campaign needed to build on that property.
 
-## Highlights
-- Hero with Zelle donation CTA, membership links, and WhatsApp call buttons.
-- Four-section grid covering hero design, donation journey, membership tracker, and timeline.
-- Membership and reminder cards with Twilio placeholders.
-- Meeting recordings system:
+## Current direction
+- Homepage should foreground: purchased land, prominent property map, and construction fundraising.
+- Donation pages should speak plainly about build-stage needs: site prep, permitting, engineering, utilities, and first construction phases.
+- Construction pages should read like a real build-vision document, not speculative future moodboarding.
+- Gallery should increasingly prioritize purchased-land visuals, site plans, and property media over generic inspiration imagery.
+- Meeting recordings system remains available:
   - Public listening page: `/meeting-recordings`
   - Admin upload page with login: `/admin-recordings`
   - Raw uploads land in Google Drive (resumable)
@@ -17,7 +18,8 @@ This static site previews the Arbahara Dallas initiative: a frosted-glass hero, 
 ## Deployment
 1. Use the Vercel project connected to `github.com/stridr5555/arbahara-monastery-site`.
 2. No build step is required for static pages + serverless API under `/api`.
-3. Map your Arbahara custom domain after deployment.
+3. Production domain is `https://www.haramonastery.org`.
+4. After major content or env updates, verify the live site instead of assuming deploy success.
 
 ## Environment variables (Vercel)
 Set these in Vercel project settings:
@@ -33,7 +35,7 @@ Set these in Vercel project settings:
 - `GITHUB_OWNER` — default `stridr5555`.
 - `GITHUB_REPO` — default `arbahara-monastery-site`.
 - `GITHUB_BRANCH` — default `main`.
-- `GOOGLE_TRANSLATE_API_KEY` — existing translation API key.
+- `GOOGLE_TRANSLATE_API_KEY` — production translation API key.
 
 ## Meeting recording processing
 ### Upload raw files
@@ -70,3 +72,4 @@ The pipeline will:
 ## Notes
 - Share your Drive folder with the service account email so uploads and sync can access files.
 - Keep this repo separate from the `addis-digital-y0` site and the `ethiomarketplace` project.
+- Zillow strongly blocks automated scraping from this environment; for property-listing photos, expect to provide manual screenshots/uploads or another approved media source.
