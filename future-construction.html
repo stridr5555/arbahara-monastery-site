@@ -10,16 +10,36 @@
     <header>
       <div class="header-inner">
         <div class="brand">Arbahara</div>
-        <nav class="nav-links">
-          <a data-i18n-key="nav-home" href="index.html">Home</a>
-          <a data-i18n-key="nav-donate" href="donate.html">Donate</a>
+        <nav class="nav-links" data-mobile-nav>
+          <a href="index.html">Home</a>
           <a href="future-construction.html" class="active">Future Construction</a>
-          <a data-i18n-key="nav-gallery" href="/gallery">Gallery</a>
-        
-          <div class="language-switcher" data-language-switcher>
-            <button data-lang="en">EN</button>
-            <button data-lang="am">አማ</button>
-          </div></nav>
+          <a href="index.html#vision">Vision</a>
+          <a href="index.html#timeline">Timeline</a>
+          <a href="index.html#contact">Contact</a>
+          <a href="donate.html">Donate &amp; Membership</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/meeting-recordings">Meeting Recordings</a>
+          <a
+            href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user"
+            class="social-link"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15.12 8.5h1.9v-2.5h-1.9c-1.2 0-1.3.6-1.3 1.2v1.3h-1.5v2.8h1.5v6h3v-6h1.8l.2-2.8H16.8V7c0-.4.2-.8.9-.8z" />
+            </svg>
+            Facebook
+          </a>
+        </nav>
+        <div class="language-switcher" data-language-switcher>
+          <button data-lang="en">EN</button>
+          <button data-lang="am">አማ</button>
+        </div>
+        <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
     <main class="policy">
@@ -116,5 +136,26 @@
     </footer>
       <script src="/scripts/translation.js" defer></script>
     <script src="/scripts/gallery.js" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileNav = document.querySelector('.nav-links[data-mobile-nav]');
+
+        if (menuToggle && mobileNav) {
+          const toggleMenu = () => {
+            const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', String(!expanded));
+            mobileNav.classList.toggle('is-open');
+          };
+          menuToggle.addEventListener('click', toggleMenu);
+          mobileNav.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+              menuToggle.setAttribute('aria-expanded', 'false');
+              mobileNav.classList.remove('is-open');
+            });
+          });
+        }
+      });
+    </script>
 </body>
 </html>
