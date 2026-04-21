@@ -3,28 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hara Monastery • Land Secured, Build the Monastery</title>
-    <meta
-      name="description"
-      content="We have secured land for Hara Monastery in Texas. Help us raise the funds needed to build the church, prayer spaces, and community campus on the newly purchased property."
-    />
+    <title>Arbahara • Monastery of Abuna Hara Dengeel</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="home land-campaign-page">
+  <body class="home">
     <header>
       <div class="header-inner">
-        <div class="brand">Hara Monastery</div>
+        <div class="brand">Arbahara</div>
         <nav class="nav-links" data-mobile-nav>
-          <a href="index.html">Home</a>
-          <a href="#land">The Land</a>
-          <a href="#build">Construction Vision</a>
-          <a href="#fundraising">Build Fund</a>
-          <a href="#timeline">Timeline</a>
-          <a href="#contact">Contact</a>
-          <a href="donate.html">Donate</a>
-          <a href="future-construction.html">Plans</a>
-          <a href="/gallery">Gallery</a>
-          <a href="/meeting-recordings">Meetings</a>
+          <a data-i18n-key="nav-construction" href="future-construction.html">Future Construction</a>
+          <a data-i18n-key="nav-vision" href="#vision">Vision</a>
+          <a data-i18n-key="nav-timeline" href="#timeline">Timeline</a>
+          <a data-i18n-key="nav-contact" href="#contact">Contact</a>
+          <a data-i18n-key="nav-donate" href="donate.html">Donate &amp; Membership</a>
+          <a data-i18n-key="nav-gallery" href="/gallery">Gallery</a>
+          <a href="/meeting-recordings">Meeting Recordings</a>
+          <a
+            href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user"
+            class="social-link"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15.12 8.5h1.9v-2.5h-1.9c-1.2 0-1.3.6-1.3 1.2v1.3h-1.5v2.8h1.5v6h3v-6h1.8l.2-2.8H16.8V7c0-.4.2-.8.9-.8z" />
+            </svg>
+            Facebook
+          </a>
         </nav>
         <div class="language-switcher" data-language-switcher>
           <button data-lang="en">EN</button>
@@ -37,230 +41,201 @@
         </button>
       </div>
     </header>
-
     <main>
-      <section class="campaign-hero">
-        <div class="campaign-hero-media">
-          <div class="campaign-hero-card property-photo-card">
-            <div class="property-photo-grid">
-              <img src="assets/property/land-01.webp" alt="Front view of the purchased monastery property in Crandall, Texas" />
-              <img src="assets/property/land-02.webp" alt="Land and home view from the purchased property" />
-              <img src="assets/property/land-03.webp" alt="Aerial or broad land view of the purchased monastery property" />
-            </div>
-            <p class="property-media-note">
-              Real property images from the public listing for 7029 FM 2757, Crandall, TX 75114 are now anchoring the homepage while the monastery-specific media set continues to expand.
-            </p>
-          </div>
-          <div class="campaign-hero-card map-card prominent-map-card">
-            <div class="map-card-header">
-              <span class="eyebrow">Purchased land</span>
-              <h3>New monastery property in Crandall, Texas</h3>
-            </div>
-            <div class="map-embed-shell">
-              <iframe
-                title="Map showing the purchased land for Hara Monastery"
-                src="https://www.google.com/maps?q=7029%20FM%202757%2C%20Crandall%2C%20TX%2075114&z=14&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
-            <div class="map-card-copy">
-              <p>
-                We now have a real place to build. The purchased property is approximately 10 acres in Crandall, Texas and will become the future home of the monastery, prayer life, hospitality, and community gathering.
-              </p>
-              <a
-                class="button secondary"
-                href="https://www.zillow.com/homedetails/7029-Fm-2757-Crandall-TX-75114/28667231_zpid/?utm_source=nativeshare_activation_v1"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View property listing
-              </a>
-            </div>
+      <section class="hero hero-with-map" aria-label="Arbahara sanctuary showcase">
+        <div class="hero-slider" aria-live="polite">
+          <div
+            class="slide active"
+            style="background-image: url('assets/images/jesus-icon.png');"
+          ></div>
+          <div
+            class="slide"
+            style="background-image: url('assets/images/saint-portrait.jpg');"
+          ></div>
+          <div
+            class="slide"
+            style="background-image: url('assets/images/view-terrace.jpg');"
+          ></div>
+          <div
+            class="slide"
+            style="background-image: url('assets/images/flowers.jpg');"
+          ></div>
+        </div>
+        <div class="hero-spirits">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="hero-indicators" aria-label="Hero slider controls"></div>
+        <div class="hero-map-card">
+          <div class="hero-map-label">Purchased Land • Crandall, Texas</div>
+          <div class="hero-map-embed">
+            <iframe
+              title="Map showing the monastery property in Crandall, Texas"
+              src="https://www.google.com/maps?q=7029%20FM%202757%2C%20Crandall%2C%20TX%2075114&z=14&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
-
-        <div class="campaign-hero-content">
-          <span class="eyebrow">Land secured • now we build</span>
-          <h1>We purchased the land. Help us build Hara Monastery.</h1>
-          <p class="campaign-lead">
-            This is a major turning point. Hara Monastery is no longer just a vision on paper — we now have land in Texas for the monastery campus. Our mission now is to raise the funds needed for site work, church construction, utilities, and the first phase of the monastery grounds.
-          </p>
+        <div class="hero-content">
+          <p data-i18n-key="hero-location">Monastery of Abuna Hara Dengeel • Dallas, Texas</p>
+          <h1 data-i18n-key="hero-title">Monastery of Abuna Hara Dengeel</h1>
+          <p class="hero-subheading">By God’s grace, land has now been purchased for the future monastery in the Dallas area. Our next season is prayerful, worship-focused construction fundraising to build a sacred home for liturgy, community, and hospitality.</p>
           <div class="hero-actions">
-            <button class="button primary" onclick="window.open('donate.html', '_self')">Give to the build fund</button>
-            <button class="button secondary" onclick="window.open('#land', '_self')">See the land vision</button>
-            <button class="button secondary" onclick="window.open('https://tinyurl.com/Zelle27', '_blank')">Donate via Zelle</button>
-          </div>
-
-          <div class="hero-stat-grid">
-            <article>
-              <strong>1</strong>
-              <span>Purchased property</span>
-            </article>
-            <article>
-              <strong>Next</strong>
-              <span>Site prep and permitting</span>
-            </article>
-            <article>
-              <strong>Now</strong>
-              <span>Construction fundraising campaign</span>
-            </article>
+            <button class="button primary" onclick="window.open('https://tinyurl.com/Zelle27', '_blank')" data-i18n-key="hero-cta-donate">Donate via Zelle</button>
+            <button class="button secondary" onclick="window.open('donate.html', '_self')" data-i18n-key="hero-cta-membership">See Donation &amp; Membership</button>
+            <button class="button secondary" onclick="window.open('mailto:support@haramonastery.org', '_self')" data-i18n-key="hero-cta-contact">Contact the Team</button>
+            <button class="button secondary" onclick="window.open('future-construction.html', '_self')" data-i18n-key="hero-cta-construction">Future Construction</button>
           </div>
         </div>
       </section>
 
-      <section id="land" class="section">
-        <span class="eyebrow">What changed</span>
-        <h2 class="section-title">From planning a monastery to building on purchased land</h2>
+      <section id="vision" class="section" data-animate="true">
+        <h2 class="section-title" data-i18n-key="vision-title">Vision &amp; Sanctuary</h2>
         <p>
-          The story of the website has to change because the project itself has changed. We are no longer speaking only about a future dream or a possible site. By God’s grace, land has been purchased. That means every page of this site now needs to speak clearly about construction, stewardship, and the next practical steps to bring the monastery to life.
+          The Dallas monastery campus is meant to remain worship-focused: a place for prayer, liturgy, hospitality, and spiritual formation. The newly purchased land gives this vision a real home and lets the community begin preparing for construction with clarity and purpose.
         </p>
-        <div class="grid grid-vision-cards">
-          <article class="card feature-card">
-            <h3>Real property, real next steps</h3>
+        <div class="grid">
+          <article class="card">
+            <h3 data-i18n-key="card-stillness-title">Spaces of stillness</h3>
             <p>
-              The immediate focus is no longer searching for land. It is preparing the site, funding utilities and access, and moving toward the first construction phase.
+              The monastery is envisioned first as sacred space — a place where prayer, chanting, and silence draw people into the life of worship.
             </p>
           </article>
-          <article class="card feature-card">
-            <h3>A build campaign, not only a membership drive</h3>
+          <article class="card">
+            <h3 data-i18n-key="card-community-title">Community pulse</h3>
             <p>
-              Donations now support visible, physical outcomes: surveying, engineering, permits, foundations, worship space, and long-term monastery infrastructure.
+              Families, clergy, supporters, and pilgrims will gather around a common spiritual home rooted in Ethiopian Orthodox tradition.
             </p>
           </article>
-          <article class="card feature-card">
-            <h3>A place for prayer and community</h3>
+          <article class="card">
+            <h3 data-i18n-key="card-services-title">Construction with purpose</h3>
             <p>
-              The purchased land is meant to become a sacred home for liturgy, retreat, teaching, hospitality, and Ethiopian Orthodox life for generations.
+              Fundraising now supports the practical next steps toward a real worship campus: site preparation, planning, infrastructure, and future building phases.
             </p>
           </article>
         </div>
-      </section>
-
-      <section id="build" class="section section-highlight">
-        <span class="eyebrow">Construction vision</span>
-        <h2 class="section-title">What we are building on the land</h2>
-        <div class="construction-columns">
-          <div>
-            <p>
-              The long-term vision is a full monastery campus rooted in prayer, community life, and Ethiopian Orthodox tradition. The first phases will focus on making the property usable and preparing for a permanent place of worship.
-            </p>
-            <ul class="build-list">
-              <li>Site preparation and land readiness</li>
-              <li>Permitting, engineering, and utility access</li>
-              <li>Construction of the first worship and gathering spaces</li>
-              <li>Infrastructure for future monastery expansion</li>
-              <li>Spaces for hospitality, teaching, and community events</li>
-            </ul>
-          </div>
-          <div class="build-fund-box">
-            <h3>Build fund priorities</h3>
-            <p>
-              Every gift now helps move the project from acquired land to actual construction. We want donors to understand exactly why the need has grown: the land is secured, but the building phase is what comes next.
-            </p>
-            <a class="button primary" href="donate.html">Support construction</a>
-          </div>
-        </div>
-      </section>
-
-      <section id="fundraising" class="section">
-        <span class="eyebrow">Why we are fundraising now</span>
-        <h2 class="section-title">The need has changed from acquisition to construction</h2>
-        <div class="grid fundraising-grid">
-          <article class="card fundraising-card">
-            <h3>Site work</h3>
-            <p>Preparing the land, access, grading, and making the property ready for safe and lawful development.</p>
-          </article>
-          <article class="card fundraising-card">
-            <h3>Design and approvals</h3>
-            <p>Engineering, architectural work, planning documents, and the city and county approvals needed to build correctly.</p>
-          </article>
-          <article class="card fundraising-card">
-            <h3>Construction itself</h3>
-            <p>Raising the structure, worship space, community facilities, and the core utilities needed for a functioning monastery campus.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="timeline" class="section">
-        <span class="eyebrow">Roadmap</span>
-        <h2 class="section-title">Suggested build roadmap</h2>
-        <ol class="timeline-list modern-timeline">
+      <section id="timeline" class="section" data-animate="true">
+        <h2 class="section-title" data-i18n-key="timeline-title">Planning Timeline</h2>
+        <p>These are the major phases we are tracking as the project moves from land ownership toward monastery construction.</p>
+        <ol class="timeline-list">
           <li>
-            <time>Phase 1 • Land readiness</time>
-            <p>Finalize site assessments, surveying, access planning, and early property preparation.</p>
+            <time>Phase 1 • Land secured</time>
+            <p>Property acquisition is complete, giving the monastery a real site for future worship and development.</p>
           </li>
           <li>
-            <time>Phase 2 • Design, permits, and infrastructure</time>
-            <p>Advance plans, secure approvals, and prepare utility and construction logistics for the first structures.</p>
+            <time>Phase 2 • Site planning &amp; preparation</time>
+            <p>Engineering, permitting, utility planning, and practical land-readiness work prepare the property for holy and sustainable use.</p>
           </li>
           <li>
-            <time>Phase 3 • First construction campaign</time>
-            <p>Begin the first major build effort for prayer, gathering, and the future monastery footprint.</p>
+            <time>Phase 3 • Construction fundraising &amp; building</time>
+            <p>The community raises support for the first worship-focused construction phases and the long-term monastery campus.</p>
           </li>
         </ol>
       </section>
 
-      <section class="section land-gallery-section">
-        <span class="eyebrow">Visual direction</span>
-        <h2 class="section-title">Property and planning visuals</h2>
-        <p>
-          We are reorganizing the media around the newly purchased land and the future construction campaign. As more confirmed property media is added, this gallery should center the land, maps, and building vision first.
-        </p>
-        <div class="gallery land-gallery">
-          <img src="assets/property/land-04.webp" alt="Property image showing the purchased land in Crandall" />
-          <img src="assets/property/land-05.webp" alt="Additional exterior view from the property listing" />
-          <img src="assets/property/land-06.webp" alt="Land and surrounding property view" />
-          <img src="assets/property/land-07.webp" alt="Monastery property listing image" />
-          <img src="assets/property/land-08.webp" alt="Another view of the purchased property" />
-          <img src="assets/property/land-09.webp" alt="Exterior or grounds image from the public listing" />
+
+      <section class="section" data-animate="true">
+        <h2 class="section-title" data-i18n-key="home-gallery-title">Gallery</h2>
+        <p data-i18n-key="home-gallery-copy">View select photos from the sanctuary before diving into the full gallery.</p>
+        <div class="gallery">
+          <img data-i18n-alt="gallery-1" src="assets/images/jesus-icon.png" alt="Icon of Christ" />
+          <img data-i18n-alt="gallery-2" src="assets/images/saint-portrait.jpg" alt="Saint portrait" />
+          <img data-i18n-alt="gallery-3" src="assets/images/announcement.jpg" alt="Community announcement" />
+          <img data-i18n-alt="gallery-4" src="assets/images/view-terrace.jpg" alt="Dallas hillside view" />
+          <img data-i18n-alt="gallery-5" src="assets/images/flowers.jpg" alt="Sanctuary garden" />
+        </div>
+        <div class="gallery-actions">
+          <a class="button secondary" href="/gallery" data-i18n-key="home-gallery-link">See Full Gallery</a>
         </div>
       </section>
 
-      <section id="contact" class="section">
-        <span class="eyebrow">Get involved</span>
-        <h2 class="section-title">Contact the monastery build team</h2>
+      <section id="contact" class="section" data-animate="true">
+        <h2 class="section-title" data-i18n-key="contact-title">Contact &amp; Social</h2>
         <div class="contact-grid">
           <article class="contact-card">
-            <h3>Support the project</h3>
-            <p><strong>Email:</strong> <a href="mailto:support@haramonastery.org">support@haramonastery.org</a></p>
-            <p><strong>Phone:</strong> 214 803 1347 / 469 212 6370</p>
-            <p><strong>P.O. Box:</strong> 850721, Richardson, TX 75085-0721</p>
+            <h3 data-i18n-key="contact-visit">Visit or write</h3>
+            <p>Monastery of Abuna Hara Dengeel • Dallas, Texas</p>
+            <p data-i18n-key="contact-po"> <strong>P.O. Box:</strong> 850721, Richardson, TX 75085-0721</p>
+            <p data-i18n-key="contact-phone"><strong>Phone:</strong> 214 803 1347 / 469 212 6370</p>
+            <p data-i18n-key="contact-email"><strong>Email:</strong> <a href="mailto:support@haramonastery.org">support@haramonastery.org</a></p>
           </article>
           <article class="contact-card">
-            <h3>Follow updates</h3>
-            <p>
-              Follow the project as the land transitions into a construction site and, by God’s grace, into a monastery campus.
-            </p>
-            <p><strong>Facebook:</strong> <a href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user" target="_blank" rel="noreferrer">Arbahara Facebook</a></p>
-            <p><strong>YouTube:</strong> <a href="https://youtube.com/@Arbaharadallas?feature=shared" target="_blank" rel="noreferrer">Arbahara Dallas channel</a></p>
+            <h3 data-i18n-key="contact-stay">Stay informed</h3>
+            <p data-i18n-key="contact-facebook"><strong>Facebook:</strong> <a href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user" target="_blank" rel="noreferrer">Arbahara Facebook</a></p>
+            <p data-i18n-key="contact-youtube"><strong>YouTube:</strong> <a href="https://youtube.com/@Arbaharadallas?feature=shared" target="_blank" rel="noreferrer">Arbahara Dallas channel</a></p>
           </article>
         </div>
       </section>
     </main>
-
     <footer class="footer">
       <div>
-        <p>P.O. Box 850721, Richardson, TX 75085-0721</p>
-        <p>© 2026 Hara Monastery.</p>
+        <p data-i18n-key="footer-address">P.O. Box 850721, Richardson, TX 75085-0721</p>
+        <p data-i18n-key="footer-copy">© 2026 Arbahara.</p>
       </div>
       <div class="footer-links">
         <a href="donate.html">Donate</a>
-        <a href="future-construction.html">Plans</a>
-        <a href="/gallery">Gallery</a>
         <a href="/meeting-recordings">Meeting Recordings</a>
         <a href="terms.html">Terms &amp; Conditions</a>
         <a href="privacy.html">Privacy Policy</a>
       </div>
-      <div class="language-switcher" data-language-switcher>
+            <div class="language-switcher" data-language-switcher>
         <button data-lang="en">EN</button>
         <button data-lang="am">አማ</button>
+      </div>
+<div class="footer-icon-group">
+        <a class="footer-icon" href="https://tinyurl.com/Zelle27" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 4h16v2l-12 8h10v2H4V4z" />
+          </svg>
+          <span>Donate via Zelle</span>
+        </a>
+        <a class="footer-icon" href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 8h-1v3H7v2h1v6h3v-6h2l.3-2H11V8.5c0-.5.2-1.1 1.1-1.1H14V5h-1.9C10.4 5 9 6.4 9 8V8z" />
+          </svg>
+          <span>Facebook</span>
+        </a>
       </div>
     </footer>
 
     <script src="/scripts/translation.js" defer></script>
+    <script src="/scripts/gallery.js" defer></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.hero-slider .slide');
+        const indicators = document.querySelector('.hero-indicators');
+        let current = 0;
+
+        slides.forEach((slide, index) => {
+          const button = document.createElement('button');
+          button.setAttribute('aria-label', `Slide ${index + 1}`);
+          button.addEventListener('click', () => setSlide(index));
+          indicators.appendChild(button);
+        });
+
+        const buttons = indicators.querySelectorAll('button');
+        if (buttons.length > 0) {
+          buttons[0].classList.add('active');
+        }
+
+        const setSlide = (index) => {
+          slides[current].classList.remove('active');
+          buttons[current].classList.remove('active');
+          current = index;
+          slides[current].classList.add('active');
+          buttons[current].classList.add('active');
+        };
+
+        const cycle = () => setSlide((current + 1) % slides.length);
+        let sliderInterval = setInterval(cycle, 4500);
+
+        indicators.addEventListener('mouseenter', () => clearInterval(sliderInterval));
+        indicators.addEventListener('mouseleave', () => {
+          sliderInterval = setInterval(cycle, 4500);
+        });
+
         const observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -268,9 +243,9 @@
               observer.unobserve(entry.target);
             }
           });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.2 });
 
-        document.querySelectorAll('.card, .timeline-list li, .contact-card, .campaign-hero-card').forEach((el) => {
+        document.querySelectorAll('.home .grid .card, .home .timeline-list li, .home .contact-card').forEach((el) => {
           observer.observe(el);
         });
 
