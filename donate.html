@@ -3,134 +3,114 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Donate &amp; Membership • Arbahara</title>
+    <title>Build Fund • Hara Monastery</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header>
       <div class="header-inner">
-        <div class="brand">Arbahara</div>
-        <nav class="nav-links">
+        <div class="brand">Hara Monastery</div>
+        <nav class="nav-links" data-mobile-nav>
           <a href="index.html">Home</a>
-          <a data-i18n-key="nav-anchor-donate" href="#donation">Donate</a>
-          <a data-i18n-key="nav-anchor-membership" href="#membership">Membership</a>
-          <a data-i18n-key="nav-contact" href="index.html#contact">Contact</a>
-          <a data-i18n-key="nav-gallery" href="/gallery">Gallery</a>
-          <a data-i18n-key="nav-terms" href="terms.html">Terms</a>
-          <a data-i18n-key="nav-construction" href="future-construction.html">Future Construction</a>
-          <a data-i18n-key="nav-privacy" href="privacy.html">Privacy</a>
-          <a
-            href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user"
-            class="social-link" data-i18n-key="nav-facebook"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M15.12 8.5h1.9v-2.5h-1.9c-1.2 0-1.3.6-1.3 1.2v1.3h-1.5v2.8h1.5v6h3v-6h1.8l.2-2.8H16.8V7c0-.4.2-.8.9-.8z" />
-            </svg>
-            Facebook
-          </a>
-        
-          <div class="language-switcher" data-language-switcher>
-            <button data-lang="en">EN</button>
-            <button data-lang="am">አማ</button>
-          </div></nav>
+          <a href="#build-fund">Build Fund</a>
+          <a href="#ways-to-give">Ways to Give</a>
+          <a href="#construction-needs">Construction Needs</a>
+          <a href="future-construction.html">Plans</a>
+          <a href="/gallery">Gallery</a>
+          <a href="index.html#contact">Contact</a>
+        </nav>
+        <div class="language-switcher" data-language-switcher>
+          <button data-lang="en">EN</button>
+          <button data-lang="am">አማ</button>
+        </div>
       </div>
     </header>
+
     <main>
-      <section class="donation-hero" id="donation">
+      <section class="donation-hero build-fund-hero" id="build-fund">
         <div class="donation-hero-content">
-          <h1>Support planning for the Arbahara sanctuary</h1>
+          <span class="eyebrow">Construction campaign</span>
+          <h1>Help us build on the newly purchased monastery land</h1>
           <p>
-            Gifts fund the luminous nave, community lounges, cultural programming, and Dallas planning sessions. Every donation helps
-            keep the team moving toward a grand build in the next five years.
+            We have land. Now we need the community to help fund the actual work of building the monastery. Your gift supports site preparation, engineering, permits, utilities, and the first construction phases for the Hara Monastery campus.
           </p>
           <div class="hero-actions">
             <button class="button primary" onclick="window.open('https://tinyurl.com/Zelle27','_blank')">Donate via Zelle</button>
-            <button class="button secondary" onclick="window.open('mailto:support@haramonastery.org','_blank')">Share Project Ideas</button>
+            <button class="button secondary" onclick="window.open('mailto:support@haramonastery.org','_blank')">Ask about larger gifts</button>
           </div>
         </div>
       </section>
 
-      <section class="section">
-        <h2 class="section-title">Donation &amp; Membership QR Codes</h2>
+      <section class="section" id="ways-to-give">
+        <span class="eyebrow">Ways to give</span>
+        <h2 class="section-title">Support the monastery build fund</h2>
         <p>
-          Scan or tap the codes below to donate directly or enroll in the membership circle. The QR flows lead to secure forms that capture your information for future planning updates.
+          Every contribution now directly supports the transition from purchased land to monastery construction. We want this page to be unmistakably about building — not just general support.
         </p>
         <div class="donation-grid">
           <article class="qr-card">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tinyurl.com/Zelle27" alt="Zelle QR" />
-            <div class="qr-label">Donate via Zelle</div>
-            <p>Instantly route funds to Arbahara Dallas. Follow the confirmation link for receipts.</p>
-            <button class="qr-link button secondary" onclick="window.open('https://tinyurl.com/Zelle27','_blank')">Open Link</button>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://tinyurl.com/Zelle27" alt="Zelle donation QR code" />
+            <div class="qr-label">Give to the build fund</div>
+            <p>Use Zelle to give immediately toward the land development and monastery construction campaign.</p>
+            <button class="qr-link button secondary" onclick="window.open('https://tinyurl.com/Zelle27','_blank')">Open donation link</button>
           </article>
           <article class="qr-card">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit" alt="Membership QR" />
-            <div class="qr-label">Membership Form</div>
-            <p>Sign the Google form to join the membership circle and receive planning updates.</p>
-            <button class="qr-link button secondary" onclick="window.open('https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit','_blank')">Open Link</button>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit" alt="Membership and supporter QR code" />
+            <div class="qr-label">Join as a monthly supporter</div>
+            <p>Become part of the core group helping carry the construction campaign forward month by month.</p>
+            <button class="qr-link button secondary" onclick="window.open('https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit','_blank')">Open supporter form</button>
           </article>
         </div>
       </section>
 
-      <section id="membership" class="section">
-        <h2 class="section-title">Membership Circle — $20 / month</h2>
-        <div class="membership-card">
-          <h3>Family membership</h3>
-          <p>$20 per month covers the whole family. Members receive planning briefings, invitations to design workshops, and early notices about sanctuary ceremonies.</p>
-          <button class="button secondary" onclick="window.open('https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit','_blank')">Join the Membership Circle</button>
+      <section class="section" id="construction-needs">
+        <span class="eyebrow">What donations fund</span>
+        <h2 class="section-title">Construction-stage needs</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Land readiness</h3>
+            <p>Surveying, access planning, site work, and the foundational steps needed to prepare the property for development.</p>
+          </article>
+          <article class="card">
+            <h3>Professional planning</h3>
+            <p>Engineering, architecture, legal and permitting work, and the technical steps required before major building begins.</p>
+          </article>
+          <article class="card">
+            <h3>First construction phases</h3>
+            <p>The first spaces for worship, gathering, and monastery life, along with the utilities and infrastructure needed to support them.</p>
+          </article>
         </div>
       </section>
 
       <section class="section">
-        <h2 class="section-title">Donor Storyboard</h2>
-        <div class="grid">
-          <article class="card">
-            <h3>Planning updates</h3>
-            <p>Donors receive quarterly briefings, schematic renderings, and schedule notes for the upcoming Dallas planning meetings.</p>
-          </article>
-          <article class="card">
-            <h3>Cultural experiences</h3>
-            <p>Experience design nights, hospitality previews, and archive sessions that highlight Ethiopian heritage.</p>
-          </article>
-          <article class="card">
-            <h3>Community oversight</h3>
-            <p>Every member is invited to share input, join small advisory tables, and track progress through shared documents.</p>
-          </article>
+        <span class="eyebrow">Monthly commitment</span>
+        <h2 class="section-title">Become a steady builder</h2>
+        <div class="membership-card">
+          <h3>Monthly support circle</h3>
+          <p>
+            Recurring support helps the monastery plan responsibly. Monthly giving gives the team confidence to move through design, approvals, and early construction with real momentum.
+          </p>
+          <button class="button secondary" onclick="window.open('https://docs.google.com/forms/d/1s0_XaKvp38MH3IUBueydGhrkz0PFLKvMVMAchRLq7nk/edit','_blank')">Join the support circle</button>
         </div>
       </section>
     </main>
+
     <footer class="footer">
+      <div>
+        <p>P.O. Box 850721, Richardson, TX 75085-0721</p>
+        <p>© 2026 Hara Monastery.</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="donate.html">Donate</a>
+        <a href="future-construction.html">Plans</a>
+        <a href="/gallery">Gallery</a>
+      </div>
       <div class="language-switcher" data-language-switcher>
         <button data-lang="en">EN</button>
         <button data-lang="am">አማ</button>
       </div>
-
-      <div>
-        <p>P.O. Box 850721, Richardson, TX 75085-0721</p>
-        <p>© 2026 Arbahara.</p>
-      </div>
-      <div class="footer-links">
-        <a href="donate.html">Donate</a>
-        <a data-i18n-key="nav-terms" href="terms.html">Terms &amp; Conditions</a>
-        <a data-i18n-key="nav-privacy" href="privacy.html">Privacy Policy</a>
-      </div>
-      <div class="footer-icon-group">
-        <a class="footer-icon" href="https://tinyurl.com/Zelle27" target="_blank" rel="noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 4h16v2l-12 8h10v2H4V4z" />
-          </svg>
-          <span>Donate via Zelle</span>
-        </a>
-        <a class="footer-icon" href="https://m.facebook.com/profile.php/?id=100075855976512&name=xhp_nt__fb__action__open_user" target="_blank" rel="noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 8h-1v3H7v2h1v6h3v-6h2l.3-2H11V8.5c0-.5.2-1.1 1.1-1.1H14V5h-1.9C10.4 5 9 6.4 9 8V8z" />
-          </svg>
-          <span>Facebook</span>
-        </a>
-      </div>
     </footer>
-      <script src="/scripts/translation.js" defer></script>
-    <script src="/scripts/gallery.js" defer></script>
-</body>
+    <script src="/scripts/translation.js" defer></script>
+  </body>
 </html>
