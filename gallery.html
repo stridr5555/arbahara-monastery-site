@@ -3,83 +3,140 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Land &amp; Vision Gallery • Hara Monastery</title>
+    <title>Gallery • Haramonastery</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header>
       <div class="header-inner">
-        <div class="brand">Hara Monastery</div>
+        <div class="brand">Arbahara</div>
         <nav class="nav-links" data-mobile-nav>
-          <a href="index.html">Home</a>
-          <a href="donate.html">Donate</a>
-          <a href="future-construction.html">Plans</a>
-          <a href="/gallery" class="active">Gallery</a>
+          <a data-i18n-key="nav-home" href="index.html">Home</a>
+          <a data-i18n-key="nav-donate" href="donate.html">Donate &amp; Membership</a>
+          <a data-i18n-key="nav-future" href="future-construction.html">Future Construction</a>
+          <a data-i18n-key="nav-gallery" href="/gallery" class="active">Gallery</a>
+          <a href="/meeting-recordings">Meeting Recordings</a>
         </nav>
         <div class="language-switcher" data-language-switcher>
           <button data-lang="en">EN</button>
           <button data-lang="am">አማ</button>
         </div>
+        <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
     <main class="policy">
       <section class="policy-card">
-        <span class="eyebrow">Land, planning, and community</span>
-        <h1>Gallery &amp; Build Vision</h1>
-        <p>
-          This gallery is being reorganized around the newly purchased monastery land, the site vision, and the community gathering around the future build. As more confirmed property media is added, this page should increasingly foreground the land itself.
+        <h1 data-i18n-key="gallery-title">Gallery &amp; Media</h1>
+        <p data-i18n-key="gallery-intro">
+          Explore the full image archive, video reflections, and spiritual visual references connected to the Haramonastery journey.
         </p>
-
-        <div class="construction-gallery gallery land-gallery-grid">
+        <div class="construction-gallery gallery">
           <div>
-            <img src="assets/property/land-01.webp" alt="Front property image" />
-            <p>Purchased Property • View 1</p>
+            <img src="assets/images/axum-vision.png" alt="Axum vision" />
+            <p>Axum Vision Board</p>
           </div>
           <div>
-            <img src="assets/property/land-02.webp" alt="Property listing view two" />
-            <p>Purchased Property • View 2</p>
+            <img src="assets/images/meditation-portrait.png" alt="Meditation portrait" />
+            <p>Meditation Portrait</p>
           </div>
           <div>
-            <img src="assets/property/land-03.webp" alt="Property listing view three" />
-            <p>Purchased Property • View 3</p>
+            <img src="assets/images/community-gathering.jpg" alt="Community gathering" />
+            <p>Community Gathering</p>
           </div>
           <div>
-            <img src="assets/property/land-04.webp" alt="Property listing view four" />
-            <p>Purchased Property • View 4</p>
+            <img src="assets/images/pilgrims.jpg" alt="Pilgrims in mountains" />
+            <p>Pilgrims Journey</p>
           </div>
           <div>
-            <img src="assets/property/land-05.webp" alt="Property listing view five" />
-            <p>Purchased Property • View 5</p>
+            <img src="assets/images/mountain-temple.jpg" alt="Mountain temple" />
+            <p>Mountain Temple</p>
           </div>
           <div>
-            <img src="assets/property/land-06.webp" alt="Property listing view six" />
-            <p>Purchased Property • View 6</p>
+            <img src="assets/images/choral-procession.jpg" alt="Choral procession" />
+            <p>Choral Procession</p>
           </div>
           <div>
-            <img src="assets/property/land-07.webp" alt="Property listing view seven" />
-            <p>Purchased Property • View 7</p>
+            <img src="assets/images/hall-night.jpg" alt="Hall at night" />
+            <p>Sanctuary at Night</p>
           </div>
           <div>
-            <img src="assets/property/land-08.webp" alt="Property listing view eight" />
-            <p>Purchased Property • View 8</p>
+            <img src="assets/images/calcite.jpg" alt="Calcite detail" />
+            <p>Calcite Detail</p>
           </div>
           <div>
-            <img src="assets/property/land-09.webp" alt="Property listing view nine" />
-            <p>Purchased Property • View 9</p>
+            <img src="assets/images/assembly.jpg" alt="Assembly hall" />
+            <p>Assembly Hall</p>
           </div>
+        </div>
+        <div class="video-grid">
+          <article>
+            <h2 data-i18n-key="gallery-video-title-1">Community Blessing</h2>
+            <video controls poster="assets/images/video-VID_20220607_230552_179.jpg">
+              <source src="https://haramonastery-gallery-media.s3.us-east-2.amazonaws.com/VID_20220607_230552_179.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+          <article>
+            <h2 data-i18n-key="gallery-video-title-2">Pilgrimage Highlights</h2>
+            <video controls poster="assets/images/video-VID_20220607_230555_407.jpg">
+              <source src="https://haramonastery-gallery-media.s3.us-east-2.amazonaws.com/VID_20220607_230555_407.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+          <article>
+            <h2 data-i18n-key="gallery-video-title-3">Evening Chant</h2>
+            <video controls poster="assets/images/video-VID_20220607_230601_446.jpg">
+              <source src="https://haramonastery-gallery-media.s3.us-east-2.amazonaws.com/VID_20220607_230601_446.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+          <article>
+            <h2 data-i18n-key="gallery-video-title-4">Night Vigil</h2>
+            <video controls poster="assets/images/video-VID_20220607_230724_600.jpg">
+              <source src="https://haramonastery-gallery-media.s3.us-east-2.amazonaws.com/VID_20220607_230724_600.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+          <article>
+            <h2 data-i18n-key="gallery-video-title-5">Temple Courtyard</h2>
+            <video controls poster="assets/images/video-VID_20220607_230814_250.jpg">
+              <source src="https://haramonastery-gallery-media.s3.us-east-2.amazonaws.com/VID_20220607_230814_250.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+          <article>
+            <h2 data-i18n-key="gallery-video-title-6">Meditation Walk</h2>
+            <video controls poster="assets/images/video-VID_20220607_230849_742.jpg">
+              <source src="https://haramonastery-gallery-media.s3.us-east-2.amazonaws.com/VID_20220607_230849_742.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
+          <article>
+            <h2 data-i18n-key="gallery-video-title-7">Flickering Light</h2>
+            <video controls poster="assets/images/video-VID_20220607_230855_830.jpg">
+              <source src="https://haramonastery-gallery-media.s3.us-east-2.amazonaws.com/VID_20220607_230855_830.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </article>
         </div>
       </section>
     </main>
     <footer class="footer">
       <div>
-        <p>P.O. Box 850721, Richardson, TX 75085-0721</p>
-        <p>© 2026 Hara Monastery.</p>
+        <p data-i18n-key="footer-address">P.O. Box 850721, Richardson, TX 75085-0721</p>
+        <p data-i18n-key="footer-copy">© 2026 Arbahara.</p>
       </div>
       <div class="footer-links">
         <a href="index.html">Home</a>
         <a href="donate.html">Donate</a>
-        <a href="future-construction.html">Plans</a>
+        <a href="future-construction.html">Future Construction</a>
         <a href="/gallery">Gallery</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
       </div>
       <div class="language-switcher" data-language-switcher>
         <button data-lang="en">EN</button>
@@ -88,5 +145,26 @@
     </footer>
     <script src="/scripts/translation.js" defer></script>
     <script src="/scripts/gallery.js" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileNav = document.querySelector('.nav-links[data-mobile-nav]');
+
+        if (menuToggle && mobileNav) {
+          const toggleMenu = () => {
+            const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', String(!expanded));
+            mobileNav.classList.toggle('is-open');
+          };
+          menuToggle.addEventListener('click', toggleMenu);
+          mobileNav.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+              menuToggle.setAttribute('aria-expanded', 'false');
+              mobileNav.classList.remove('is-open');
+            });
+          });
+        }
+      });
+    </script>
   </body>
 </html>
