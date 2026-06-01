@@ -960,3 +960,159 @@ main {
   border-radius: 10px;
   padding: 0.55rem 0.7rem;
 }
+
+.store-page main {
+  padding-top: 2rem;
+}
+
+.store-hero {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr);
+  gap: 2rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.store-image-card,
+.store-purchase-card,
+.store-result-card {
+  background: rgba(255, 249, 244, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.14);
+}
+
+.store-image-card {
+  padding: 1rem;
+}
+
+.store-image-card img {
+  display: block;
+  width: 100%;
+  border-radius: 22px;
+  object-fit: cover;
+}
+
+.store-purchase-card {
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.store-purchase-card h1,
+.store-result-card h1 {
+  font-family: 'Merriweather', serif;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.1;
+  margin: 0.6rem 0 1rem;
+}
+
+.store-lead {
+  color: #3c2b25;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.store-price-box {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.store-price-box > div {
+  background: #fff8f1;
+  border: 1px solid rgba(198, 91, 37, 0.2);
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.store-price-label {
+  display: block;
+  color: #6b5148;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.store-price-box strong {
+  font-family: 'Merriweather', serif;
+  font-size: 2rem;
+}
+
+.store-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.store-form label {
+  font-weight: 700;
+}
+
+.amount-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 16px;
+  padding: 0.35rem 0.85rem;
+  max-width: 220px;
+}
+
+.amount-row span {
+  font-weight: 800;
+  color: #6b5148;
+}
+
+.amount-row input {
+  width: 100%;
+  border: 0;
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 800;
+  outline: none;
+  padding: 0.55rem 0;
+}
+
+.form-note,
+.store-message {
+  color: #6b5148;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.store-message.error {
+  color: #a92714;
+  font-weight: 700;
+}
+
+.store-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.store-details .card,
+.store-policy {
+  background: rgba(255, 248, 241, 0.88);
+}
+
+.store-policy ul {
+  line-height: 1.8;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.store-result-card {
+  max-width: 760px;
+  margin: 4rem auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+@media (max-width: 820px) {
+  .store-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .store-price-box {
+    grid-template-columns: 1fr;
+  }
+}

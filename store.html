@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Medhanialem Cross Store • Hara Monastery</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="store-page">
+    <header>
+      <div class="header-inner">
+        <div class="brand">Hara Monastery</div>
+        <nav class="nav-links" data-mobile-nav>
+          <a href="index.html">Home</a>
+          <a href="donate.html">Donate</a>
+          <a href="future-construction.html">Plans</a>
+          <a href="index.html#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="store-hero" aria-label="Medhanialem home blessing cross store">
+        <div class="store-image-card">
+          <img src="assets/store/medhanialem-cross.jpg" alt="Wood-framed Medhanialem cross displayed above a fireplace with candles" />
+        </div>
+        <div class="store-purchase-card">
+          <span class="eyebrow">Hidden store preview</span>
+          <h1>Medhanialem Home Blessing Cross</h1>
+          <p class="store-lead">
+            Receive a beautiful Medhanialem cross for your home. Each family who purchases this cross will be remembered in a blessing for their home and family through Medhanialem.
+          </p>
+
+          <div class="store-price-box">
+            <div>
+              <span class="store-price-label">Minimum gift</span>
+              <strong>$100</strong>
+            </div>
+            <div>
+              <span class="store-price-label">Shipping</span>
+              <strong>$20</strong>
+            </div>
+          </div>
+
+          <form id="cross-store-form" class="store-form">
+            <label for="amount">Cross gift amount</label>
+            <div class="amount-row">
+              <span>$</span>
+              <input id="amount" name="amount" type="number" min="100" step="1" value="100" required />
+            </div>
+            <p class="form-note">The minimum is $100. Shipping is added separately at checkout.</p>
+
+            <button class="button primary store-button" type="submit">Checkout with Stripe</button>
+            <p id="store-message" class="store-message" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section store-details">
+        <span class="eyebrow">Purpose</span>
+        <h2 class="section-title">Supporting the future church</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Home and family blessing</h3>
+            <p>Customers who purchase the cross will receive a blessing for their home and family from Medhanialem.</p>
+          </article>
+          <article class="card">
+            <h3>Land and church fund</h3>
+            <p>The money raised helps the monastery buy land and build the church for prayer, liturgy, and community life.</p>
+          </article>
+          <article class="card">
+            <h3>Shipping</h3>
+            <p>Shipping is $20 per order. Stripe Checkout collects email and shipping address securely.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section store-policy">
+        <h2 class="section-title">Store notes</h2>
+        <ul>
+          <li>Minimum cross gift: $100.</li>
+          <li>Shipping: $20.</li>
+          <li>Payments are processed securely by Stripe.</li>
+          <li>If you need help with an order, email <a href="mailto:support@haramonastery.org">support@haramonastery.org</a>.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <p>P.O. Box 850721, Richardson, TX 75085-0721</p>
+        <p>© 2026 Hara Monastery.</p>
+      </div>
+      <div class="footer-links">
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </footer>
+    <script src="/scripts/store.js" defer></script>
+  </body>
+</html>
