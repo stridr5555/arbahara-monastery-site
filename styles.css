@@ -590,6 +590,10 @@ main {
   box-shadow: 0 35px 70px rgba(0, 0, 0, 0.35);
 }
 
+.membership-card p {
+  color: #f4ede8;
+}
+
 .membership-card button,
 .qr-card button {
   margin-top: 0.8rem;
