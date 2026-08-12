@@ -833,6 +833,33 @@ main {
   margin-top: 2rem;
 }
 
+.campus-master-plan {
+  margin: 2rem 0 0;
+}
+
+.campus-master-plan a {
+  display: block;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #f2eadf;
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.14);
+}
+
+.campus-master-plan img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.campus-master-plan figcaption {
+  margin-top: 0.75rem;
+  color: #5c4d42;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .checklist ul {
   list-style: disc;
   margin-left: 1.25rem;
