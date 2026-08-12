@@ -50,8 +50,8 @@ module.exports = async (req, res) => {
     params.append('metadata[store]', 'monastery');
     params.append('metadata[item]', 'Medhanialem Home Blessing Cross');
     params.append('payment_intent_data[metadata][store]', 'monastery');
-    params.append('payment_intent_data[metadata][fund]', 'land_and_church_building');
-    params.append('custom_text[submit][message]', 'Thank you for supporting the monastery land and church fund. Your home and family will be remembered in blessing through Medhanialem.');
+    params.append('payment_intent_data[metadata][fund]', 'monastery_campus_development');
+    params.append('custom_text[submit][message]', 'Thank you for supporting the development of our permanent monastery campus. Your home and family will be remembered in blessing through Medhanialem.');
 
     params.append('line_items[0][quantity]', '1');
     params.append('line_items[0][price_data][currency]', 'usd');
