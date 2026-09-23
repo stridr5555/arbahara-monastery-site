@@ -1,76 +1,86 @@
-# Hara Monastery Website
+# Arbahara Monastery
 
-This static site now centers the monastery's new reality: land has been purchased in Texas, and the website should lead with the construction campaign needed to build on that property.
+Website and member portal for the **Monastery of Abuna Hara Dengeel**,
+Ethiopian Orthodox Tewahedo Church, Crandall, Texas.
 
-## Current direction
-- Homepage should foreground: purchased land, prominent property map, and construction fundraising.
-- Donation pages should speak plainly about build-stage needs: site prep, permitting, engineering, utilities, and first construction phases.
-- Construction pages should read like a real build-vision document, not speculative future moodboarding.
-- Gallery should increasingly prioritize purchased-land visuals, site plans, and property media over generic inspiration imagery.
-- Meeting recordings system remains available:
-  - Public listening page: `/meeting-recordings`
-  - Admin upload page with login: `/admin-recordings`
-  - Raw uploads land in Google Drive (resumable)
-  - Drive sync downloads to `assets/audio/raw/`
-  - Processed stitched output + manifest: `assets/audio/processed/`
-  - Admin can rename playback titles (saved in `assets/audio/processed/titles.json`)
+Production: https://www.haramonastery.org
 
-## Deployment
-1. Use the Vercel project connected to `github.com/stridr5555/arbahara-monastery-site`.
-2. No build step is required for static pages + serverless API under `/api`.
-3. Production domain is `https://www.haramonastery.org`.
-4. After major content or env updates, verify the live site instead of assuming deploy success.
+## Development
 
-## Environment variables (Vercel)
-Set these in Vercel project settings:
+Node 24 is required. Install dependencies with `npm ci`. Set `VITE_CONVEX_URL`
+to the appropriate Convex deployment in a local environment file or process
+environment. Never put a secret in a `VITE_` variable.
 
-- `RECORDINGS_ADMIN_PASSWORD` — password used on `/admin-recordings`.
-- `RECORDINGS_SESSION_SECRET` — long random secret to sign admin session tokens.
-- `GOOGLE_DRIVE_FOLDER_ID` — destination folder for uploaded MP3 files.
-- `GOOGLE_OAUTH_CLIENT_ID` — Google OAuth web client id.
-- `GOOGLE_OAUTH_CLIENT_SECRET` — Google OAuth web client secret.
-- `GOOGLE_OAUTH_REDIRECT_URI` — set to `https://www.haramonastery.org/api/google-oauth-callback`.
-- `GOOGLE_SERVICE_ACCOUNT_EMAIL` / `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` — optional fallback path (not required for user OAuth uploads).
-- `GITHUB_TOKEN` — GitHub PAT with `repo` scope for this repo.
-- `GITHUB_OWNER` — default `stridr5555`.
-- `GITHUB_REPO` — default `arbahara-monastery-site`.
-- `GITHUB_BRANCH` — default `main`.
-- `GOOGLE_TRANSLATE_API_KEY` — production translation API key.
-
-## Meeting recording processing
-### Upload raw files
-1. Open `/admin-recordings`.
-2. Login with `RECORDINGS_ADMIN_PASSWORD`.
-3. Upload MP3 files directly to Google Drive folder (`GOOGLE_DRIVE_FOLDER_ID`).
-4. Naming convention:
-   - `YYYY-MM-DD #1.mp3`
-   - `YYYY-MM-DD #2.mp3`
-   - `YYYYMMDD #1.mp3` (also supported)
-
-### Sync Drive → process → publish to GitHub
-Run locally in the repo root:
-
-```bash
-npm run sync:drive
+```
+npm run dev
+npm test
+npm run build
+npm run preview
 ```
 
-To auto-commit and push after processing:
+The build prerenders public content into HTML and preserves the original media
+collection. Authentication, new archive records, and member workflows use Convex.
+Vercel builds the frontend and the retained serverless recording tools.
 
-```bash
+## Features
+
+- Responsive public pages for the monastery, development plans, giving, visitors,
+  Ethiopian Orthodox Tewahedo learning resources, archive, and gallery.
+- A persistent English/Amharic translation switch, plus an Amharic welcome page.
+- Convex Auth email-code sign-in, membership applications and approval, member
+  profiles, and role-based administration.
+- One-time/monthly ACH Checkout integration for the separate monastery Stripe
+  account, signed webhooks, private giving history, and recurring-giving management.
+- Zelle transfer reporting and independent treasury reconciliation.
+- Free event reservations with QR tickets, capacity enforcement, cancellation,
+  calendar downloads, and one-time staff check-in.
+- Public, active-member, and administrator-only archive records, protected file
+  downloads, source/rights notes, revision history, and portable exports.
+- CI checks and encrypted weekly backup workflow with a tested restore procedure.
+
+ACH uses the separate verified monastery Stripe account. Each checkout checks its
+identity and payment capability; the portal never falls back to the previous
+merchant account. No live payment was submitted during release verification.
+
+## Source map
+
+| Path | Purpose |
+|---|---|
+| `src/content.ts` | Official name, appeal, plans, contact details, learning sources |
+| `src/pages/` | Public page content and interactions |
+| `src/portal/` | Member and staff screens |
+| `src/site.css` | Shared palette, typography, responsive layout, motion |
+| `convex/` | Authentication, authorization, database, payments, events, archive |
+| `api/` | Vercel email bridge and retained recording/store endpoints |
+| `assets/` | Original photographs, plans, recordings, and store media |
+| `scripts/build-static.mjs` | Static HTML generation and asset preservation |
+| `scripts/*backup.mjs` | Encrypted snapshot handling |
+| `tests/` | Permission, accounting, archive, and ticket regression tests |
+
+The root `index.html` is the Vite entry. Other original root HTML pages are retained
+as historical source references; the build uses `src/pages/` for their replacements.
+`admin-recordings.html` remains active for the existing Drive upload workflow.
+Do not edit `dist/` as source.
+
+## Existing meeting recording workflow
+
+The original processing commands remain available:
+
+```
+npm run process:recordings
+npm run sync:drive
 npm run sync:drive:publish
 ```
 
-The pipeline will:
-- download MP3 files from Drive folder into `assets/audio/raw/`
-- trim leading/trailing silence for each clip
-- skip near-empty clips (<20s after trim)
-- group clips by parsed date
-- stitch all clips from the same date together using `#` number as file order (fallback: modified time)
-- output one file per date in `assets/audio/processed/`
-- write `assets/audio/processed/manifest.json` used by `/meeting-recordings`
+Raw inputs stay in `assets/audio/raw/`; public stitched recordings and the manifest
+stay in `assets/audio/processed/`. The public archive reads that manifest during
+build. The original Drive/GitHub credential configuration remains unchanged.
+Never run the publish variant without reviewing its intended media changes.
 
-## Notes
-- Share your Drive folder with the service account email so uploads and sync can access files.
-- Keep this repo separate from the `addis-digital-y0` site and the `ethiomarketplace` project.
-- Zillow and Realtor strongly block automated scraping from this environment.
-- A compatible public source for this property was found via Coldwell Banker Homes, and listing images were successfully pulled from there for site use.
+## Handover and stewardship
+
+Read [operations and recovery](docs/OPERATIONS.md), [content sources](docs/SOURCES.md),
+and [release verification](docs/RELEASE-CHECKLIST.md). Keep monastery-owned account
+recovery methods and an independent copy of the backup decryption key under the
+custody of authorized successors. Backups and active maintenance, rather than a
+one-time redesign, preserve access across generations.

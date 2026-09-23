@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /members
+Disallow: /admin-recordings
+Disallow: /api/
+Sitemap: https://www.haramonastery.org/sitemap.xml
