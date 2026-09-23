@@ -68,9 +68,40 @@ The legacy cross store now requires `MONASTERY_STRIPE_SECRET_KEY` and
 `APPROVED_MONASTERY_STRIPE_ACCOUNT_ID` in Vercel. It will not fall back to the old
 merchant account. Its orders remain separate from the member donation ledger.
 
-## Authentication email
+## Member sign-in
 
-Convex Auth sends an eight-digit code with a 15-minute lifetime. Requests are
+The sign-in screen defaults to email address plus password. New password accounts
+verify their email once. Returning password users do not need an email code.
+Existing email-code members choose **Create or set a password** with their existing
+address. Convex links the password to their verified user ID and requires proof of
+email ownership before issuing a session. Membership, giving, and tickets remain
+attached to that ID. Passwords use Convex Auth's Scrypt hashing and must contain
+12–128 characters. A completed password reset invalidates older sessions.
+
+Google and Facebook buttons appear only after their credentials and explicit
+`AUTH_GOOGLE_ENABLED=true` / `AUTH_FACEBOOK_ENABLED=true` flags exist in Convex.
+Keep flags off until the real redirect and public-user sign-in have been checked.
+Server-only credentials: `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`,
+`AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`. Do not put these in Vite variables.
+Register each provider's callbacks at
+`https://energetic-orca-365.convex.site/api/auth/callback/google` and
+`https://energetic-orca-365.convex.site/api/auth/callback/facebook`.
+Development uses the same paths on `cautious-meadowlark-132.convex.site`.
+Preserve the existing Drive OAuth callbacks when configuring Google.
+Google requires a verified email. Facebook must return an email; accounts that
+do not share one must use another sign-in method. Match the existing member email
+to keep records together; contact the office about a different-email account.
+
+Request only basic identity/email permissions. Check Meta app live mode, public
+access, privacy URL, and deletion instructions before enabling Facebook. The
+privacy page directs members to the office for correction/deletion requests.
+The old email-code provider remains for in-flight sessions and older browser tabs,
+but the current UI does not offer it as a routine sign-in method.
+
+### Verification and recovery email
+
+For first-time email verification and password recovery, Convex Auth sends an
+eight-digit code with a 15-minute lifetime. Requests are
 rate-limited by address. Vercel's `/api/member-mail` accepts only the shared secret
 `MAIL_BRIDGE_SECRET`, which also lives in Convex. SMTP uses `SMTP_USER` and
 `SMTP_PASSWORD`. At launch the verified existing Gmail sender is configured with

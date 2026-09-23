@@ -11,6 +11,7 @@
 import type * as administration from "../administration.js";
 import type * as archive from "../archive.js";
 import type * as auth from "../auth.js";
+import type * as authOptions from "../authOptions.js";
 import type * as donations from "../donations.js";
 import type * as events from "../events.js";
 import type * as http from "../http.js";
@@ -29,6 +30,7 @@ declare const fullApi: ApiFromModules<{
   administration: typeof administration;
   archive: typeof archive;
   auth: typeof auth;
+  authOptions: typeof authOptions;
   donations: typeof donations;
   events: typeof events;
   http: typeof http;
