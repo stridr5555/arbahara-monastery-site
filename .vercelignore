@@ -1,0 +1,7 @@
+.git
+.local
+node_modules
+assets/audio/raw
+test-results
+playwright-report
+.env*

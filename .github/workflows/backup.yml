@@ -1,0 +1,36 @@
+name: Encrypted monastery records backup
+on:
+  schedule:
+    - cron: '23 5 * * 0'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monastery-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Export production data and files
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_BACKUP_DEPLOY_KEY }}
+        run: npx convex export --include-file-storage --path "$RUNNER_TEMP/arbahara.zip"
+      - name: Encrypt before uploading
+        run: node scripts/encrypt-backup.mjs "$RUNNER_TEMP/arbahara.zip" "$RUNNER_TEMP/arbahara.arb" docs/backup-public-key.pem
+      - uses: actions/upload-artifact@v4
+        with:
+          name: encrypted-arbahara-${{ github.run_id }}
+          path: ${{ runner.temp }}/arbahara.arb
+          retention-days: 14
+          if-no-files-found: error
+      - name: Remove runner plaintext snapshot
+        if: always()
+        run: rm -f -- "$RUNNER_TEMP/arbahara.zip"

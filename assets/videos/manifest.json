@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "restoredAt": "2026-09-23T05:20:02.125Z",
+  "note": "Web viewing copies restored from original local files. Full duration and original audio retained; H.264/AAC encoding optimized for web playback. Original masters remain with the owner.",
+  "videos": [
+    {
+      "id": "230552_179",
+      "title": "Community Blessing",
+      "sourceFilename": "VID_20220607_230552_179.mp4.mov",
+      "path": "/assets/videos/VID_20220607_230552_179.mp4",
+      "durationSeconds": 86.366667,
+      "bytes": 11076327,
+      "sourceSha256": "eac3bfc7489154a199710e10afb82eaa873e58982cbe8ed2398f190bd1dfae59",
+      "sha256": "eeba974f938a87737c2577fc0c556fc8067a9b94a82755c8b97daade3022e7d9",
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 720,
+        "height": 1280
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    },
+    {
+      "id": "230555_407",
+      "title": "Pilgrimage Highlights",
+      "sourceFilename": "VID_20220607_230555_407.mp4.mov",
+      "path": "/assets/videos/VID_20220607_230555_407.mp4",
+      "durationSeconds": 177.468005,
+      "bytes": 19314195,
+      "sourceSha256": "d8e20a0d2928e54008518c77012b4711bae5a3d02dc563014851e69053ab03ed",
+      "sha256": "ab793ffc4de1e228ea72afb361d765d1222a8f0df9b270b55f4237942d8d7e4a",
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 720,
+        "height": 1280
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    },
+    {
+      "id": "230601_446",
+      "title": "Evening Chant",
+      "sourceFilename": "VID_20220607_230601_446.mp4.mov",
+      "path": "/assets/videos/VID_20220607_230601_446.mp4",
+      "durationSeconds": 511.7,
+      "bytes": 66844121,
+      "sourceSha256": "f3c80b43132147f41e05f33d8c3589f4cf176ef5c21e151ad7a4f4f83b9d8a3c",
+      "sha256": "91cb76ffa8f98261e711ffd8a4f8690672a01c4f517b081b7d6bda9808543471",
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 720,
+        "height": 1280
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    },
+    {
+      "id": "230724_600",
+      "title": "Night Vigil",
+      "sourceFilename": "VID_20220607_230724_600.mp4.mov",
+      "path": "/assets/videos/VID_20220607_230724_600.mp4",
+      "durationSeconds": 66.801995,
+      "bytes": 9329614,
+      "sourceSha256": "d452b13335b29a9a92f0fb04b95f93ca1d7f753cb37c60bc1abe1beeadef3a6b",
+      "sha256": "c718cdb21d495e829a1877f74212ce03ab905c728113801242de054692cc0688",
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 720,
+        "height": 1280
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    },
+    {
+      "id": "230814_250",
+      "title": "Temple Courtyard",
+      "sourceFilename": "VID_20220607_230814_250.mp4.mov",
+      "path": "/assets/videos/VID_20220607_230814_250.mp4",
+      "durationSeconds": 249.366667,
+      "bytes": 33185290,
+      "sourceSha256": "1892dcf89c3bcc735aee19d0ec89e4e7191c92ed714c523e8ee977a338f926e8",
+      "sha256": "735813910a7aae6c67bcd57310e23dad06ede8be38fac2868d2abfb3d9c9d395",
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 720,
+        "height": 1280
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    },
+    {
+      "id": "230849_742",
+      "title": "Meditation Walk",
+      "sourceFilename": "VID_20220607_230849_742.mp4.mov",
+      "path": "/assets/videos/VID_20220607_230849_742.mp4",
+      "durationSeconds": 226.346009,
+      "bytes": 30950110,
+      "sourceSha256": "36c2e3caf3f32c8109d6e4b3331fac5132e201220ab7f3364f6b966dc54d8a55",
+      "sha256": "bc4593ed8cf7a68c25c33b6bcc502773dfb874a6a35b5d4eceae53ac2673c0b5",
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 720,
+        "height": 1280
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    },
+    {
+      "id": "230855_830",
+      "title": "Flickering Light",
+      "sourceFilename": "VID_20220607_230855_830.mp4.mov",
+      "path": "/assets/videos/VID_20220607_230855_830.mp4",
+      "durationSeconds": 402.307007,
+      "bytes": 49006625,
+      "sourceSha256": "46eddcd288c85aff7080e81fe40830030668eb9b1736b7ed0142f97b1daabd2b",
+      "sha256": "a02191403ea4b8ea826cd57d6bee4ee1b3b7d596f9b14234726559844a2df7e8",
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 720,
+        "height": 1280
+      },
+      "audio": {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    }
+  ]
+}

@@ -1,16 +1,57 @@
 {
-  "rewrites": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
     {
-      "source": "/gallery",
-      "destination": "/gallery.html"
+      "source": "/future-construction",
+      "destination": "/monastery#plans",
+      "permanent": true
+    },
+    {
+      "source": "/future-construction.html",
+      "destination": "/monastery#plans",
+      "permanent": true
     },
     {
       "source": "/meeting-recordings",
-      "destination": "/meeting-recordings.html"
+      "destination": "/archive",
+      "permanent": true
     },
     {
-      "source": "/admin-recordings",
-      "destination": "/admin-recordings.html"
+      "source": "/meeting-recordings.html",
+      "destination": "/archive",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(self), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/members",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     }
   ]
 }

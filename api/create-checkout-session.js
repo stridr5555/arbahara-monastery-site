@@ -1,7 +1,5 @@
 const MIN_CROSS_AMOUNT_CENTS = 10000;
 const SHIPPING_CENTS = 2000;
-const CROSS_PRODUCT_ID = process.env.STRIPE_CROSS_PRODUCT_ID || 'prod_UcZsrY7hlxwZwI';
-const SHIPPING_PRODUCT_ID = process.env.STRIPE_SHIPPING_PRODUCT_ID || 'prod_UcZsrkuMWO3PuN';
 
 const sendJson = (res, status, payload) => {
   res.statusCode = status;
@@ -21,23 +19,26 @@ module.exports = async (req, res) => {
     return sendJson(res, 405, { error: 'Method not allowed' });
   }
 
-  const stripeKey = process.env.STRIPE_SECRET_KEY;
-  if (!stripeKey) {
-    return sendJson(res, 500, { error: 'Stripe is not configured.' });
+  const stripeKey = process.env.MONASTERY_STRIPE_SECRET_KEY;
+  if (!stripeKey || !process.env.APPROVED_MONASTERY_STRIPE_ACCOUNT_ID) {
+    return sendJson(res, 503, { error: 'Online cross orders are paused while the monastery payment account is connected. Please contact support@haramonastery.org.' });
   }
 
   try {
-    const chunks = [];
-    for await (const chunk of req) chunks.push(chunk);
-    const body = chunks.length ? JSON.parse(Buffer.concat(chunks).toString('utf8')) : {};
+    const accountResponse = await fetch('https://api.stripe.com/v1/account', {headers:{Authorization:`Bearer ${stripeKey}`}});
+    const account = await accountResponse.json();
+    if(!accountResponse.ok || account.id !== process.env.APPROVED_MONASTERY_STRIPE_ACCOUNT_ID || !account.charges_enabled) return sendJson(res,503,{error:'The monastery checkout is not available yet.'});
+    let body = req.body;
+    if(typeof body === 'string') body = JSON.parse(body);
+    if(!body){const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>4096)return sendJson(res,413,{error:'Request too large'});chunks.push(chunk);}body=chunks.length?JSON.parse(Buffer.concat(chunks).toString('utf8')):{};}
     const amountDollars = Number(body.amount);
     const crossAmountCents = Math.round(amountDollars * 100);
 
-    if (!Number.isFinite(crossAmountCents) || crossAmountCents < MIN_CROSS_AMOUNT_CENTS) {
+    if (!Number.isSafeInteger(crossAmountCents) || crossAmountCents < MIN_CROSS_AMOUNT_CENTS || crossAmountCents > 10000000) {
       return sendJson(res, 400, { error: 'The minimum cross gift is $100.' });
     }
 
-    const origin = getOrigin(req);
+    const origin = 'https://www.haramonastery.org';
     const params = new URLSearchParams();
     params.append('mode', 'payment');
     params.append('success_url', `${origin}/store-success.html?session_id={CHECKOUT_SESSION_ID}`);
@@ -56,12 +57,12 @@ module.exports = async (req, res) => {
     params.append('line_items[0][quantity]', '1');
     params.append('line_items[0][price_data][currency]', 'usd');
     params.append('line_items[0][price_data][unit_amount]', String(crossAmountCents));
-    params.append('line_items[0][price_data][product]', CROSS_PRODUCT_ID);
+    params.append('line_items[0][price_data][product_data][name]', 'Medhanialem Home Blessing Cross');
 
     params.append('line_items[1][quantity]', '1');
     params.append('line_items[1][price_data][currency]', 'usd');
     params.append('line_items[1][price_data][unit_amount]', String(SHIPPING_CENTS));
-    params.append('line_items[1][price_data][product]', SHIPPING_PRODUCT_ID);
+    params.append('line_items[1][price_data][product_data][name]', 'US shipping');
 
     const stripeResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
