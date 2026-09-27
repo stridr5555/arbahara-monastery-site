@@ -26,6 +26,32 @@ export const appeal = [
   "This work depends on your prayers and generous contributions. We appeal to your conscience and faith to help us move forward with the development of this house of God: preparing a place to gather, caring for the land, and building for those who will come after us.",
   "May the Lord reward your faithfulness and bless your generosity a hundredfold. May He remember you and your families in His mercy, and establish the work of our hands. Amen.",
 ];
+export type Announcement = {
+  slug: string;
+  title: string;
+  published: string;
+  displayDate: string;
+  excerpt: string;
+  paragraphs: string[];
+};
+export const announcements: Announcement[] = [
+  {
+    slug: "establishment-of-abuna-hara-dengeel-monastery",
+    title: "A new sanctuary for our spiritual family",
+    published: "2026-09-27",
+    displayDate: "September 27, 2026",
+    excerpt:
+      "With profound joy, we announce the establishment of the Monastery of Abuna Hara Dengeel and invite our spiritual family to help build this house of God.",
+    paragraphs: [
+      "In the name of the Father, and of the Son, and of the Holy Spirit, one God.",
+      "To our cherished spiritual family and supporters,",
+      "We are filled with profound joy as we announce the establishment of the Monastery of Abuna Hara Dengeel, a new sanctuary for the Ethiopian Orthodox Tewahedo Church. Through the grace of God, we have secured a ten-acre property that offers a serene and sacred environment, perfectly suited for spiritual retreat and divine worship.",
+      "This tranquil haven includes a four-bedroom residence, a peaceful lake, and a versatile two-door garage that we are preparing to transform into a consecrated assembly hall for congregational prayers. Furthermore, the land is blessed with an aquifer that holds the great promise of drilling for holy water, TSEBEL, bringing healing and blessings to the faithful.",
+      'Remember, "The hand that gives is more blessed than the hand that receives."',
+      "This monumental work is only possible through your prayers and generous contributions. Hence, we appeal to your conscience and faith to help us move forward with these vital development projects to complete this house of God. May the Lord reward your faithfulness and bless your generosity a hundredfold.",
+    ],
+  },
+];
 export const phases = [
   {
     title: "Prepare a place to gather",
@@ -164,6 +190,16 @@ export const pageMeta: Record<string, { title: string; description: string }> =
       title: "Church archive | Arbahara",
       description:
         "Listen to meeting recordings and explore the monastery’s plans, photographs, and community records.",
+    },
+    "/announcements": {
+      title: "Announcements & reflections | Arbahara",
+      description:
+        "Read announcements, pastoral messages, and reflections from the Monastery of Abuna Hara Dengeel.",
+    },
+    "/announcements/establishment-of-abuna-hara-dengeel-monastery": {
+      title: "A new sanctuary for our spiritual family | Arbahara",
+      description:
+        "The founding announcement of the Monastery of Abuna Hara Dengeel and an invitation to help build this house of God.",
     },
     "/gallery": {
       title: "Photographs & films | Arbahara",

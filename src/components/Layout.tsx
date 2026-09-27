@@ -136,6 +136,7 @@ export function Footer() {
         </div>
         <div>
           <h2>Our community</h2>
+          <a href="/announcements">Announcements & reflections</a>
           <a href="/visit">Visit & contact</a>
           <a href="/events">Gatherings & events</a>
           <a href="/members">Member portal</a>

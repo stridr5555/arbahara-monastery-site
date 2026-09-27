@@ -130,7 +130,9 @@ function Dashboard() {
           <h2>Your account & records</h2>
           <p>Verified email: {me.email}</p>
           <p>
-            Sign-in codes replace passwords. Keep access to this email address
+            Sign in with your password or a connected Google or Facebook
+            account. To set or reset a password, sign out and use the password
+            options on the sign-in page. Keep access to this email address
             secure. Contact the office if your email changes or you need a
             record corrected or removed.
           </p>
