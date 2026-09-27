@@ -1,4 +1,4 @@
-import { site, phases } from "../content";
+import { announcements, phases } from "../content";
 import { LinkButton, TextLink, Cross } from "../components/Layout";
 import { SacredHero } from "../components/SacredHero";
 import { DepthFrame } from "../components/Motion";
@@ -32,6 +32,21 @@ export function Home() {
             </p>
             <TextLink href="/members">Become a member</TextLink>
           </article>
+        </div>
+      </section>
+      <section className="announcement-feature wrap" aria-labelledby="latest-announcement">
+        <div className="announcement-feature-mark">
+          <span className="section-label">Latest announcement</span>
+          <time dateTime={announcements[0].published}>
+            {announcements[0].displayDate}
+          </time>
+        </div>
+        <div>
+          <h2 id="latest-announcement">{announcements[0].title}</h2>
+          <p className="lead">{announcements[0].excerpt}</p>
+          <TextLink href={`/announcements/${announcements[0].slug}`}>
+            Read our founding announcement
+          </TextLink>
         </div>
       </section>
       <section className="section wrap story-split" id="vision">

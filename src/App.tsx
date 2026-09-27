@@ -5,6 +5,10 @@ import { Monastery, Faith, Visit, Gallery } from "./pages/Community";
 import { Archive } from "./pages/Archive";
 import { Give } from "./pages/Give";
 import {
+  Announcements,
+  FoundingAnnouncement,
+} from "./pages/Announcements";
+import {
   Privacy,
   Terms,
   Amharic,
@@ -62,6 +66,12 @@ export function App({ path }: { path: string }) {
       break;
     case "/archive":
       page = <Archive />;
+      break;
+    case "/announcements":
+      page = <Announcements />;
+      break;
+    case "/announcements/establishment-of-abuna-hara-dengeel-monastery":
+      page = <FoundingAnnouncement />;
       break;
     case "/donate":
       page = <Give />;
