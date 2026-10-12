@@ -1,0 +1,1532 @@
+:root {
+  --sand: #f3eee3;
+  --linen: #faf7f0;
+  --ink: #121513;
+  --clay: #99783e;
+  --clay-dark: #765a2c;
+  --muted: #65685e;
+  --line: #d5cbb8;
+  --soft: #eae4d7;
+  --gold: #ba995d;
+  --green: #234539;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+[id] {
+  scroll-margin-top: 90px;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 5px;
+}
+.site-header {
+  background: var(--ink);
+  color: var(--sand);
+  border-bottom: 1px solid #ffffff24;
+}
+.header-inner {
+  max-width: none;
+  width: 100%;
+  padding-inline: 2.7vw;
+  min-height: 76px;
+  justify-content: flex-start;
+  gap: 40px;
+}
+.site-header nav {
+  margin-right: auto;
+  gap: 30px;
+}
+.site-header .site-language-switcher {
+  margin-left: auto;
+  order: 3;
+}
+.site-header .site-language-switcher button {
+  color: var(--sand);
+}
+.journey-shell .site-header nav {
+  font-size: 16px;
+  gap: 30px;
+  text-shadow:
+    0 1px 2px #000,
+    0 0 8px #000;
+}
+.site-header .brand {
+  color: var(--sand);
+  font-family: var(--serif);
+  letter-spacing: 0.22em;
+  font-size: 23px;
+  text-transform: uppercase;
+}
+.site-header .brand small {
+  display: none;
+}
+.site-header .brand .cross {
+  width: 28px;
+  height: 38px;
+  color: var(--gold);
+}
+.site-header nav a,
+.site-header nav .nav-member {
+  color: var(--sand);
+  font-family: var(--serif);
+  font-size: 18px;
+}
+.site-header nav .nav-member {
+  border: 0;
+  padding: 0;
+}
+.site-header a:hover {
+  color: var(--gold);
+}
+.journey-shell .site-header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 10;
+  background: transparent;
+  border: 0;
+}
+.journey-shell .brand .cross {
+  display: none;
+}
+.procession-home {
+  background: var(--ink);
+  color: var(--sand);
+}
+.procession-hero {
+  position: relative;
+  min-height: 780px;
+  height: 100svh;
+  max-height: 1200px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #121513;
+  perspective: 1000px;
+}
+.journey-textile {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+.journey-icon {
+  position: absolute;
+  left: 56%;
+  top: 8%;
+  width: 26%;
+  height: 65%;
+  transform: perspective(1000px) rotateY(-12deg) rotateZ(1deg);
+  z-index: 0;
+  box-shadow: 0 24px 45px #0008;
+}
+.journey-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.procession-copy {
+  position: relative;
+  z-index: 2;
+  padding: 18vh 2.7vw 0;
+  width: 75%;
+  pointer-events: none;
+}
+.procession-copy .actions {
+  position: relative;
+  z-index: 1;
+}
+.procession-copy .button.secondary {
+  background: #121513ba;
+}
+.procession-copy a {
+  pointer-events: auto;
+}
+.procession-copy h1 {
+  font-size: clamp(80px, 10.9vw, 174px);
+  line-height: 0.76;
+  letter-spacing: -0.06em;
+  font-weight: 400;
+  margin: 0 0 22px;
+  max-width: none;
+}
+.procession-copy h1 span {
+  white-space: nowrap;
+  font-size: 0.87em;
+}
+.procession-home .procession-copy .button.secondary {
+  background: #121513ed;
+}
+.journey-icon img {
+  clip-path: inset(1.4% 0 3% 0);
+}
+.journey-shell .site-language-switcher button {
+  font-family: var(--serif);
+  font-size: 15px;
+}
+.procession-copy p {
+  font-family: var(--serif);
+  font-size: clamp(20px, 1.4vw, 25px);
+  line-height: 1.35;
+  max-width: 650px;
+}
+.procession-hero .actions {
+  margin-top: 28px;
+  gap: 22px;
+}
+.procession-home .button {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+  border-radius: 0;
+  font-family: var(--serif);
+  font-size: 18px;
+}
+.procession-home .button.secondary {
+  background: transparent;
+  color: var(--sand);
+  border: 1px solid var(--sand);
+}
+.chapter-rail {
+  position: absolute;
+  right: 3.6%;
+  top: 21%;
+  display: grid;
+  gap: 45px;
+  border-left: 1px solid #f3eee366;
+  padding-left: 18px;
+  font-family: var(--serif);
+  z-index: 3;
+}
+.chapter-rail a {
+  display: grid;
+  color: var(--sand);
+  text-shadow:
+    0 1px 3px #000,
+    0 0 10px #000;
+  text-decoration: none;
+  position: relative;
+  font-size: 17px;
+  line-height: 1.4;
+}
+.chapter-rail a:before {
+  content: "";
+  position: absolute;
+  left: -23px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--sand);
+  border-radius: 50%;
+  background: var(--ink);
+}
+.chapter-rail a:first-child:before {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.chapter-rail span {
+  color: var(--gold);
+}
+.page-intro > p {
+  color: var(--muted);
+}
+.journey-controls {
+  position: absolute;
+  left: 2.7vw;
+  bottom: 35px;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  font-family: var(--serif);
+  font-size: 14px;
+  z-index: 3;
+}
+.journey-controls button {
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: 8px 0;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.journey-controls button svg {
+  border: 1px solid var(--sand);
+  border-radius: 50%;
+  padding: 7px;
+  width: 31px;
+  height: 31px;
+}
+.journey-controls a {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  border-left: 1px solid #f3eee366;
+  padding-left: 28px;
+  text-decoration: none;
+}
+.journey-next {
+  position: absolute;
+  right: 3.4%;
+  bottom: 42px;
+  z-index: 3;
+  display: flex;
+  gap: 28px;
+  align-items: end;
+  font-family: var(--serif);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.chapter-number {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+}
+.community-chapter {
+  padding: 0 0 100px;
+  position: relative;
+}
+.media-procession {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 34% 47% 1fr;
+  align-items: center;
+  gap: 2.5%;
+  padding: 72px 3.7vw 0;
+  min-height: 890px;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--sand);
+  perspective: 1200px;
+}
+.memory-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(#121513ca, #121513f5),
+    url("/assets/images/mountain-temple.jpg") center/cover;
+}
+.memory-intro {
+  align-self: start;
+  padding-top: 65px;
+  z-index: 2;
+}
+.memory-intro .chapter-number {
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+.memory-intro h2 {
+  font-size: clamp(58px, 6.7vw, 108px);
+  line-height: 0.9;
+  font-weight: 400;
+  margin: 27px 0 20px;
+  letter-spacing: -0.035em;
+}
+.memory-intro h2 em {
+  font-style: normal;
+  color: #e6c990;
+}
+.memory-intro p {
+  font-family: var(--sans);
+  font-size: 25px;
+  line-height: 1.5;
+}
+.memory-film {
+  margin: 0;
+  align-self: start;
+  z-index: 2;
+  border: 1px solid var(--gold);
+  padding: 12px;
+  background: #121513;
+  box-shadow: 0 20px 50px #0009;
+  transform-style: preserve-3d;
+}
+.memory-film video {
+  display: block;
+  width: 100%;
+  height: 475px;
+  object-fit: contain;
+  background: #050705;
+}
+.memory-film figcaption {
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 1.4;
+  color: #ccc7bc;
+  margin: 10px 0 0;
+}
+.memory-chapters {
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 31px;
+  padding-top: 60px;
+  font: 17px var(--serif);
+  z-index: 2;
+}
+.memory-chapters a {
+  color: var(--sand);
+  position: relative;
+  padding-left: 22px;
+}
+.memory-chapters a:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  left: 0;
+  top: 8px;
+}
+.memory-chapters a[aria-current]:before {
+  background: var(--gold);
+}
+.memory-ribbon {
+  position: absolute;
+  top: 450px;
+  left: -5%;
+  width: 112%;
+  display: flex;
+  gap: 13px;
+  z-index: -1;
+  border-block: 1px solid #ba995d88;
+  padding: 15px 0;
+  transform: rotate(-9deg);
+  opacity: 0.55;
+}
+.memory-ribbon img {
+  flex: 1;
+  min-width: 0;
+  width: 18%;
+  height: 150px;
+  object-fit: cover;
+  border: 9px solid #262a24;
+}
+.memory-continue {
+  grid-column: 1/-1;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--sand);
+  font: 10px var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin: 42px 0 25px;
+}
+.memory-archive {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+  background: var(--sand);
+  color: var(--ink);
+  margin: 0 -3.7vw;
+  padding: 40px 6vw;
+  min-height: 170px;
+}
+.memory-archive h3 {
+  font-size: 39px;
+  font-weight: 400;
+  margin: 10px 0;
+}
+.memory-archive p {
+  font: 14px/1.6 var(--sans);
+  max-width: 700px;
+  margin: 0;
+}
+.memory-archive .chapter-number {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--clay-dark);
+}
+.procession-home .memory-archive .text-link {
+  color: var(--clay-dark);
+  white-space: nowrap;
+}
+.community-bottom {
+  padding-top: 70px;
+}
+.preserved-collection > summary {
+  font: 27px var(--serif);
+  padding: 22px 0;
+  border-block: 1px solid var(--line);
+  cursor: pointer;
+}
+.preserved-collection[open] > summary {
+  margin-bottom: 30px;
+}
+html[data-motion="on"] .land-illustration {
+  transition: transform 1.8s cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+.land-journey[data-stop="1"] .land-illustration {
+  transform: scale(1.18) translate(5%, 2%);
+  transform-origin: 45% 65%;
+}
+.land-journey[data-stop="2"] .land-illustration {
+  transform: scale(1.22) translate(-2%, 5%);
+  transform-origin: 50% 35%;
+}
+.land-journey[data-stop="3"] .land-illustration {
+  transform: scale(1.14) translate(-3%, -3%);
+  transform-origin: 70% 65%;
+}
+@media (max-width: 1000px) {
+  .media-procession {
+    grid-template-columns: 1fr 1.3fr;
+    min-height: 0;
+    padding-top: 45px;
+  }
+  .memory-intro {
+    padding-top: 15px;
+  }
+  .memory-intro h2 {
+    font-size: 70px;
+  }
+  .memory-film video {
+    height: 380px;
+  }
+  .memory-chapters {
+    grid-column: 1/-1;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px 0 0;
+    gap: 25px;
+  }
+  .memory-ribbon {
+    top: 300px;
+  }
+  .memory-continue {
+    margin-top: 30px;
+  }
+  .memory-archive {
+    padding: 35px 5vw;
+  }
+  .memory-archive h3 {
+    font-size: 32px;
+  }
+}
+@media (max-width: 640px) {
+  .media-procession {
+    display: block;
+    padding: 40px 22px 0;
+    min-height: 0;
+  }
+  .memory-intro h2 {
+    font-size: 68px;
+  }
+  .memory-intro p {
+    font-size: 20px;
+  }
+  .memory-film {
+    margin-top: 35px;
+    padding: 7px;
+  }
+  .memory-film video {
+    height: 380px;
+  }
+  .memory-chapters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 25px;
+    gap: 17px;
+    font-size: 16px;
+  }
+  .memory-ribbon {
+    top: 350px;
+    height: 150px;
+  }
+  .memory-ribbon img {
+    height: 120px;
+    min-width: 110px;
+  }
+  .memory-continue {
+    display: flex;
+    margin: 35px 0;
+  }
+  .memory-archive {
+    display: block;
+    margin: 0 -22px;
+    padding: 30px 22px;
+  }
+  .memory-archive h3 {
+    font-size: 32px;
+  }
+  .memory-archive .text-link {
+    margin-top: 20px;
+  }
+  .community-bottom {
+    padding-top: 40px;
+  }
+}
+.community-heading {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  column-gap: 8vw;
+  align-items: end;
+}
+.community-heading .chapter-number {
+  grid-column: 1/-1;
+  margin-bottom: 28px;
+}
+.community-heading h2 {
+  font-size: clamp(55px, 6.7vw, 110px);
+  grid-row: 2/4;
+  line-height: 0.98;
+  font-weight: 400;
+}
+.community-heading p {
+  font-size: 23px;
+  max-width: 460px;
+}
+.procession-home .text-link {
+  color: var(--gold);
+}
+.community-film {
+  width: min(1180px, 86%);
+  margin: 65px auto 60px;
+}
+.community-film video {
+  width: 100%;
+  max-height: 68vh;
+  object-fit: contain;
+  background: #080b09;
+  box-shadow: 0 40px 90px #0009;
+}
+.community-film figcaption {
+  color: #bcbcb0;
+  text-align: center;
+}
+.community-bottom {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 8vw;
+}
+.community-invitation {
+  border-left: 1px solid #ba995d55;
+  padding: 20px 0 20px 5vw;
+}
+.community-invitation h3 {
+  font-size: 46px;
+}
+.community-invitation .cross {
+  color: var(--gold);
+  width: 30px;
+  height: 40px;
+  margin-bottom: 20px;
+}
+.community-invitation .text-link {
+  display: flex;
+  margin-top: 18px;
+}
+.next-gatherings .section-heading {
+  gap: 15px;
+}
+.next-gatherings h2 {
+  font-size: 36px;
+}
+.next-gatherings .gathering-detail {
+  padding-left: 20px;
+}
+.next-gatherings .gathering-detail p {
+  color: inherit;
+}
+.journey-invitation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9vw;
+  padding-block: 100px;
+}
+.journey-invitation h2 {
+  font-size: clamp(48px, 5.5vw, 80px);
+  font-weight: 400;
+}
+.procession-home .announcement-feature {
+  border-color: #ba995d55;
+  padding-block: 70px;
+}
+.procession-home .announcement-feature time {
+  color: #bcbcb0;
+}
+.procession-home .giving-band {
+  background: #1b211d;
+}
+.procession-home .giving-band .button {
+  background: var(--gold);
+}
+.land-journey {
+  background: var(--ink);
+  color: var(--sand);
+}
+.land-stage {
+  min-height: 800px;
+  height: calc(100svh - 70px);
+  max-height: 1100px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.land-illustration {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+.land-heading {
+  position: absolute;
+  top: 45px;
+  left: 3.5vw;
+  max-width: 50%;
+  z-index: 2;
+}
+.land-heading h2 {
+  font-size: clamp(65px, 6.8vw, 112px);
+  font-weight: 400;
+  line-height: 0.93;
+  margin-bottom: 18px;
+  letter-spacing: -0.05em;
+}
+.land-heading p {
+  max-width: 470px;
+  font-family: var(--serif);
+  font-size: 23px;
+  line-height: 1.35;
+  text-shadow: 0 2px 8px #000;
+}
+.land-mode {
+  position: absolute;
+  right: 3vw;
+  top: 35px;
+  max-width: 360px;
+  text-align: right;
+  z-index: 2;
+}
+.land-mode p {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 12px;
+  color: #d6cdbb;
+}
+.land-mode .calendar-switch {
+  border-radius: 30px;
+  border-color: var(--gold);
+  background: #121513ce;
+}
+.land-mode .calendar-switch button {
+  border-radius: 30px;
+  color: var(--sand);
+  font-family: var(--serif);
+  padding: 9px 20px;
+}
+.land-mode .calendar-switch button[aria-pressed="true"] {
+  background: var(--gold);
+  color: var(--ink);
+}
+.land-budget {
+  position: absolute;
+  right: 3vw;
+  bottom: 115px;
+  background: var(--sand);
+  color: var(--ink);
+  padding: 27px 30px;
+  width: 350px;
+  z-index: 2;
+  box-shadow: 0 20px 60px #0005;
+}
+.land-budget h3 {
+  font-size: 31px;
+  font-style: italic;
+}
+.land-budget strong {
+  font-family: var(--serif);
+  font-size: 49px;
+  font-weight: 500;
+  color: #99783e;
+  line-height: 1;
+}
+.land-budget > p {
+  font-family: var(--serif);
+  font-size: 22px;
+  margin: 4px 0 15px;
+}
+.land-budget dl {
+  border-block: 1px solid var(--line);
+  padding: 18px 0;
+  font-size: 13px;
+}
+.land-budget dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.land-budget dd {
+  margin: 0;
+}
+.land-budget .text-link {
+  color: #765a2c;
+}
+.land-tour-controls {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: #121513dd;
+  border: 1px solid #ba995d88;
+  border-radius: 40px;
+  padding: 12px 26px;
+  white-space: nowrap;
+  z-index: 2;
+  font-family: var(--serif);
+  font-size: 15px;
+}
+.land-tour-controls > span {
+  color: var(--gold);
+}
+.land-tour-controls button {
+  background: none;
+  border: 0;
+  color: #d7d1c5;
+  padding: 4px 0;
+  border-bottom: 1px solid transparent;
+}
+.land-tour-controls button[aria-pressed="true"] {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.land-tour-controls a {
+  display: flex;
+  gap: 8px;
+  text-decoration: none;
+  border-left: 1px solid #ffffff40;
+  padding-left: 20px;
+}
+.land-disclaimer {
+  font-size: 12px;
+  padding: 16px 3.5vw;
+  margin: 0;
+  color: #c1bcad;
+  background: #121513;
+}
+.land-webgl {
+  position: absolute;
+  inset: 10% 0 5%;
+  pointer-events: none;
+  z-index: 1;
+}
+.land-webgl canvas {
+  width: 100%;
+  height: 100%;
+}
+.proposed-callout {
+  position: absolute;
+  top: 41%;
+  left: 58%;
+  border: 1px solid var(--gold);
+  padding: 10px 15px;
+  background: #121513da;
+  z-index: 2;
+  font-family: var(--serif);
+  font-size: 18px;
+}
+.proposed-callout small {
+  font-family: var(--sans);
+  font-size: 10px;
+}
+.construction-budget {
+  background: var(--sand);
+  color: var(--ink);
+  max-width: none;
+  padding: 80px max(4vw, calc((100vw - 1280px) / 2));
+}
+.construction-budget .section-heading strong {
+  font-family: var(--serif);
+  font-size: 46px;
+  color: #99783e;
+}
+.construction-budget .button {
+  display: inline-flex;
+  margin: 25px;
+}
+.construction-budget caption {
+  text-align: left;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+.church-calendar {
+  display: grid;
+  grid-template-columns: 1.2fr 0.85fr;
+  border: 1px solid var(--line);
+  padding: 24px;
+  margin-bottom: 50px;
+  gap: 25px;
+  background: #faf7f066;
+}
+.calendar-toolbar {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.calendar-toolbar h2 {
+  font-size: 34px;
+  margin: 0;
+  white-space: nowrap;
+}
+.calendar-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.calendar-switch button {
+  border: 0;
+  padding: 10px 16px;
+  font-family: var(--serif);
+  font-size: 17px;
+  background: transparent;
+  color: var(--ink);
+}
+.calendar-switch button[aria-pressed="true"] {
+  background: var(--green);
+  color: #fff;
+}
+.calendar-arrows {
+  display: flex;
+  gap: 10px;
+}
+.calendar-arrows button {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 37px;
+  height: 37px;
+  background: transparent;
+}
+.calendar-week,
+.calendar-cells {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.calendar-week > span {
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 18px;
+  background: var(--soft);
+  padding: 8px 0;
+  border: 1px solid var(--line);
+  border-right: 0;
+}
+.calendar-week > span:last-child {
+  border-right: 1px solid var(--line);
+}
+.calendar-cells {
+  border-left: 1px solid var(--line);
+}
+.calendar-day,
+.calendar-blank {
+  min-height: 95px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: start;
+  color: var(--ink);
+}
+.calendar-day:hover {
+  background: #e8dfcd;
+}
+.calendar-day.selected {
+  background: #e1eadd;
+  box-shadow: inset 0 0 0 2px var(--green);
+}
+.day-primary {
+  font-family: var(--serif);
+  font-size: 25px;
+  line-height: 1.1;
+}
+.calendar-day small {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.day-event {
+  font-size: 11px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+.day-event:before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 4px;
+  background: var(--gold);
+}
+.day-event.ziker {
+  color: var(--green);
+}
+.day-event.ziker:before {
+  background: var(--green);
+}
+.calendar-agenda {
+  border-left: 1px solid var(--line);
+  padding: 5px 0 0 25px;
+}
+.calendar-agenda h2 {
+  font-size: 41px;
+  margin-bottom: 10px;
+}
+.gathering-detail {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0 25px 27px;
+  margin-bottom: 8px;
+}
+.gathering-detail:before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  position: absolute;
+  left: 0;
+  top: 29px;
+}
+.gathering-detail.ziker:before {
+  background: var(--green);
+}
+.gathering-detail h3 {
+  font-size: 27px;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.gathering-detail p {
+  font-size: 14px;
+  margin: 8px 0;
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.gathering-detail p svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 25px 0 18px;
+}
+.calendar-actions .button {
+  font-size: 13px;
+  padding: 12px 15px;
+  background: var(--green);
+  border-color: var(--green);
+}
+.calendar-actions .button.secondary {
+  background: transparent;
+  color: var(--ink);
+}
+.portal-wrap {
+  max-width: 1440px;
+}
+.portal-workspace {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 30px;
+}
+.portal-sidebar {
+  background: var(--ink);
+  color: var(--sand);
+  padding: 28px 18px;
+  align-self: start;
+  position: sticky;
+  top: 95px;
+}
+.portal-sidebar h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+.portal-sidebar button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  color: inherit;
+  border: 0;
+  border-left: 3px solid transparent;
+  font-family: var(--serif);
+  font-size: 19px;
+  padding: 12px 10px;
+}
+.portal-sidebar button[aria-current="page"] {
+  border-color: var(--gold);
+  background: #ffffff12;
+  color: var(--gold);
+}
+.portal-main {
+  min-width: 0;
+}
+.portal-main > h2 {
+  font-size: 45px;
+}
+.portal-main .panel {
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.dues-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin: 20px 0;
+}
+.dues-month {
+  border: 1px solid var(--line);
+  padding: 10px;
+  text-align: center;
+  font-size: 13px;
+}
+.dues-month strong {
+  display: block;
+  font-size: 14px;
+}
+.dues-month.paid {
+  background: #e5efdf;
+}
+.dues-month.future {
+  color: var(--muted);
+}
+.finance-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 25px 0;
+}
+.finance-summary > div {
+  border-left: 2px solid var(--gold);
+  padding: 10px 22px;
+}
+.finance-summary strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 35px;
+}
+.finance-tabs {
+  margin: 20px 0;
+}
+.finance-form {
+  display: grid;
+  gap: 15px;
+  max-width: 850px;
+}
+.finance-form .two-columns {
+  gap: 20px;
+}
+.signup-steps {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  gap: 24px;
+  margin-bottom: 35px;
+}
+.signup-steps li {
+  border-bottom: 2px solid var(--line);
+  padding: 8px;
+}
+.signup-steps li[aria-current="step"] {
+  border-color: var(--gold);
+}
+.form-review dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+.form-review dd {
+  margin: 0 0 18px;
+  font-size: 19px;
+}
+.bank-pending {
+  border-left: 3px solid var(--gold);
+  padding: 20px;
+  background: var(--soft);
+}
+@media (min-width: 1400px) {
+  .procession-copy {
+    padding-top: 18vh;
+  }
+  .journey-icon {
+    left: 55%;
+    width: 26%;
+    height: 70%;
+  }
+  .procession-copy h1 {
+    font-size: 10.9vw;
+  }
+}
+@media (max-width: 1150px) {
+  .calendar-toolbar {
+    flex-wrap: wrap;
+  }
+  .calendar-toolbar h2 {
+    order: -1;
+    width: 100%;
+    font-size: 32px;
+  }
+  .church-calendar {
+    grid-template-columns: 1.15fr 1fr;
+    padding: 18px;
+    gap: 18px;
+  }
+  .calendar-agenda {
+    padding-left: 18px;
+  }
+  .calendar-day {
+    padding: 8px 5px;
+  }
+  .calendar-day small {
+    font-size: 9px;
+  }
+  .day-event {
+    font-size: 10px;
+  }
+  .land-budget {
+    width: 300px;
+    padding: 23px;
+  }
+  .land-tour-controls {
+    gap: 18px;
+    font-size: 13px;
+  }
+}
+@media (max-width: 800px) {
+  .site-header nav.open {
+    background: var(--ink);
+    color: var(--sand);
+  }
+  .site-header .header-inner {
+    padding-inline: 22px;
+    gap: 12px;
+  }
+  .site-header .brand {
+    font-size: 20px;
+    letter-spacing: 0.18em;
+  }
+  .site-header .menu-button {
+    color: var(--sand);
+    border-color: #f3eee355;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .site-header .site-language-switcher button {
+    font-size: 11px;
+  }
+  .procession-hero {
+    height: 980px;
+    min-height: 0;
+    max-height: none;
+  }
+  .journey-textile {
+    top: 440px;
+    height: 540px;
+    object-position: 64% center;
+    opacity: 1;
+    mask-image: linear-gradient(to bottom, transparent, #000 18%);
+  }
+  .procession-copy {
+    padding: 135px 22px 0;
+    width: 100%;
+  }
+  .procession-copy h1 {
+    font-size: clamp(65px, 12vw, 100px);
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+  .procession-copy h1 span {
+    white-space: normal;
+  }
+  .procession-copy p {
+    font-size: 21px;
+    max-width: 480px;
+  }
+  .journey-icon {
+    top: 490px;
+    left: 44%;
+    width: 39%;
+    height: 390px;
+  }
+  .chapter-rail {
+    display: none;
+  }
+  .journey-next {
+    bottom: 34px;
+    right: 22px;
+  }
+  .journey-controls {
+    left: 22px;
+    bottom: 30px;
+    gap: 12px;
+  }
+  .journey-controls a {
+    padding-left: 15px;
+  }
+  .community-chapter {
+    padding: 0 0 65px;
+  }
+  .community-heading,
+  .community-bottom,
+  .journey-invitation {
+    grid-template-columns: 1fr;
+  }
+  .community-heading h2 {
+    grid-row: auto;
+  }
+  .community-heading .chapter-number {
+    grid-column: auto;
+  }
+  .community-heading p {
+    max-width: none;
+  }
+  .community-invitation {
+    margin-top: 35px;
+    border-left: 0;
+    border-top: 1px solid #ba995d55;
+    padding: 35px 0 0;
+  }
+  .community-film {
+    width: 100%;
+    margin: 40px auto;
+  }
+  .community-film figcaption {
+    padding-inline: 24px;
+  }
+  .community-film video {
+    min-height: 250px;
+  }
+  .journey-invitation {
+    padding-block: 60px;
+    gap: 20px;
+  }
+  .land-stage {
+    height: 1000px;
+    min-height: 0;
+  }
+  .land-illustration {
+    object-position: 60% center;
+    object-fit: cover;
+  }
+  .land-heading {
+    top: 30px;
+    max-width: 92%;
+    left: 6vw;
+  }
+  .land-heading h2 {
+    font-size: clamp(60px, 10vw, 82px);
+  }
+  .land-heading p {
+    font-size: 21px;
+    max-width: 80%;
+  }
+  .land-mode {
+    top: 285px;
+    right: 6vw;
+    max-width: 85%;
+  }
+  .land-mode p {
+    max-width: 300px;
+    margin-left: auto;
+  }
+  .land-budget {
+    bottom: 120px;
+    right: 6vw;
+    width: 310px;
+  }
+  .land-tour-controls {
+    bottom: 20px;
+    max-width: 92%;
+    flex-wrap: wrap;
+    white-space: normal;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 12px 18px;
+    gap: 8px 20px;
+  }
+  .land-tour-controls > span {
+    display: none;
+  }
+  .land-tour-controls a {
+    border: 0;
+    padding: 0;
+  }
+  .proposed-callout {
+    top: 45%;
+    left: 10%;
+    font-size: 16px;
+  }
+  .construction-budget {
+    padding: 50px 6vw;
+  }
+  .construction-budget .section-heading {
+    display: block;
+  }
+  .church-calendar {
+    grid-template-columns: 1fr;
+    padding: 15px;
+    gap: 25px;
+  }
+  .calendar-toolbar h2 {
+    width: auto;
+    order: 0;
+  }
+  .calendar-toolbar {
+    gap: 10px;
+  }
+  .calendar-toolbar .calendar-switch button {
+    font-size: 15px;
+    padding: 8px 12px;
+  }
+  .calendar-agenda {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 25px 0 0;
+  }
+  .calendar-day {
+    min-height: 88px;
+  }
+  .calendar-week > span {
+    font-size: 15px;
+  }
+  .calendar-day small {
+    font-size: 8px;
+    word-break: break-word;
+  }
+  .day-primary {
+    font-size: 22px;
+  }
+  .day-event {
+    font-size: 9px;
+  }
+  .portal-workspace {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .portal-sidebar {
+    position: static;
+    padding: 15px;
+    display: flex;
+    overflow: auto;
+    gap: 8px;
+  }
+  .portal-sidebar h2 {
+    display: none;
+  }
+  .portal-sidebar button {
+    width: auto;
+    white-space: nowrap;
+    font-size: 16px;
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    padding: 8px;
+  }
+  .portal-sidebar button[aria-current="page"] {
+    border-bottom-color: var(--gold);
+  }
+  .dues-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .portal-main > h2 {
+    font-size: 36px;
+  }
+  .signup-steps {
+    gap: 8px;
+    font-size: 12px;
+  }
+}
+@media (max-width: 450px) {
+  .procession-copy h1 {
+    font-size: 66px;
+  }
+  .procession-copy .actions {
+    gap: 12px;
+  }
+  .procession-copy .button {
+    font-size: 16px;
+    padding: 12px 15px;
+  }
+  .journey-icon {
+    left: 35%;
+    width: 50%;
+  }
+  .journey-controls {
+    font-size: 12px;
+  }
+  .journey-next {
+    display: none;
+  }
+  .calendar-toolbar h2 {
+    order: -1;
+    width: 100%;
+  }
+  .calendar-day {
+    min-height: 80px;
+    padding: 6px 3px;
+  }
+  .calendar-day small {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .day-event {
+    font-size: 8px;
+  }
+  .calendar-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+  .land-budget {
+    width: 88%;
+    right: 6%;
+  }
+  .gathering-detail h3 {
+    font-size: 25px;
+  }
+  .procession-copy p {
+    font-size: 19px;
+  }
+  .land-heading p {
+    max-width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

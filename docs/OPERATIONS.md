@@ -8,13 +8,21 @@ Repository: https://github.com/stridr5555/arbahara-monastery-site
 
 Use organization-controlled accounts with more than one responsible custodian.
 Keep recovery methods and the handover record in the monastery's secure records.
-The initial production administrator is the existing office address
-`support@haramonastery.org`. Administrators must verify their email through the
+The existing production bootstrap address is `support@haramonastery.org`.
+The redesign's development bootstrap list includes the requested
+`btekle6370@gmail.com` and `stridr5555@gmail.com`; preserve the office address when
+updating the production list during the separately reviewed release.
+Administrators must verify their email through the
 normal sign-in flow. The server reads bootstrap administrator addresses from
 `ADMIN_EMAILS` in Convex; no email address in client code grants access.
 
 Administrators review members, publish events and archive records, assign staff
-roles, and export records. Treasurers reconcile Zelle reports. Check-in volunteers
+roles, and export records. Treasurers reconcile Zelle reports and accounting records.
+Secretaries can review households, import rosters, record collections and reconcile
+bank activity, but cannot invite staff, connect the bank, or close periods. Invite
+the secretary by her exact Gmail address in Stewardship > Staff invitations; access
+begins only after verified sign-in. Invitations do not send email automatically.
+Check-in volunteers
 validate tickets. Members can read only their own profiles, gifts, and tickets.
 Active members can download member-only archive files. Administration mutations
 create an audit record. Remove staff roles when responsibilities change, and also
@@ -22,15 +30,15 @@ remove any bootstrap address from `ADMIN_EMAILS` if its owner no longer serves.
 
 ## Services
 
-| Service | Resource |
-|---|---|
-| Vercel production project | arbahara-monastery-site |
-| Convex project | arbahara-monastery, project 3053427 |
-| Convex production | energetic-orca-365 |
-| Convex development | cautious-meadowlark-132 |
-| Stripe owner email | btekle6370@gmail.com |
-| Separate Stripe live account | acct_1UIhM409auEOsI8O |
-| Separate Stripe sandbox | acct_1UIhMHP8Y3azJapB |
+| Service                      | Resource                            |
+| ---------------------------- | ----------------------------------- |
+| Vercel production project    | arbahara-monastery-site             |
+| Convex project               | arbahara-monastery, project 3053427 |
+| Convex production            | energetic-orca-365                  |
+| Convex development           | cautious-meadowlark-132             |
+| Stripe owner email           | btekle6370@gmail.com                |
+| Separate Stripe live account | acct_1UIhM409auEOsI8O               |
+| Separate Stripe sandbox      | acct_1UIhMHP8Y3azJapB               |
 
 The previous Stripe account belongs to Take Flight Merch LLC. It must not be used
 for this member giving portal. The separate live account completed activation:
@@ -42,8 +50,11 @@ credentials are stored here, and no real-money payment was submitted during QA.
 
 Convex production requires `STRIPE_SECRET_KEY` for the separate live monastery
 account, `APPROVED_STRIPE_ACCOUNT_ID`, and `STRIPE_WEBHOOK_SECRET`. Confirm that the
-account ID is correct, charges are enabled, and `us_bank_account_ach_payments` is
-active. Never enable `PAYMENTS_TEST_MODE` in production. Development uses only the
+account ID is correct, charges are enabled, and `card_payments` is active.
+New Checkout Sessions explicitly accept `card` only. Existing Stripe ACH records
+and subscriptions remain historical/legacy; this change does not cancel or migrate
+them, and must not create a second automatic collection for the same person.
+Never enable `PAYMENTS_TEST_MODE` in production. Development uses only the
 monastery sandbox and may set that variable to `true`.
 
 Stripe webhook destination: `https://energetic-orca-365.convex.site/stripe-webhook`.

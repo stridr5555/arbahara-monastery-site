@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+const FinanceAdmin = lazy(() => import("./FinanceAdmin"));
+const CalendarAdmin = lazy(() =>
+  import("./CalendarAdmin").then((m) => ({ default: m.CalendarAdmin })),
+);
 import {
   MemberAdmin,
   Treasury,
@@ -17,6 +21,8 @@ export default function AdminRouter({
   const tabs =
     role === "admin"
       ? [
+          ["finance", "Stewardship & accounts"],
+          ["calendar", "Recurring calendar"],
           ["members", "Members"],
           ["treasury", "Zelle review"],
           ["events", "Events"],
@@ -24,8 +30,14 @@ export default function AdminRouter({
           ["archive", "Archive"],
           ["records", "Exports & audit"],
         ]
-      : role === "treasurer"
-        ? [["treasury", "Zelle review"]]
+      : role === "treasurer" || role === "secretary"
+        ? [
+            ["finance", "Stewardship & accounts"],
+            ["treasury", "Zelle review"],
+            ...(role === "secretary"
+              ? [["calendar", "Recurring calendar"]]
+              : []),
+          ]
         : [["checkin", "Check-in"]];
   const [tab, setTab] = useState(initialView || tabs[0][0]);
   return (
@@ -42,7 +54,15 @@ export default function AdminRouter({
           </button>
         ))}
       </div>
-      {tab === "members" ? (
+      {tab === "finance" ? (
+        <Suspense fallback={<p>Loading stewardship tools…</p>}>
+          <FinanceAdmin role={role} />
+        </Suspense>
+      ) : tab === "calendar" ? (
+        <Suspense fallback={<p>Loading calendar administration…</p>}>
+          <CalendarAdmin />
+        </Suspense>
+      ) : tab === "members" ? (
         <MemberAdmin />
       ) : tab === "treasury" ? (
         <Treasury />

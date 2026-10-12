@@ -98,7 +98,7 @@ export const reportZelle = mutation({
 export const reviewQueue = query({
   args: {},
   handler: async (ctx) => {
-    await requireRole(ctx, ["admin", "treasurer"]);
+    await requireRole(ctx, ["admin", "treasurer", "secretary"]);
     return Promise.all(
       (
         await ctx.db
@@ -115,7 +115,7 @@ export const reviewQueue = query({
 export const reconcile = mutation({
   args: { id: v.id("donations"), confirmed: v.boolean(), note: v.string() },
   handler: async (ctx, a) => {
-    const u = await requireRole(ctx, ["admin", "treasurer"]);
+    const u = await requireRole(ctx, ["admin", "treasurer", "secretary"]);
     const d = await ctx.db.get(a.id);
     if (!d || d.method !== "zelle" || d.status !== "reported")
       throw new Error("Only unreviewed Zelle reports can be reconciled.");
@@ -198,7 +198,7 @@ export const beginCheckout = internalMutation({
     await rateLimit(ctx, `checkout:${a.userId}`, 10, 3600000);
     return ctx.db.insert("donations", {
       ...a,
-      method: "ach",
+      method: "card",
       status: "pending",
       giftDate: new Date().toISOString().slice(0, 10),
       createdAt: Date.now(),

@@ -4,6 +4,7 @@ import { ConvexReactClient } from "convex/react";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { App } from "./App";
 import "./site.css";
+import "./redesign.css";
 const normalized =
   window.location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
 const path = normalized === "/index" ? "/" : normalized;

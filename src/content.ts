@@ -171,6 +171,7 @@ export const archiveItems: ArchiveItem[] = [
 ];
 export const pageMeta: Record<string, { title: string; description: string }> =
   {
+    "/calendar": {title:"Community calendar | Arbahara",description:"Ethiopian and Gregorian dates for the monthly Arbahara Mahiber and Medhanialem Ziker, with a downloadable calendar."},
     "/": {
       title: "Arbahara Monastery | A home for prayer. A legacy of faith.",
       description:

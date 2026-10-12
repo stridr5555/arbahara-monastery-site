@@ -27,11 +27,22 @@ export const save = mutation({
     language: v.union(v.literal("en"), v.literal("am")),
     interests: v.array(v.string()),
     consent: v.boolean(),
+    baptismalName: v.optional(v.string()),
+    spouseName: v.optional(v.string()),
+    spouseBaptismalName: v.optional(v.string()),
+    address: v.optional(v.string()),
   },
   handler: async (ctx, a) => {
     const user = await requireUser(ctx);
     if (!a.consent) throw new Error("Please accept the privacy notice.");
     const name = clean(a.name, 120, "Name");
+    if (
+      [a.baptismalName, a.spouseName, a.spouseBaptismalName].some(
+        (x) => x && x.length > 120,
+      ) ||
+      (a.address?.length || 0) > 500
+    )
+      throw new Error("Please shorten household fields.");
     if (a.phone.length > 40 || a.city.length > 120 || a.interests.length > 10)
       throw new Error("Please shorten the profile fields.");
     const allowed = [
@@ -54,6 +65,16 @@ export const save = mutation({
       language: a.language,
       interests: a.interests,
       updatedAt: Date.now(),
+      ...(a.baptismalName !== undefined
+        ? { baptismalName: a.baptismalName.trim() }
+        : {}),
+      ...(a.spouseName !== undefined
+        ? { spouseName: a.spouseName.trim() }
+        : {}),
+      ...(a.spouseBaptismalName !== undefined
+        ? { spouseBaptismalName: a.spouseBaptismalName.trim() }
+        : {}),
+      ...(a.address !== undefined ? { address: a.address.trim() } : {}),
     };
     const id = old
       ? old._id
@@ -65,6 +86,43 @@ export const save = mutation({
           memberNumber: `ARB-${user._id.slice(-8).toUpperCase()}`,
         });
     if (old) await ctx.db.patch(id, values);
+    const link = await ctx.db
+      .query("householdLinks")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .unique();
+    if (!link) {
+      const householdId = await ctx.db.insert("households", {
+        name,
+        email: user.email,
+        phone: a.phone.trim(),
+        address: a.address?.trim() || a.city.trim(),
+        status: "pending",
+        exempt: false,
+        source: "application",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+      await ctx.db.insert("householdLinks", {
+        householdId,
+        userId: user._id,
+        linkedBy: user._id,
+        createdAt: Date.now(),
+      });
+    } else {
+      const household = await ctx.db.get(link.householdId);
+      if (
+        household?.source === "application" &&
+        household.status === "pending" &&
+        !household.approvedAt
+      )
+        await ctx.db.patch(household._id, {
+          name,
+          email: user.email,
+          phone: a.phone.trim(),
+          address: a.address?.trim() || a.city.trim(),
+          updatedAt: Date.now(),
+        });
+    }
     await audit(ctx, user._id, old ? "member.updated" : "member.applied", id);
     return id;
   },
@@ -144,10 +202,46 @@ export const exportMine = query({
   args: {},
   handler: async (ctx) => {
     const u = await requireUser(ctx);
+    const link = await ctx.db
+      .query("householdLinks")
+      .withIndex("by_user", (q) => q.eq("userId", u._id))
+      .unique();
+    const household = link ? await ctx.db.get(link.householdId) : null;
+    const charges = household
+      ? await ctx.db
+          .query("duesCharges")
+          .withIndex("by_household_month", (q) =>
+            q.eq("householdId", household._id),
+          )
+          .collect()
+      : [];
+    const receipts = household
+      ? await ctx.db
+          .query("receipts")
+          .withIndex("by_household", (q) => q.eq("householdId", household._id))
+          .collect()
+      : [];
     return {
-      schemaVersion: 1,
+      schemaVersion: 2,
       exportedAt: new Date().toISOString(),
       email: u.email,
+      household,
+      duesCharges: charges,
+      householdCollections: receipts.map(
+        ({ createdBy, requestId, intent, ...r }) => r,
+      ),
+      duesAllocations: (
+        await Promise.all(
+          receipts.map((r) =>
+            ctx.db
+              .query("duesAllocations")
+              .withIndex("by_receipt", (q) => q.eq("receiptId", r._id))
+              .collect(),
+          ),
+        )
+      )
+        .flat()
+        .map(({ createdBy, ...a }) => a),
       profile: await ctx.db
         .query("members")
         .withIndex("by_user", (q) => q.eq("userId", u._id))

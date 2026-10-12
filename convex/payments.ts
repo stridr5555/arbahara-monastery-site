@@ -9,7 +9,7 @@ import type { Id } from "./_generated/dataModel";
 function client() {
   if (!process.env.STRIPE_SECRET_KEY)
     throw new Error(
-      "Bank giving is not available yet. Please use Zelle or contact the office.",
+      "Card giving is not available yet. Please use Zelle or contact the office.",
     );
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 }
@@ -28,7 +28,7 @@ export const checkout = action({
       !process.env.STRIPE_WEBHOOK_SECRET
     )
       throw new Error(
-        "Bank giving is being prepared. You can give through Zelle today.",
+        "Card giving is being prepared. You can give through Zelle today.",
       );
     const stripe = client();
     const account = await stripe.accounts.retrieve(
@@ -42,10 +42,10 @@ export const checkout = action({
       (!sandbox &&
         (!account.charges_enabled ||
           !account.payouts_enabled ||
-          account.capabilities?.us_bank_account_ach_payments !== "active"))
+          account.capabilities?.card_payments !== "active"))
     )
       throw new Error(
-        "Bank giving is temporarily unavailable. Please contact the office.",
+        "Card giving is temporarily unavailable. Please contact the office.",
       );
     const identity = await ctx.runQuery(internal.donations.identity, {
       userId,
@@ -72,13 +72,13 @@ export const checkout = action({
         stripeCustomerId: created.id,
       });
     }
-    const metadata = { app: "arbahara", userId, donationId, fund: a.fund };
+    const metadata = { app: "arbahara", userId, donationId, fund: a.fund, paymentRail: "card" };
     const site = process.env.SITE_URL || "https://www.haramonastery.org";
     const session = await stripe.checkout.sessions.create(
       {
         mode: a.frequency === "monthly" ? "subscription" : "payment",
         customer,
-        payment_method_types: ["us_bank_account"],
+        payment_method_types: ["card"],
         line_items: [
           {
             quantity: 1,
@@ -103,7 +103,7 @@ export const checkout = action({
         custom_text: {
           submit: {
             message:
-              "Thank you for supporting Arbahara Monastery. Your bank payment will appear as pending until it is confirmed.",
+              "Thank you for supporting Arbahara Monastery. Your card payment is confirmed only after processing.",
           },
         },
       },
@@ -125,7 +125,7 @@ export const billingPortal = action({
     const { customer } = await ctx.runQuery(internal.donations.identity, {
       userId,
     });
-    if (!customer) throw new Error("No bank giving account is linked yet.");
+    if (!customer) throw new Error("No Stripe giving account is linked yet.");
     const session = await client().billingPortal.sessions.create({
       customer,
       return_url: `${process.env.SITE_URL}/members?view=giving`,
@@ -190,6 +190,7 @@ export const acceptWebhook = internalAction({
         id: sub.metadata.donationId,
         userId: sub.metadata.userId,
         fund: sub.metadata.fund,
+        method: sub.metadata.paymentRail === "card" ? "card" : "ach",
         subscriptionId: sub.id,
         invoiceId: object.id,
         paymentIntentId: typeof payment === "string" ? payment : payment?.id,

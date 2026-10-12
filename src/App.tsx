@@ -17,6 +17,7 @@ import {
 } from "./pages/Information";
 import { Live } from "./components/Live";
 import { MotionProvider } from "./components/Motion";
+import { ChurchCalendar } from "./components/ChurchCalendar";
 const Portal = lazy(() => import("./portal/Portal"));
 const EventList = lazy(() =>
   import("./portal/Tickets").then((m) => ({ default: m.EventList })),
@@ -114,12 +115,14 @@ export function App({ path }: { path: string }) {
         </div>
       );
       break;
+    case "/calendar":
     case "/events":
       page = (
         <div className="wrap">
-          <PageIntro title="Gather in faith and fellowship.">
-            Published monastery events and community gatherings.
+          <PageIntro title="Gather in prayer and fellowship.">
+            In faith. In community. Always together.
           </PageIntro>
+          <ChurchCalendar />
           <p>
             For regular worship and current service times,{" "}
             <a href="/visit">contact the monastery office</a>. Event

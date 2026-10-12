@@ -1,10 +1,69 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { api, internal } from "./_generated/api";
+import { calendarIcs, upcomingGatherings } from "../src/lib/calendar";
+import { applyCalendarChanges } from "../src/lib/calendarChanges";
 import { auth } from "./auth";
 import type { Id } from "./_generated/dataModel";
 const http = httpRouter();
 auth.addHttpRoutes(http);
+http.route({
+  path: "/calendar.ics",
+  method: "GET",
+  handler: httpAction(async (ctx) => {
+    const changes = await ctx.runQuery(api.calendarRecords.changes, {});
+    const until = new Date();
+    until.setUTCFullYear(until.getUTCFullYear() + 1);
+    const events = applyCalendarChanges(
+      upcomingGatherings(new Date(Date.now() - 7 * 86400000), 13),
+      changes,
+    ).filter(
+      (e) =>
+        !e.cancelled && e.endsAt > Date.now() && e.startsAt < until.getTime(),
+    );
+    return new Response(calendarIcs(events), {
+      headers: {
+        "Content-Type": "text/calendar; charset=utf-8",
+        "Content-Disposition": 'attachment; filename="arbahara-gatherings.ics"',
+        "Cache-Control": "public, max-age=300",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  }),
+});
+http.route({
+  path: "/calendar/google/callback",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const url = new URL(request.url),
+      state = url.searchParams.get("state"),
+      code = url.searchParams.get("code");
+    let ok = false;
+    try {
+      if (state)
+        ok = (
+          await ctx.runAction(internal.calendarActions.complete, {
+            state,
+            code: code || undefined,
+          })
+        ).ok;
+    } catch {}
+    const target = new URL(
+      "/members",
+      process.env.SITE_URL || "https://www.haramonastery.org",
+    );
+    target.searchParams.set("view", "calendar");
+    target.searchParams.set("calendar", ok ? "connected" : "reconnect");
+    return new Response(null, {
+      status: 303,
+      headers: {
+        Location: target.href,
+        "Cache-Control": "no-store",
+        "Referrer-Policy": "no-referrer",
+      },
+    });
+  }),
+});
 http.route({
   path: "/archive-file",
   method: "OPTIONS",

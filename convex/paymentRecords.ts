@@ -5,7 +5,9 @@ import type { Id } from "./_generated/dataModel";
 export const availability = query({
   args: {},
   handler: () => ({
-    ach: !!(
+    // Chase ACH is a separate rail. Mock API access is not activation.
+    ach: false,
+    card: !!(
       process.env.STRIPE_SECRET_KEY &&
       process.env.APPROVED_STRIPE_ACCOUNT_ID &&
       process.env.STRIPE_WEBHOOK_SECRET
@@ -122,7 +124,8 @@ export const apply = internalMutation({
           userId: p.userId,
           amountCents: p.amountCents,
           fund: p.fund,
-          method: "ach",
+          // Legacy subscriptions predate paymentRail and remain ACH.
+          method: p.method === "card" ? "card" : "ach",
           frequency: "monthly",
           status,
           giftDate: new Date(a.eventCreated * 1000).toISOString().slice(0, 10),
