@@ -24,13 +24,23 @@ export async function roleFor(
     admins.includes(user.email?.toLowerCase() || "")
   )
     return "admin" as const;
+  const invitation =
+    user?.emailVerificationTime && user.email
+      ? await ctx.db
+          .query("staffInvitations")
+          .withIndex("by_email", (q) =>
+            q.eq("email", user.email!.toLowerCase()),
+          )
+          .unique()
+      : null;
   return (
     (
       await ctx.db
         .query("roles")
         .withIndex("by_user", (q) => q.eq("userId", userId))
         .unique()
-    )?.role || "member"
+    )?.role ||
+    (invitation && !invitation.revokedAt ? invitation.role : "member")
   );
 }
 export async function requireRole(

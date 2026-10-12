@@ -1,124 +1,130 @@
-import { useState } from "react";
 import { DepthFrame } from "../components/Motion";
 import { ArrowUpRight, MapPin, Mail, Phone } from "lucide-react";
 import { site, phases, resources, invocation } from "../content";
 import { PageIntro, TextLink, LinkButton } from "../components/Layout";
+import { LandJourney } from "../components/LandJourney";
+import { MediaProcession } from "../components/MediaProcession";
 export function Monastery() {
   return (
-    <div className="wrap">
-      <PageIntro title="Rooted in faith. Growing together.">
-        The story and vision of {site.fullName}.
-      </PageIntro>
-      <section className="editorial-split">
-        <div className="prose">
-          <p className="invocation">{invocation}</p>
-          <h2>A beginning in Crandall</h2>
-          <p>
-            Through the grace of God and the support of our spiritual family, we
-            have secured a ten-acre property in Crandall, Texas. Here we hope to
-            establish a lasting home for prayer, the Divine Liturgy, spiritual
-            retreat, and service within the Ethiopian Orthodox Tewahedo Church.
-          </p>
-          <p>
-            The property includes a four-bedroom residence, a peaceful lake, and
-            a two-door garage. Our first building priority is to prepare the
-            garage as a place for congregational prayer, with its sacred use and
-            consecration under ecclesiastical guidance.
-          </p>
-          <p>
-            We also hope to explore the aquifer beneath the land and the
-            possibility of a well for tsebel, holy water. Professional
-            assessment and required permissions must accompany the Church’s
-            blessing and direction.
-          </p>
-          <p>
-            We build for those who will pray here after us. Our shared records,
-            photographs, and teachings preserve the story of these beginnings so
-            that future generations can know the faith and care behind them.
-          </p>
-        </div>
-        <figure>
-          <img
-            className="landscape"
-            src="/assets/property/land-02.webp"
-            width="2344"
-            height="1310"
-            alt="Aerial view of the existing residence surrounded by trees"
-          />
-          <figcaption>
-            The acquired Crandall property. Existing residence.
-          </figcaption>
-          <div className="property-facts">
-            <span>
-              <strong>10 acres</strong>Land acquired
-            </span>
-            <span>
-              <strong>Crandall</strong>Texas
-            </span>
+    <>
+      <LandJourney full />
+      <div className="wrap">
+        <PageIntro title="Rooted in faith. Growing together.">
+          The story and vision of {site.fullName}.
+        </PageIntro>
+        <section className="editorial-split">
+          <div className="prose">
+            <p className="invocation">{invocation}</p>
+            <h2>A beginning in Crandall</h2>
+            <p>
+              Through the grace of God and the support of our spiritual family,
+              we have secured a ten-acre property in Crandall, Texas. Here we
+              hope to establish a lasting home for prayer, the Divine Liturgy,
+              spiritual retreat, and service within the Ethiopian Orthodox
+              Tewahedo Church.
+            </p>
+            <p>
+              The property includes a four-bedroom residence, a peaceful lake,
+              and a two-door garage. Our first building priority is to prepare
+              the garage as a place for congregational prayer, with its sacred
+              use and consecration under ecclesiastical guidance.
+            </p>
+            <p>
+              We also hope to explore the aquifer beneath the land and the
+              possibility of a well for tsebel, holy water. Professional
+              assessment and required permissions must accompany the Church’s
+              blessing and direction.
+            </p>
+            <p>
+              We build for those who will pray here after us. Our shared
+              records, photographs, and teachings preserve the story of these
+              beginnings so that future generations can know the faith and care
+              behind them.
+            </p>
           </div>
-        </figure>
-      </section>
-      <section className="section" id="plans">
-        <div className="section-heading">
-          <div>
-            <span className="section-label">The campus vision</span>
-            <h2>A place for generations.</h2>
-          </div>
-          <TextLink
-            href="/assets/images/monastery-campus-master-plan.png"
-            external
-          >
-            Open full-size plan
-          </TextLink>
-        </div>
-        <figure className="master-plan">
-          <a
-            href="/assets/images/monastery-campus-master-plan.png"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <figure>
             <img
-              loading="lazy"
-              width="1448"
-              height="1086"
-              src="/assets/images/monastery-campus-master-plan.png"
-              alt="Conceptual campus master plan with the complete numbered legend"
+              className="landscape"
+              src="/assets/property/land-02.webp"
+              width="2344"
+              height="1310"
+              alt="Aerial view of the existing residence surrounded by trees"
             />
-          </a>
-          <figcaption>
-            Conceptual campus master plan, preserved from the existing monastery
-            records. Facilities shown are proposed and remain subject to design,
-            funding, and approvals.
-          </figcaption>
-        </figure>
-        <ol className="phase-list">
-          {phases.map((p, i) => (
-            <li key={p.title}>
-              <span className="phase-number">0{i + 1}</span>
-              <div>
-                <h3>{p.title}</h3>
-                <p>{p.text}</p>
-              </div>
-              <span className="status">Planned</span>
-            </li>
-          ))}
-        </ol>
-      </section>
-      <section className="callout">
-        <h2>There is work for many hands.</h2>
-        <p>
-          Support the construction fund, volunteer your skills, or help preserve
-          the monastery’s records. Contact the office to discuss how you can
-          serve.
-        </p>
-        <div className="actions">
-          <LinkButton href="/donate">Support the monastery</LinkButton>
-          <LinkButton href="/visit" secondary>
-            Speak with the office
-          </LinkButton>
-        </div>
-      </section>
-    </div>
+            <figcaption>
+              The acquired Crandall property. Existing residence.
+            </figcaption>
+            <div className="property-facts">
+              <span>
+                <strong>10 acres</strong>Land acquired
+              </span>
+              <span>
+                <strong>Crandall</strong>Texas
+              </span>
+            </div>
+          </figure>
+        </section>
+        <section className="section" id="plans">
+          <div className="section-heading">
+            <div>
+              <span className="section-label">The campus vision</span>
+              <h2>A place for generations.</h2>
+            </div>
+            <TextLink
+              href="/assets/images/monastery-campus-master-plan.png"
+              external
+            >
+              Open full-size plan
+            </TextLink>
+          </div>
+          <figure className="master-plan">
+            <a
+              href="/assets/images/monastery-campus-master-plan.png"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                loading="lazy"
+                width="1448"
+                height="1086"
+                src="/assets/images/monastery-campus-master-plan.png"
+                alt="Conceptual campus master plan with the complete numbered legend"
+              />
+            </a>
+            <figcaption>
+              Conceptual campus master plan, preserved from the existing
+              monastery records. Facilities shown are proposed and remain
+              subject to design, funding, and approvals.
+            </figcaption>
+          </figure>
+          <ol className="phase-list">
+            {phases.map((p, i) => (
+              <li key={p.title}>
+                <span className="phase-number">0{i + 1}</span>
+                <div>
+                  <h3>{p.title}</h3>
+                  <p>{p.text}</p>
+                </div>
+                <span className="status">Planned</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+        <section className="callout">
+          <h2>There is work for many hands.</h2>
+          <p>
+            Support the construction fund, volunteer your skills, or help
+            preserve the monastery’s records. Contact the office to discuss how
+            you can serve.
+          </p>
+          <div className="actions">
+            <LinkButton href="/donate">Support the monastery</LinkButton>
+            <LinkButton href="/visit" secondary>
+              Speak with the office
+            </LinkButton>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }
 export function Faith() {
@@ -314,32 +320,38 @@ const photoLabels: Record<number, string> = {
   10: "Bathroom, virtually staged",
 };
 export function Gallery() {
-  const [filter, setFilter] = useState("collection");
   return (
-    <div className="wrap">
-      <PageIntro title="A place. A people. A shared memory.">
-        Photographs and films preserved from the monastery’s existing
-        collection.
-      </PageIntro>
-      <div className="filter-row" aria-label="Gallery collections">
-        {[
-          ["collection", "Original collection"],
-          ["property", "The property"],
-          ["sacred", "Sacred art"],
-          ["films", "Community films"],
-        ].map(([key, label]) => (
-          <button
-            key={key}
-            type="button"
-            aria-pressed={filter === key}
-            onClick={() => setFilter(key)}
-          >
-            {label}
-          </button>
-        ))}
+    <>
+      <div className="wrap">
+        <PageIntro title="Photographs and films">
+          Our community, our property, and the memories we share. Everything is
+          on this page—scroll down, or go directly to a section below.
+        </PageIntro>
+        <nav
+          className="collection-jump-links"
+          aria-label="Photographs and films sections"
+        >
+          {[
+            ["community-photographs", "Community photographs"],
+            ["property-photographs", "Property photographs"],
+            ["sacred-art", "Sacred art"],
+            ["community-films", "Watch community films"],
+          ].map(([key, label]) => (
+            <a key={key} href={`#${key}`}>
+              {label} <ArrowUpRight size={17} />
+            </a>
+          ))}
+        </nav>
       </div>
-      {filter === "collection" ? (
-        <>
+      <MediaProcession />
+      <div className="wrap" id="community">
+        <section
+          className="collection-section"
+          id="community-photographs"
+          aria-labelledby="community-photos-heading"
+        >
+          <h2 id="community-photos-heading">Community photographs</h2>
+          <p>Select a photograph to open the full-size image in a new tab.</p>
           <p className="small">
             The photographs, sacred images, and visual records from our original
             website. Historical images are preserved as part of the collection,
@@ -372,6 +384,7 @@ export function Gallery() {
                     href={`/assets/images/${file}`}
                     target="_blank"
                     rel="noreferrer"
+                    aria-label={`View larger: ${label} (opens in a new tab)`}
                   >
                     <img
                       src={`/assets/images/${file}`}
@@ -384,9 +397,13 @@ export function Gallery() {
               </DepthFrame>
             ))}
           </div>
-        </>
-      ) : filter === "property" ? (
-        <>
+        </section>
+        <section
+          className="collection-section"
+          id="property-photographs"
+          aria-labelledby="property-photos-heading"
+        >
+          <h2 id="property-photos-heading">Property photographs</h2>
           <p className="small">
             Original property listing photographs. Images marked “Virtually
             Staged” contain illustrative furnishings and do not document the
@@ -399,6 +416,7 @@ export function Gallery() {
                   href={`/assets/property/land-${String(n).padStart(2, "0")}.webp`}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label={`View larger: ${photoLabels[n]} (opens in a new tab)`}
                 >
                   <img
                     src={`/assets/property/land-${String(n).padStart(2, "0")}.webp`}
@@ -415,73 +433,91 @@ export function Gallery() {
           <TextLink href="/assets/property/user-map-overhead.jpg" external>
             Property map from the original collection
           </TextLink>
-        </>
-      ) : filter === "sacred" ? (
-        <div className="sacred-gallery">
-          <figure>
-            <img
-              src="/assets/images/jesus-icon.png"
-              alt="Icon of Christ from the original monastery website"
-            />
-            <figcaption>Icon of Christ from the original website.</figcaption>
-          </figure>
-          <figure>
-            <img
-              src="/assets/images/saint-portrait.jpg"
-              alt="Sacred portrait from the monastery collection"
-            />
-            <figcaption>
-              Sacred portrait preserved from the original website.
-            </figcaption>
-          </figure>
-          <p>
-            We preserve this image as part of the monastery’s existing
-            collection. For its history and identification, please ask the
-            monastery office.
-          </p>
-        </div>
-      ) : (
-        <div className="photo-grid">
-          {[
-            "230552_179",
-            "230555_407",
-            "230601_446",
-            "230724_600",
-            "230814_250",
-            "230849_742",
-            "230855_830",
-          ].map((id, i) => (
-            <figure key={id}>
-              <video
-                controls
-                preload="none"
-                poster={`/assets/images/video-VID_20220607_${id}.jpg`}
-                aria-label={`Community film ${i + 1}`}
-              >
-                <source
-                  src={`/assets/videos/VID_20220607_${id}.mp4`}
-                  type="video/mp4"
-                />
-              </video>
+        </section>
+        <section
+          className="collection-section"
+          id="sacred-art"
+          aria-labelledby="sacred-art-heading"
+        >
+          <h2 id="sacred-art-heading">Sacred art</h2>
+          <div className="sacred-gallery">
+            <figure>
+              <img
+                src="/assets/images/jesus-icon.png"
+                alt="Icon of Christ from the original monastery website"
+                loading="lazy"
+              />
+              <figcaption>Icon of Christ from the original website.</figcaption>
+            </figure>
+            <figure>
+              <img
+                src="/assets/images/saint-portrait.jpg"
+                alt="Sacred portrait from the monastery collection"
+                loading="lazy"
+              />
               <figcaption>
-                Community film {i + 1} · original 2022 collection. Captions and
-                detailed descriptions are not yet available.
+                Sacred portrait preserved from the original website.
               </figcaption>
             </figure>
-          ))}
-        </div>
-      )}
-      <section className="callout">
-        <h2>Help us preserve the names and stories.</h2>
-        <p>
-          If you can identify a person, place, or occasion in our collection,
-          contact the office. Please obtain permission before sharing
-          photographs of others, especially children.
-        </p>
-        <TextLink href={`mailto:${site.email}`}>
-          Contribute a description
-        </TextLink>
-      </section>
-    </div>
+            <p>
+              We preserve this image as part of the monastery’s existing
+              collection. For its history and identification, please ask the
+              monastery office.
+            </p>
+          </div>
+        </section>
+        <section
+          className="collection-section"
+          id="community-films"
+          aria-labelledby="community-films-heading"
+        >
+          <h2 id="community-films-heading">Watch community films</h2>
+          <p>
+            Press the Play button on a film to watch. Sound starts only when you
+            play it.
+          </p>
+          <div className="photo-grid">
+            {[
+              "230552_179",
+              "230555_407",
+              "230601_446",
+              "230724_600",
+              "230814_250",
+              "230849_742",
+              "230855_830",
+            ].map((id, i) => (
+              <figure key={id}>
+                <video
+                  controls
+                  preload="none"
+                  poster={`/assets/images/video-VID_20220607_${id}.jpg`}
+                  aria-label={`Community film ${i + 1}`}
+                >
+                  <source
+                    src={`/assets/videos/VID_20220607_${id}.mp4`}
+                    type="video/mp4"
+                  />
+                </video>
+                <figcaption>
+                  Community film {i + 1} · original 2022 collection. Captions
+                  and detailed descriptions are not yet available.
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+        <section className="callout">
+          <h2>Help us preserve the names and stories.</h2>
+          <p>
+            If you can identify a person, place, or occasion in our collection,
+            contact the office. Please obtain permission before sharing
+            photographs of others, especially children.
+          </p>
+          <TextLink href={`mailto:${site.email}`}>
+            Contribute a description
+          </TextLink>
+        </section>
+      </div>
+    </>
   );
 }

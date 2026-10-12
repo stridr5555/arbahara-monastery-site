@@ -86,10 +86,10 @@ export function Header({ path }: { path: string }) {
             aria-label="Main navigation"
           >
             {[
-              ["/monastery", "Our monastery"],
-              ["/faith", "Faith & learning"],
-              ["/archive", "Archive"],
-              ["/visit", "Visit"],
+              ["/faith", "Faith"],
+              ["/#community", "Community"],
+              ["/monastery", "Land & vision"],
+              ["/calendar", "Calendar"],
             ].map(([href, label]) => (
               <a
                 key={href}
@@ -104,10 +104,7 @@ export function Header({ path }: { path: string }) {
               href="/members"
               aria-current={path === "/members" ? "page" : undefined}
             >
-              Member login
-            </a>
-            <a className="button compact" href="/donate">
-              Give
+              Members
             </a>
           </nav>
         </div>
@@ -136,6 +133,7 @@ export function Footer() {
         </div>
         <div>
           <h2>Our community</h2>
+          <a href="/announcements">Announcements & reflections</a>
           <a href="/visit">Visit & contact</a>
           <a href="/events">Gatherings & events</a>
           <a href="/members">Member portal</a>
@@ -201,7 +199,10 @@ export function Layout({
   const root = useRef<HTMLDivElement>(null);
   usePageMotion(root);
   return (
-    <div className="site-shell" ref={root}>
+    <div
+      className={`site-shell ${path === "/" ? "journey-shell" : ""}`}
+      ref={root}
+    >
       <TranslationController />
       <div className="reading-progress" aria-hidden="true" />
       <Header path={path} />

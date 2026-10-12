@@ -182,9 +182,10 @@ export function EventList({ signedIn = false }: { signedIn?: boolean }) {
         </p>
       ) : !events.length ? (
         <div className="empty panel">
-          <h2>Gatherings will be announced here.</h2>
+          <h2>Special event registration</h2>
           <p>
-            No upcoming event has been published. Contact the office for current
+            No special event is open for registration. Regular Mahiber and Ziker
+            gatherings are listed in the public calendar. Contact the office for
             worship and visiting arrangements.
           </p>
           <a className="text-link" href="/visit">

@@ -141,12 +141,12 @@ export function MemberGive() {
           Your offering supports the monastery’s life and future. You will see
           the status in your giving history.
         </p>
-        {availability && !availability.ach ? (
+        {availability && !availability.card ? (
           <div className="notice">
-            <h3>Bank giving is being prepared</h3>
+            <h3>Card giving is being prepared</h3>
             <p>
-              You can give through Zelle now. Online ACH will open after the
-              monastery’s receiving account is confirmed.
+              You can give through Zelle now. Bank ACH is separate from Stripe
+              and is not activated yet. No bank details are collected here.
             </p>
           </div>
         ) : null}

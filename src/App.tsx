@@ -5,6 +5,10 @@ import { Monastery, Faith, Visit, Gallery } from "./pages/Community";
 import { Archive } from "./pages/Archive";
 import { Give } from "./pages/Give";
 import {
+  Announcements,
+  FoundingAnnouncement,
+} from "./pages/Announcements";
+import {
   Privacy,
   Terms,
   Amharic,
@@ -13,6 +17,7 @@ import {
 } from "./pages/Information";
 import { Live } from "./components/Live";
 import { MotionProvider } from "./components/Motion";
+import { ChurchCalendar } from "./components/ChurchCalendar";
 const Portal = lazy(() => import("./portal/Portal"));
 const EventList = lazy(() =>
   import("./portal/Tickets").then((m) => ({ default: m.EventList })),
@@ -63,6 +68,12 @@ export function App({ path }: { path: string }) {
     case "/archive":
       page = <Archive />;
       break;
+    case "/announcements":
+      page = <Announcements />;
+      break;
+    case "/announcements/establishment-of-abuna-hara-dengeel-monastery":
+      page = <FoundingAnnouncement />;
+      break;
     case "/donate":
       page = <Give />;
       break;
@@ -104,12 +115,14 @@ export function App({ path }: { path: string }) {
         </div>
       );
       break;
+    case "/calendar":
     case "/events":
       page = (
         <div className="wrap">
-          <PageIntro title="Gather in faith and fellowship.">
-            Published monastery events and community gatherings.
+          <PageIntro title="Gather in prayer and fellowship.">
+            In faith. In community. Always together.
           </PageIntro>
+          <ChurchCalendar />
           <p>
             For regular worship and current service times,{" "}
             <a href="/visit">contact the monastery office</a>. Event

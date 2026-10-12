@@ -15,14 +15,14 @@ export function OfferingForm({
     amountCents: number;
     frequency: "once" | "monthly";
     fund: string;
-    method: "ach" | "zelle";
+    method: "card" | "zelle";
   }) => void;
   disabled?: boolean;
 }) {
   const [amount, setAmount] = useState("50");
   const [frequency, setFrequency] = useState<"once" | "monthly">("once");
   const [fund, setFund] = useState("construction");
-  const [method, setMethod] = useState<"ach" | "zelle">("zelle");
+  const [method, setMethod] = useState<"card" | "zelle">("zelle");
   const [qr, setQr] = useState("");
   useEffect(() => {
     if (!onContinue) return;
@@ -37,10 +37,10 @@ export function OfferingForm({
       setAmount(selected);
     const selectedFund = p.get("fund");
     if (selectedFund && fundNames[selectedFund]) setFund(selectedFund);
-    if (p.get("method") === "ach") setMethod("ach");
+    if (p.get("method") === "card") setMethod("card");
     if (p.get("frequency") === "monthly") {
       setFrequency("monthly");
-      setMethod("ach");
+      setMethod("card");
     }
   }, []);
   useEffect(() => {
@@ -94,7 +94,7 @@ export function OfferingForm({
               checked={frequency === "monthly"}
               onChange={() => {
                 setFrequency("monthly");
-                setMethod("ach");
+                setMethod("card");
               }}
             />
             Monthly
@@ -144,10 +144,10 @@ export function OfferingForm({
         <div className="method-options">
           <button
             type="button"
-            aria-pressed={method === "ach"}
-            onClick={() => setMethod("ach")}
+            aria-pressed={method === "card"}
+            onClick={() => setMethod("card")}
           >
-            Bank account (ACH)
+            Credit / debit card
           </button>
           <button
             type="button"
@@ -199,8 +199,8 @@ export function OfferingForm({
       ) : (
         <p className="payment-note">
           <ShieldCheck size={18} />
-          Bank giving uses a secure payment-provider checkout. Availability
-          appears after member sign-in.
+          Card giving uses Stripe’s secure checkout. Availability appears after
+          member sign-in.
         </p>
       )}
       <button type="submit" className="button full" disabled={disabled}>
@@ -210,7 +210,7 @@ export function OfferingForm({
             ? "Record my Zelle gift"
             : frequency === "monthly"
               ? "Set up monthly giving"
-              : "Continue with bank giving"}
+              : "Continue with card giving"}
         <ArrowRight size={17} />
       </button>
       <p className="small">
@@ -306,7 +306,7 @@ export function Give() {
           ],
           [
             "Can I give every month?",
-            "Monthly bank giving is available when the monastery’s payment account is connected. You authorize the recurring amount in the provider’s checkout and can manage or cancel it through the portal. For standing Zelle transfers, ask your bank about its options.",
+            "Monthly card giving uses Stripe Checkout when available. Manage or cancel it through the portal. Chase bank ACH is a separate service and is not activated yet. For standing Zelle transfers, ask your bank about its options.",
           ],
           [
             "Can I request a receipt or discuss a larger gift?",

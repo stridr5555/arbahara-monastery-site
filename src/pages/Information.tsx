@@ -39,7 +39,11 @@ export function Privacy() {
         <h2>Service providers</h2>
         <p>
           The website runs on Vercel. Convex hosts authentication and member
-          records. Sign-in codes are sent through the configured email provider.
+          records. Passwords are stored as protected hashes, not readable text.
+          Verification and password-reset codes use the configured email provider.
+          If you choose Google or Facebook sign-in, that provider shares your
+          account identifier, name, email address, and profile image when available.
+          We request identity information for sign-in, not access to your posts or contacts.
           Where bank giving is enabled, Stripe handles bank-account collection,
           authorization, and payment processing. We do not store your bank
           login, account number, or routing number. Zelle transfers take place
@@ -54,7 +58,7 @@ export function Privacy() {
         <p>
           The portal stores authentication tokens on your device to maintain
           your session. Sign out when using a shared device. Do not share
-          sign-in codes or ticket QR codes.
+          passwords, verification codes, or ticket QR codes.
         </p>
         <h2>Retention and preservation</h2>
         <p>
