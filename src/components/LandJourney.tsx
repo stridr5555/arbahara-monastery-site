@@ -6,10 +6,16 @@ import {
   Play,
   Pause,
   RotateCcw,
-  X,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 import { useMotion } from "./Motion";
-import { advanceTour, tourChapter, tourChapters } from "../lib/landTour";
+import {
+  advanceTour,
+  chapterProgress,
+  tourChapter,
+  tourChapters,
+} from "../lib/landTour";
 import {
   constructionProjects,
   constructionSource,
@@ -29,8 +35,7 @@ export function LandJourney({ full = false }: { full?: boolean }) {
   const [visible, setVisible] = useState(false);
   const [seekVersion, setSeekVersion] = useState(0);
   const root = useRef<HTMLDivElement>(null);
-  const dialog = useRef<HTMLDialogElement>(null);
-  const [photo, setPhoto] = useState(0);
+  const [zoom, setZoom] = useState(1);
   const progress = useRef(0);
   const scrubber = useRef<HTMLInputElement>(null);
   const { enabled } = useMotion();
@@ -72,7 +77,8 @@ export function LandJourney({ full = false }: { full?: boolean }) {
     return () => cancelAnimationFrame(frame);
   }, [visible, enabled, playing]);
   const goTo = (next: number) => {
-    progress.current = Math.min(3, Math.max(0, next)) / 4 + 0.04;
+    progress.current = chapterProgress(next);
+    setZoom(1);
     setStop(tourChapter(progress.current));
     setPlaying(false);
     setEnded(false);
@@ -89,7 +95,7 @@ export function LandJourney({ full = false }: { full?: boolean }) {
   };
   return (
     <section
-      className={`land-journey diorama-tour ${full ? "full" : ""}`}
+      className={`land-journey diorama-tour flyover-tour ${full ? "full" : ""}`}
       id="land"
       data-stop={stop}
     >
@@ -102,14 +108,10 @@ export function LandJourney({ full = false }: { full?: boolean }) {
           progress={progress}
           stop={stop}
           active={visible && enabled && playing}
+          visible={visible}
           motionEnabled={enabled}
           seekVersion={seekVersion}
-          onSelect={goTo}
-          onPhoto={(index) => {
-            setPlaying(false);
-            setPhoto(index);
-            dialog.current?.showModal();
-          }}
+          zoom={zoom}
         />
         <header className="land-heading">
           <h2>
@@ -128,17 +130,16 @@ export function LandJourney({ full = false }: { full?: boolean }) {
             role="group"
             aria-label="Property view"
           >
-            <button aria-pressed={stop !== 3} onClick={() => goTo(0)}>
+            <button aria-pressed="true" onClick={() => goTo(0)}>
               Existing property
             </button>
-            <button aria-pressed={stop === 3} onClick={() => goTo(3)}>
-              Future vision
-            </button>
+            <a href={full ? "#project-budget" : "/monastery#project-budget"}>
+              Future plans <ArrowRight size={14} />
+            </a>
           </div>
           <p>
-            {stop === 3
-              ? "Proposed campus, not completed construction."
-              : "An illustrated land tour. Click the photo markers, or press Play to explore."}
+            Explore the residence, lake and wooded grounds. Choose a place, or
+            let the guided tour lead you.
           </p>
         </div>
         <aside className="land-budget" id="future">
@@ -197,7 +198,7 @@ export function LandJourney({ full = false }: { full?: boolean }) {
             <button
               aria-label="Next tour chapter"
               onClick={() => goTo(stop + 1)}
-              disabled={stop === 3}
+              disabled={stop === tourChapters.length - 1}
             >
               <ChevronRight size={24} />
             </button>
@@ -217,6 +218,35 @@ export function LandJourney({ full = false }: { full?: boolean }) {
               </button>
             ))}
           </nav>
+          <div
+            className="property-zoom"
+            role="group"
+            aria-label="Inspect the model"
+          >
+            <button onClick={() => goTo(0)}>
+              <RotateCcw size={15} /> Return to overview
+            </button>
+            <button
+              disabled={zoom >= 1.4}
+              onClick={() => {
+                setPlaying(false);
+                setZoom((z) => Math.min(1.4, z + 0.15));
+                setSeekVersion((v) => v + 1);
+              }}
+            >
+              <ZoomOut size={17} /> Wider
+            </button>
+            <button
+              disabled={zoom <= 0.65}
+              onClick={() => {
+                setPlaying(false);
+                setZoom((z) => Math.max(0.65, z - 0.15));
+                setSeekVersion((v) => v + 1);
+              }}
+            >
+              <ZoomIn size={17} /> Closer
+            </button>
+          </div>
         </div>
       </div>
       <div className="diorama-caption">
@@ -229,7 +259,7 @@ export function LandJourney({ full = false }: { full?: boolean }) {
         <p className="photo-tour-note">
           {!enabled
             ? "Animations are off. You can still view every chapter using the buttons above. "
-            : "Animated isometric illustration · "}
+            : "Photo-informed 3D reconstruction · "}
           Not a surveyed model or drone recording.{" "}
           <a href="/gallery#property-photographs">
             See all original photographs
@@ -237,29 +267,12 @@ export function LandJourney({ full = false }: { full?: boolean }) {
           .
         </p>
         <p className="photo-tour-note">
-          The illustration shows the setting, not surveyed boundaries or
-          ownership of neighboring buildings. Original photographs remain the
+          Buildings, trees, shoreline and entrance are modeled approximations,
+          not photogrammetry or measured architectural drawings. Proposed
+          buildings are not shown as completed. Original photographs remain the
           source of truth.
         </p>
       </div>
-      <dialog
-        ref={dialog}
-        className="land-photo-dialog"
-        aria-label="Property photograph"
-        onClick={(event) => {
-          if (event.target === event.currentTarget) dialog.current?.close();
-        }}
-      >
-        <button
-          className="land-photo-close"
-          onClick={() => dialog.current?.close()}
-          autoFocus
-        >
-          <X size={22} /> Close photograph
-        </button>
-        <img src={tourChapters[photo].image} alt={tourChapters[photo].alt} />
-        <p>{tourChapters[photo].text}</p>
-      </dialog>
       {full ? (
         <section className="construction-budget wrap" id="project-budget">
           <div className="section-heading">

@@ -1,112 +1,138 @@
-import { useEffect, useRef, type RefObject } from "react";
-import { ArrowUpRight, Camera } from "lucide-react";
-import { tourChapters, tourPose } from "../lib/landTour";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  mixPoint,
+  smoothFlight,
+  tourChapters,
+  tourPose,
+} from "../lib/landTour";
+import type { createPropertyRenderer } from "../lib/propertyRenderer";
 
-const anchors = [
-  { left: "44%", top: "64%" },
-  { left: "33%", top: "49%" },
-  { left: "54%", top: "31%" },
-  { left: "63%", top: "60%" },
-];
-
-/** The original illustrated diorama, with perspective motion and lifted gallery photographs.
- * This is deliberately not presented as photogrammetry or surveyed 3D geometry. */
 export default function LandScene({
   progress,
   stop,
   active,
+  visible,
   motionEnabled,
   seekVersion,
-  onSelect,
-  onPhoto,
+  zoom,
 }: {
   progress: RefObject<number>;
   stop: number;
   active: boolean;
+  visible: boolean;
   motionEnabled: boolean;
   seekVersion: number;
-  onSelect: (chapter: number) => void;
-  onPhoto: (chapter: number) => void;
+  zoom: number;
 }) {
-  const world = useRef<HTMLDivElement>(null);
-  const photograph = useRef<HTMLDivElement>(null);
+  const host = useRef<HTMLDivElement>(null);
+  const engine = useRef<ReturnType<typeof createPropertyRenderer> | null>(null);
+  const latest = useRef({ progress: progress.current, zoom });
+  latest.current = { progress: progress.current, zoom };
+  const [status, setStatus] = useState<"loading" | "ready" | "fallback">(
+    "loading",
+  );
+  const lastSeek = useRef(seekVersion);
   useEffect(() => {
-    let frame = 0;
-    let previous = -1;
-    const draw = () => {
-      if (
-        world.current &&
-        photograph.current &&
-        previous !== progress.current
-      ) {
-        previous = progress.current;
-        const pose = tourPose(previous);
-        world.current.style.transform = motionEnabled
-          ? `translate3d(${pose.x}%, ${pose.y}%, 0) rotateX(${pose.pitch}deg) rotateY(${pose.yaw}deg) scale(${pose.scale})`
-          : "none";
-        world.current.dataset.cameraProgress = previous.toFixed(5);
-        photograph.current.style.transform = motionEnabled
-          ? `perspective(1000px) translate3d(0, ${(1 - pose.photoLift) * 70}px, ${pose.photoLift * 60}px) rotateY(${pose.photoYaw}deg) rotateX(${(1 - pose.photoLift) * 12}deg) scale(${0.75 + pose.photoLift * 0.25})`
-          : "none";
-        photograph.current.dataset.photoProgress = previous.toFixed(5);
-      }
-      if (active) frame = requestAnimationFrame(draw);
+    if (!visible || engine.current || status === "fallback") return;
+    let cancelled = false;
+    // Keep Three.js out of the initial page bundle, and load only near the tour.
+    import("../lib/propertyRenderer")
+      .then(({ createPropertyRenderer }) => {
+        if (cancelled || !host.current) return;
+        try {
+          engine.current = createPropertyRenderer(host.current, () =>
+            setStatus("fallback"),
+          );
+          engine.current.draw(
+            tourPose(latest.current.progress, latest.current.zoom),
+          );
+          setStatus("ready");
+        } catch {
+          setStatus("fallback");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setStatus("fallback");
+      });
+    return () => {
+      cancelled = true;
     };
-    draw();
+  }, [visible, status]);
+  useEffect(
+    () => () => {
+      engine.current?.dispose();
+      engine.current = null;
+    },
+    [],
+  );
+  useEffect(() => {
+    if (status === "fallback") {
+      engine.current?.dispose();
+      engine.current = null;
+    }
+  }, [status]);
+  useEffect(() => {
+    if (status !== "ready" || !visible || !engine.current) return;
+    let frame = 0;
+    const from = engine.current.snapshot();
+    const fly = lastSeek.current !== seekVersion && motionEnabled && !active;
+    lastSeek.current = seekVersion;
+    let elapsed = 0,
+      previous = 0;
+    const draw = (now: number) => {
+      if (!engine.current) return;
+      if (!document.hidden) {
+        const destination = tourPose(progress.current, zoom);
+        elapsed += previous ? Math.min(100, now - previous) : 0;
+        previous = now;
+        const t = fly ? smoothFlight(elapsed / 2200) : 1;
+        engine.current.draw({
+          position: mixPoint(from.position, destination.position, t),
+          target: mixPoint(from.target, destination.target, t),
+        });
+        if (host.current)
+          host.current.dataset.cameraProgress = progress.current.toFixed(5);
+        if (active || t < 1) frame = requestAnimationFrame(draw);
+      } else {
+        previous = 0;
+        frame = requestAnimationFrame(draw);
+      }
+    };
+    frame = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(frame);
-  }, [active, motionEnabled, progress, stop, seekVersion]);
+  }, [active, visible, motionEnabled, progress, seekVersion, zoom, status]);
   return (
-    <div className="diorama-scene">
-      <div className="diorama-world" ref={world}>
-        <img
-          className="diorama-art"
-          src="/assets/images/land-illustration-accurate.webp"
-          width="1536"
-          height="1024"
-          alt="Game-like cutaway illustration of the wooded Crandall property: residence and garage to the southwest of the lake, driveway leading to the road on the east. Illustrative, not a property boundary survey."
-        />
-        {anchors.map((anchor, i) => (
-          <button
-            key={tourChapters[i].name}
-            className="diorama-hotspot"
-            style={anchor}
-            aria-label={`Show ${tourChapters[i].name.toLowerCase()}`}
-            aria-pressed={stop === i}
-            onClick={() => onSelect(i)}
-          >
-            <Camera size={17} />
-          </button>
-        ))}
-      </div>
-      <div className="diorama-photo" ref={photograph}>
-        {tourChapters.map((chapter, i) => (
-          <figure key={chapter.name} hidden={stop !== i}>
-            <button
-              onClick={() => onPhoto(i)}
-              aria-label={`Enlarge ${chapter.name.toLowerCase()} photograph${i === 3 ? " (future concept)" : ""}`}
-            >
-              <img
-                src={chapter.image}
-                alt={chapter.alt}
-                loading={i === stop ? "eager" : "lazy"}
-                width="480"
-                height="270"
-              />
-              <span>
-                <span>
-                  {i === 3
-                    ? "Future campus · concept only"
-                    : "From our property photographs"}
-                </span>
-                <ArrowUpRight size={19} />
-              </span>
-            </button>
-            <figcaption>
-              {chapter.name}
-              <span>Click photo to enlarge</span>
-            </figcaption>
-          </figure>
-        ))}
+    <div className="diorama-scene property-flight" data-renderer={status}>
+      <div className="property-canvas" ref={host} hidden={status !== "ready"} />
+      {status !== "ready" ? (
+        <div className="property-fallback">
+          <img
+            className="diorama-art"
+            src="/assets/images/land-illustration-accurate.webp"
+            width="1536"
+            height="1024"
+            alt="Illustration of the wooded property, residence southwest of the lake and drive leading to the eastern road. Not a survey."
+          />
+          <p role="status">
+            {status === "loading"
+              ? "Preparing the 3D property…"
+              : "3D is unavailable on this device. Explore the chapter descriptions below or view the original photographs."}
+          </p>
+        </div>
+      ) : null}
+      <div className="property-flight-label">
+        <span>
+          {String(stop + 1).padStart(2, "0")} /{" "}
+          {String(tourChapters.length).padStart(2, "0")}
+        </span>{" "}
+        {tourChapters[stop].name}
+        <small>
+          {!motionEnabled
+            ? "Choose any place · motion is off"
+            : active
+              ? "Guided flight · pauses at each feature"
+              : "Select a place or press Play tour"}
+        </small>
       </div>
     </div>
   );

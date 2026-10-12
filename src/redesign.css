@@ -1047,6 +1047,114 @@ a:focus-visible {
   inset: 0;
   perspective: 1400px;
 }
+.property-flight {
+  perspective: none;
+}
+.property-canvas,
+.property-fallback {
+  position: absolute;
+  inset: 0;
+}
+.property-canvas[hidden] {
+  display: none;
+}
+.property-canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.property-fallback p {
+  position: absolute;
+  left: 4vw;
+  bottom: 210px;
+  max-width: 350px;
+  font: 13px/1.5 var(--sans);
+  padding: 12px;
+  background: #121513e8;
+}
+.property-flight-label {
+  position: absolute;
+  left: 4vw;
+  bottom: 225px;
+  color: #eee9dd;
+  font: 31px/1.2 var(--serif);
+  pointer-events: none;
+  text-shadow: 0 2px 8px #000;
+  background: #101710da;
+  padding: 12px 18px;
+  border-left: 1px solid #ba995d;
+}
+.property-flight-label > span {
+  color: #ba995d;
+  font: 12px var(--sans);
+  display: block;
+  margin-bottom: 7px;
+  letter-spacing: 0.12em;
+}
+.property-flight-label small {
+  display: block;
+  margin-top: 8px;
+  font: 12px/1.5 var(--sans);
+}
+.flyover-tour .land-mode a {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: #eee9dd;
+  padding: 12px 16px;
+  text-decoration: none;
+  font: 15px var(--serif);
+}
+.flyover-tour .land-mode p {
+  max-width: 300px;
+}
+.flyover-tour .photo-tour-chapters {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+.property-zoom {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  border-top: 1px solid #ba995d30;
+  margin-top: 6px;
+  padding-top: 6px;
+}
+.property-zoom button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: none;
+  border: 0;
+  color: #d9cfb4;
+  font: 12px var(--sans);
+  min-height: 36px;
+  cursor: pointer;
+}
+.property-zoom button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.flyover-tour:not([data-stop="0"]) .land-heading h2 {
+  font-size: clamp(38px, 4vw, 60px);
+}
+.flyover-tour:not([data-stop="0"]) .land-heading p {
+  font-size: 18px;
+}
+.flyover-tour .land-heading {
+  pointer-events: none;
+}
+.flyover-tour .land-budget {
+  bottom: 225px;
+  width: 245px;
+}
+.flyover-tour .land-budget strong {
+  font-size: 36px;
+}
+.flyover-tour .land-budget h3 {
+  font-size: 25px;
+}
 .diorama-world {
   position: absolute;
   inset: 0;
@@ -1797,6 +1905,45 @@ a:focus-visible {
     flex: 0 0 330px;
     order: 3;
     margin-top: 8px;
+  }
+  .property-flight {
+    height: 360px;
+    flex-basis: 360px;
+  }
+  .property-flight-label {
+    left: 6vw;
+    bottom: 16px;
+    font-size: 24px;
+  }
+  .property-flight-label small {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+  .property-flight-label > span {
+    font-size: 10px;
+    margin-bottom: 3px;
+  }
+  .property-fallback p {
+    left: 6vw;
+    bottom: 85px;
+    max-width: 80%;
+  }
+  .flyover-tour:not([data-stop="0"]) .land-heading h2 {
+    font-size: clamp(48px, 10vw, 76px);
+  }
+  .flyover-tour:not([data-stop="0"]) .land-heading p {
+    font-size: 20px;
+  }
+  .flyover-tour .photo-tour-chapters {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .property-zoom {
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  .property-zoom button {
+    font-size: 11px;
+    min-height: 40px;
   }
   .diorama-hotspot {
     width: 42px;
