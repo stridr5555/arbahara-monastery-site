@@ -589,6 +589,7 @@ a:focus-visible {
   max-width: 920px;
 }
 .photo-tour-chapters button {
+  gap: 8px;
   border: 0;
   border-bottom: 2px solid transparent;
   color: #c5c1b6;

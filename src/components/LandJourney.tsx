@@ -176,7 +176,8 @@ export function LandJourney({ full = false }: { full?: boolean }) {
               aria-pressed={stop === i}
               onClick={() => goTo(i)}
             >
-              {i + 1} {s.name}
+              <span aria-hidden="true">{i + 1}</span>
+              <span>{s.name}</span>
             </button>
           ))}
         </nav>
