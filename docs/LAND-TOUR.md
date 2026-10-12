@@ -1,27 +1,41 @@
-# Illustrated land tour
+# Property flyover
 
-The restored art direction follows the original `assets/images/land-illustration.webp` and original `76ccc62` land layout. The corrected sibling asset is `assets/images/land-illustration-accurate.webp`; the original is preserved.
+## Owner’s current direction
 
-This is a **2.5D illustrated diorama with CSS perspective motion**, not a measured terrain mesh, photogrammetry scan, drone recording, or boundary survey. Real photographs remain the source of truth. The future campus image is explicitly a proposal, not completed construction. Neighboring structures in the illustration do not imply monastery ownership.
+Preserve the wooded, game-like cutaway style, but replace the image-based motion with a genuine 3D model. Fly toward features and zoom in for study; do not spin the property. The owner explicitly withdrew the earlier photo-popup request on October 12, 2026.
 
-## Playback
+## Sources and accuracy
 
-`LandJourney` owns one progress clock. `tourPose` derives land translation, tilt, zoom and photo lift/rotation from that same position. Pause freezes the clock; chapter buttons and the slider seek without starting playback. Offscreen and hidden-tab playback does not advance. Motion preferences disable animation while keeping chapter selection and photographs usable. Photo enlargement pauses playback and uses a native keyboard-accessible dialog.
+- Owner-provided `assets/property/user-map-overhead.jpg` and `user-map-oblique.jpg` inform the residence southwest of the lake, garage beside the residence, eastern road and curved driveway.
+- `assets/property/land-01.webp` and `land-02.webp` inform cream stone, red-brown roof, two white dormers, chimney, porch and garage doors.
+- Reference: <https://www.realtor.com/realestateandhomes-detail/7029-FM-2757_Crandall_TX_75114_M97693-63657>. Public page text could be inspected; its interactive fly-around returned an availability error in the in-app browser. No proprietary listing mesh, service key or third-party tiles were extracted or embedded.
+- This is an original **photo-informed, illustrative 3D reconstruction**, not a photogrammetry scan, survey, measured architectural model or drone recording. Footprints, dimensions, slopes, trees, water level, shoreline and entry details are approximate. The cutaway edge is a presentation device, not a legal boundary. Neighboring buildings are omitted rather than represented as monastery property.
+- Proposed campus buildings are not placed in the existing-property model. Future plans remain linked separately with the existing budget and conceptual master plan.
 
-No per-frame React state is used for transforms; only chapter changes update content. The former photograph-plane WebGL scene is removed, so this tour no longer depends on WebGL support or the Three.js download.
+## Implementation
 
-## Asset provenance
+`propertyModel.ts` builds native Three.js mesh geometry for terrain, rocky cutaway, house, dormers, windows, chimney, porch columns, garage doors, pond, shoreline, driveway, road, entry and vegetation. Surface textures and sky reflection are original deterministic procedural textures. Trees, grass and stones use instancing. The model has no rotation animation and no photographic billboards.
 
-Built-in Image Gen edited the original illustration using the supplied overhead photograph and `land-02.webp` as references. The selected PNG was converted to WebP for delivery. Exact prompt:
+`propertyRenderer.ts` owns lighting, shadows, the perspective camera, resize handling, GPU resource cleanup and context-loss notification. It is dynamically imported only when the tour is visible. No new packages, third-party model API, API key or payment service are required. The Three.js chunk is approximately 147 KB gzip and is separate from the main page bundle.
 
-> Use case: precise-object-edit. Edit target Image 1 is an accepted realistic game-like isometric cutaway landscape illustration for a monastery website. Image 2 is the original overhead photograph, image 3 is the actual existing residence. Preserve Image 1's exact overall isometric composition, dark nearly black #0d110e background, wooded terrain, rich textured rocky cutaway edges, golden natural sunlight, high-detail realistic 3D-diorama rendering, and floating-island appearance. Do NOT redesign it or flatten it into an aerial photo. Change ONLY the monastery residence and garage in the left foreground to match Image 3's red/brown steep gabled roof, two white dormers, cream/brick two-story facade, porch and chimney; retain a small separate matching garage beside it, using the footprint relationship in Image 2. Refine the lake outline, driveway sweep and nearly straight road on the right to more closely match Image 2 while keeping the original perspective. Preserve surrounding mature woodland and open grass. The smaller neighboring property beside the road is context only, do not add new monastery buildings. No churches or future buildings, no invented water springs. This is an illustrative reconstruction, not a surveyed model. Maintain the same layout and scale so property hotspots still line up: main house around 33% across / 48% down, lake around 54% across / 31% down, road along right edge. No text, no labels, no arrows, no UI. Landscape 1536x1024. Preserve all invariants aggressively; this is a fidelity correction, not a new concept.
+`landTour.ts` defines a 70-second, five-stop camera route: approach/overview → residence → garage → lake → entrance. Positions and look-at targets translate in world space. Smooth quintic easing and a raised transit path descend into each inspection view; the final 35% of each chapter is stationary. There is no orbit loop. Closer/Wider dolly along the same viewing ray without rotating the land or changing the target.
 
-## Fidelity checks
+`LandJourney` owns the playback clock. Pause stops its advancement. Chapter selection pauses playback and uses a 2.2-second camera flight to the inspection stop; Closer/Wider also pause playback. The progress slider, previous/next and Return to overview remain keyboard-accessible. Hidden tabs and offscreen tours do not advance the playback clock. Reduced-motion mode removes transitions and disables autoplay while preserving direct feature selection and zoom.
 
-- Original wooded cutaway silhouette and dark background restored instead of flat aerial planes.
-- Original “Rooted here. For generations.” heading, serif typography, sand/gold palette and existing/future controls retained.
-- Residence dormers, porch and chimney refined against the actual residence photo.
-- Actual photos animate in perspective and enlarge without leaving the page.
-- Mobile layout puts controls below the land and the budget below the controls, avoiding floating-panel collisions.
+`LandScene` shows the accepted illustration while loading and as an explicitly labeled fallback when WebGL fails. Chapter descriptions and original photograph links remain available without WebGL or animation. The fallback is not described as live 3D.
 
-Intentional changes from the original composition: clearly labeled playback controls, photographic popups, photo-based residence refinement, and an explicit non-survey disclaimer.
+## Design comparison
+
+| Accepted direction | Implementation / intentional change |
+| --- | --- |
+| Wooded floating cutaway | Retained as actual geometry, with rocky edges and instanced woodland |
+| Dark, sand and gold theme | Retained; natural lighting and pond sky reflection added |
+| “Rooted here. For generations.” serif heading | Retained; smaller on desktop during close-up inspection to leave room for the feature |
+| House southwest of lake, road east | Retained from the supplied aerial; details reconstructed from residence photos |
+| Photo popups | Removed at owner’s request; actual model features replace them |
+
+The old Image Gen illustration `land-illustration-accurate.webp` is preserved for loading/error fallback only. Its original generation provenance is retained in Git history (commit `8406751`). No new generated bitmap is used as a substitute for 3D geometry.
+
+## Verification
+
+Automated tests cover all visible chapters without animation, absence of photo dialogs/popups, bounded playback, deterministic camera poses, continuity, stationary inspection stops and fixed-target dolly zoom. Full existing application tests and the production build must pass before publication. Browser QA covers desktop and phone-sized layouts, native canvas rendering, feature selection, playback/pause, zoom, fixed model rotation, motion-off selection and console health. No financial or membership activation is part of this change.

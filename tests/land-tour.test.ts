@@ -5,6 +5,7 @@ import { Gallery } from "../src/pages/Community";
 import { LandJourney } from "../src/components/LandJourney";
 import {
   advanceTour,
+  chapterProgress,
   tourChapter,
   tourChapters,
   tourPose,
@@ -35,31 +36,56 @@ describe("Accessible collection and property tour", () => {
     expect(html).toContain("Tour progress");
     expect(html).toContain("land-illustration-accurate.webp");
     expect(html).toContain("Rooted here.");
-    expect(html).toContain("Enlarge the land photograph");
-    expect(html).toContain("Show the residence");
-    expect(html).toContain("Property photograph");
-    expect(html).not.toContain("photo-tour-webgl");
+    expect(html).toContain("Closer");
+    expect(html).toContain("Wider");
+    expect(html).toContain("Return to overview");
+    expect(html).not.toContain("<dialog");
+    expect(html).not.toContain("diorama-photo");
   });
-  it("drives the diorama and popup from the same deterministic playback position", () => {
+  it("flies through space, descends toward the residence and holds for inspection", () => {
     const start = tourPose(0);
-    const lifted = tourPose(0.05);
-    expect(lifted.photoLift).toBeGreaterThan(start.photoLift);
-    expect(lifted.photoYaw).not.toBe(start.photoYaw);
-    expect(lifted.yaw).not.toBe(start.yaw);
-    expect(lifted.scale).toBeGreaterThan(start.scale);
-    // A paused clock has exactly the same camera and photo pose, without independent drift.
+    const house = tourPose(chapterProgress(1));
+    expect(house.position).toEqual(tourChapters[1].position);
+    expect(house.target).toEqual(tourChapters[1].target);
+    expect(house.position[1]).toBeLessThan(start.position[1]);
+    expect(tourPose(0.335)).toEqual(tourPose(0.39));
+    // Pausing has no independent orbit, image movement or drift.
     expect(tourPose(0.36)).toEqual(tourPose(0.36));
     expect(tourPose(NaN)).toEqual(start);
     expect(tourPose(-1)).toEqual(start);
     expect(tourPose(2)).toEqual(tourPose(1));
+    for (let i = 1; i < tourChapters.length; i++) {
+      const boundary = i / tourChapters.length;
+      for (let axis = 0; axis < 3; axis++) {
+        expect(tourPose(boundary - 0.000001).position[axis]).toBeCloseTo(
+          tourPose(boundary).position[axis],
+          4,
+        );
+        expect(tourPose(boundary - 0.000001).target[axis]).toBeCloseTo(
+          tourPose(boundary).target[axis],
+          4,
+        );
+      }
+    }
+    for (let i = 0; i < tourChapters.length; i++)
+      expect(tourChapter(chapterProgress(i))).toBe(i);
+  });
+  it("dollies closer to a fixed target instead of spinning the scene", () => {
+    const p = chapterProgress(2),
+      wide = tourPose(p),
+      close = tourPose(p, 0.65);
+    expect(close.target).toEqual(wide.target);
+    const distance = (pose: ReturnType<typeof tourPose>) =>
+      Math.hypot(...pose.position.map((v, i) => v - pose.target[i]));
+    expect(distance(close)).toBeCloseTo(distance(wide) * 0.65);
   });
   it("bounds progress and prevents a hidden-tab time jump", () => {
     expect(tourChapter(-1)).toBe(0);
     expect(tourChapter(NaN)).toBe(0);
     expect(tourChapter(0.25)).toBe(1);
     expect(tourChapter(0.5)).toBe(2);
-    expect(tourChapter(1)).toBe(3);
-    expect(advanceTour(0.2, 60)).toBeCloseTo(0.2025);
+    expect(tourChapter(1)).toBe(4);
+    expect(advanceTour(0.2, 60)).toBeCloseTo(0.2 + 0.1 / 70);
     expect(advanceTour(1, 0.1)).toBe(1);
     expect(advanceTour(0.2, -1)).toBe(0.2);
   });

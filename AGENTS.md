@@ -9,4 +9,4 @@ The owner has requested: **publish website changes after completing them**.
 
 ## Land tour design
 
-Preserve the original wooded, game-like cutaway diorama. Do not replace it with flat aerial photo planes. The owner wants gallery photographs to lift out of the land during playback, with Play/Pause controlling both land movement and photographs. Keep existing property separate from proposed construction, and label the illustrative reconstruction honestly.
+Preserve the wooded, game-like cutaway style. Use genuine 3D geometry and guided camera flights that descend and zoom toward the residence, garage, lake and entrance, holding still for inspection. Do not spin the land or use photo popups (the owner superseded that earlier request). Keep existing property separate from proposed construction, and label the photo-informed, non-surveyed reconstruction honestly.
