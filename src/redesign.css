@@ -1040,6 +1040,7 @@ a:focus-visible {
 .diorama-tour .land-stage {
   background: #0d110e;
   perspective: 1400px;
+  overflow: clip;
 }
 .diorama-scene {
   position: absolute;
