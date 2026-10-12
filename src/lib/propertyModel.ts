@@ -271,24 +271,24 @@ export function buildPropertyModel() {
   mainRoof.position.y = 6.2;
   house.add(mainRoof);
   gable(mainRoof, 0, 0, 0, 12.8, 5.7, 16.5, roof, stone);
-  box(house, "Covered porch floor", 1, 0.35, 8, 13.5, 0.3, 4.8, concrete);
+  box(house, "Covered porch floor", 2.5, 0.35, 8, 11.8, 0.3, 4.8, concrete);
   const porchRoof = box(
     house,
     "Continuous roof over covered porch",
-    0,
+    2.5,
     5.65,
     8,
-    16.9,
+    11.8,
     0.24,
     5.3,
     roof,
   );
   porchRoof.rotation.x = 0.59;
-  for (const x of [-5.2, -1.2, 3, 7.2]) {
+  for (const x of [-2.8, 0.8, 4.5, 8]) {
     box(house, "Porch white column", x, 2.5, 9.5, 0.22, 4.2, 0.22, ivory);
     box(house, "Column base", x, 0.65, 9.5, 0.45, 0.5, 0.45, ivory);
   }
-  box(house, "Porch fascia", 1, 4.25, 10.3, 14, 0.3, 0.16, ivory);
+  box(house, "Porch fascia", 2.5, 4.25, 10.3, 11.8, 0.3, 0.16, ivory);
   const window = (
     parent: T.Group,
     x: number,
