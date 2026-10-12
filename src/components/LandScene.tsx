@@ -1,170 +1,113 @@
 import { useEffect, useRef, type RefObject } from "react";
-import * as THREE from "three";
+import { ArrowUpRight, Camera } from "lucide-react";
+import { tourChapters, tourPose } from "../lib/landTour";
 
-/** Actual photographs on planes in 3D, never invented terrain or surveyed geometry. */
+const anchors = [
+  { left: "44%", top: "64%" },
+  { left: "33%", top: "49%" },
+  { left: "54%", top: "31%" },
+  { left: "63%", top: "60%" },
+];
+
+/** The original illustrated diorama, with perspective motion and lifted gallery photographs.
+ * This is deliberately not presented as photogrammetry or surveyed 3D geometry. */
 export default function LandScene({
   progress,
-  onStatus,
+  stop,
+  active,
+  motionEnabled,
+  seekVersion,
+  onSelect,
+  onPhoto,
 }: {
   progress: RefObject<number>;
-  onStatus: (status: "loading" | "ready" | "fallback") => void;
+  stop: number;
+  active: boolean;
+  motionEnabled: boolean;
+  seekVersion: number;
+  onSelect: (chapter: number) => void;
+  onPhoto: (chapter: number) => void;
 }) {
-  const mount = useRef<HTMLDivElement>(null);
+  const world = useRef<HTMLDivElement>(null);
+  const photograph = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const host = mount.current;
-    if (!host) return;
-    onStatus("loading");
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        powerPreference: "low-power",
-      });
-    } catch {
-      onStatus("fallback");
-      return;
-    }
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-    renderer.setClearColor(0x121713);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    host.appendChild(renderer.domElement);
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 100);
-    let disposed = false;
-    let failed = false;
-    let loaded = false;
-    let lastTime = 0;
-    let current = progress.current;
-    const textures: THREE.Texture[] = [];
-    const geometries: THREE.BufferGeometry[] = [];
-    const materials: THREE.Material[] = [];
-    const manager = new THREE.LoadingManager();
-    manager.onLoad = () => {
-      if (!disposed && !failed) {
-        loaded = true;
-        onStatus("ready");
+    let frame = 0;
+    let previous = -1;
+    const draw = () => {
+      if (
+        world.current &&
+        photograph.current &&
+        previous !== progress.current
+      ) {
+        previous = progress.current;
+        const pose = tourPose(previous);
+        world.current.style.transform = motionEnabled
+          ? `translate3d(${pose.x}%, ${pose.y}%, 0) rotateX(${pose.pitch}deg) rotateY(${pose.yaw}deg) scale(${pose.scale})`
+          : "none";
+        world.current.dataset.cameraProgress = previous.toFixed(5);
+        photograph.current.style.transform = motionEnabled
+          ? `perspective(1000px) translate3d(0, ${(1 - pose.photoLift) * 70}px, ${pose.photoLift * 60}px) rotateY(${pose.photoYaw}deg) rotateX(${(1 - pose.photoLift) * 12}deg) scale(${0.75 + pose.photoLift * 0.25})`
+          : "none";
+        photograph.current.dataset.photoProgress = previous.toFixed(5);
       }
+      if (active) frame = requestAnimationFrame(draw);
     };
-    manager.onError = () => {
-      failed = true;
-      if (!disposed) {
-        renderer.setAnimationLoop(null);
-        onStatus("fallback");
-      }
-    };
-    const loader = new THREE.TextureLoader(manager);
-    const texture = (src: string) => {
-      const map = loader.load(src, (ready) => {
-        if (disposed) ready.dispose();
-      });
-      map.colorSpace = THREE.SRGBColorSpace;
-      map.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-      textures.push(map);
-      return map;
-    };
-    const plane = (map: THREE.Texture, width: number, height: number) => {
-      const geometry = new THREE.PlaneGeometry(width, height);
-      const material = new THREE.MeshBasicMaterial({
-        map,
-        side: THREE.DoubleSide,
-      });
-      geometries.push(geometry);
-      materials.push(material);
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
-      return mesh;
-    };
-    const aerial = plane(
-      texture("/assets/property/user-map-overhead.jpg"),
-      24,
-      13.5,
-    );
-    aerial.rotation.x = -Math.PI / 2;
-    const residence = plane(
-      texture("/assets/property/land-02.webp"),
-      7.4,
-      4.14,
-    );
-    residence.position.set(-5, 2.6, 3);
-    const entrance = plane(texture("/assets/property/land-01.webp"), 5.3, 3.52);
-    entrance.position.set(-9.8, 1.9, -1);
-    entrance.rotation.y = 0.4;
-    const vision = plane(
-      texture("/assets/images/monastery-campus-master-plan.png"),
-      8.2,
-      6.15,
-    );
-    vision.position.set(6, 3.2, -1);
-    vision.rotation.y = -0.1;
-    for (const photo of [residence, entrance, vision]) {
-      const edge = new THREE.EdgesGeometry(photo.geometry);
-      const material = new THREE.LineBasicMaterial({ color: 0xba995d });
-      geometries.push(edge);
-      materials.push(material);
-      photo.add(new THREE.LineSegments(edge, material));
-    }
-    const path = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(1, 14, 13),
-      new THREE.Vector3(-5.4, 5.8, 12.5),
-      new THREE.Vector3(0, 10, 0.5),
-      new THREE.Vector3(6.8, 5.8, 11.4),
-      new THREE.Vector3(5.4, 4.4, 9.9),
-    ]);
-    const focusPath = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-1, 0, 0),
-      new THREE.Vector3(-5, 2.4, 3),
-      new THREE.Vector3(0, 0, -2.8),
-      new THREE.Vector3(6, 3.2, -1),
-      new THREE.Vector3(6, 3.2, -1),
-    ]);
-    const position = new THREE.Vector3();
-    const focus = new THREE.Vector3();
-    const resize = () => {
-      const { width, height } = host.getBoundingClientRect();
-      if (!width || !height) return;
-      renderer.setSize(width, height, false);
-      camera.aspect = width / height;
-      camera.fov = camera.aspect < 1.1 ? 68 : 48;
-      camera.updateProjectionMatrix();
-    };
-    const observer = new ResizeObserver(resize);
-    observer.observe(host);
-    resize();
-    const draw = (now: number) => {
-      if (document.hidden || !loaded || disposed || failed) {
-        lastTime = 0;
-        return;
-      }
-      const dt = lastTime ? Math.min((now - lastTime) / 1000, 0.1) : 0;
-      lastTime = now;
-      current = THREE.MathUtils.damp(current, progress.current, 4, dt);
-      path.getPoint(current, position);
-      focusPath.getPoint(current, focus);
-      camera.position.copy(position);
-      camera.lookAt(focus);
-      vision.visible = current >= 0.67;
-      renderer.render(scene, camera);
-      host.dataset.cameraProgress = current.toFixed(4);
-    };
-    renderer.setAnimationLoop(draw);
-    const lost = (event: Event) => {
-      event.preventDefault();
-      failed = true;
-      renderer.setAnimationLoop(null);
-      onStatus("fallback");
-    };
-    renderer.domElement.addEventListener("webglcontextlost", lost);
-    return () => {
-      disposed = true;
-      renderer.setAnimationLoop(null);
-      observer.disconnect();
-      renderer.domElement.removeEventListener("webglcontextlost", lost);
-      geometries.forEach((g) => g.dispose());
-      materials.forEach((m) => m.dispose());
-      textures.forEach((t) => t.dispose());
-      renderer.dispose();
-      renderer.domElement.remove();
-    };
-  }, [progress, onStatus]);
-  return <div className="photo-tour-webgl" ref={mount} aria-hidden="true" />;
+    draw();
+    return () => cancelAnimationFrame(frame);
+  }, [active, motionEnabled, progress, stop, seekVersion]);
+  return (
+    <div className="diorama-scene">
+      <div className="diorama-world" ref={world}>
+        <img
+          className="diorama-art"
+          src="/assets/images/land-illustration-accurate.webp"
+          width="1536"
+          height="1024"
+          alt="Game-like cutaway illustration of the wooded Crandall property: residence and garage to the southwest of the lake, driveway leading to the road on the east. Illustrative, not a property boundary survey."
+        />
+        {anchors.map((anchor, i) => (
+          <button
+            key={tourChapters[i].name}
+            className="diorama-hotspot"
+            style={anchor}
+            aria-label={`Show ${tourChapters[i].name.toLowerCase()}`}
+            aria-pressed={stop === i}
+            onClick={() => onSelect(i)}
+          >
+            <Camera size={17} />
+          </button>
+        ))}
+      </div>
+      <div className="diorama-photo" ref={photograph}>
+        {tourChapters.map((chapter, i) => (
+          <figure key={chapter.name} hidden={stop !== i}>
+            <button
+              onClick={() => onPhoto(i)}
+              aria-label={`Enlarge ${chapter.name.toLowerCase()} photograph${i === 3 ? " (future concept)" : ""}`}
+            >
+              <img
+                src={chapter.image}
+                alt={chapter.alt}
+                loading={i === stop ? "eager" : "lazy"}
+                width="480"
+                height="270"
+              />
+              <span>
+                <span>
+                  {i === 3
+                    ? "Future campus · concept only"
+                    : "From our property photographs"}
+                </span>
+                <ArrowUpRight size={19} />
+              </span>
+            </button>
+            <figcaption>
+              {chapter.name}
+              <span>Click photo to enlarge</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
 }

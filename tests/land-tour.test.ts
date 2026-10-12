@@ -3,7 +3,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { Gallery } from "../src/pages/Community";
 import { LandJourney } from "../src/components/LandJourney";
-import { advanceTour, tourChapter, tourChapters } from "../src/lib/landTour";
+import {
+  advanceTour,
+  tourChapter,
+  tourChapters,
+  tourPose,
+} from "../src/lib/landTour";
 
 describe("Accessible collection and property tour", () => {
   it("renders every collection without an accordion or category filter", () => {
@@ -28,6 +33,25 @@ describe("Accessible collection and property tour", () => {
     expect(html).toContain("Animations are off");
     expect(html).toContain("Not a surveyed model or drone recording");
     expect(html).toContain("Tour progress");
+    expect(html).toContain("land-illustration-accurate.webp");
+    expect(html).toContain("Rooted here.");
+    expect(html).toContain("Enlarge the land photograph");
+    expect(html).toContain("Show the residence");
+    expect(html).toContain("Property photograph");
+    expect(html).not.toContain("photo-tour-webgl");
+  });
+  it("drives the diorama and popup from the same deterministic playback position", () => {
+    const start = tourPose(0);
+    const lifted = tourPose(0.05);
+    expect(lifted.photoLift).toBeGreaterThan(start.photoLift);
+    expect(lifted.photoYaw).not.toBe(start.photoYaw);
+    expect(lifted.yaw).not.toBe(start.yaw);
+    expect(lifted.scale).toBeGreaterThan(start.scale);
+    // A paused clock has exactly the same camera and photo pose, without independent drift.
+    expect(tourPose(0.36)).toEqual(tourPose(0.36));
+    expect(tourPose(NaN)).toEqual(start);
+    expect(tourPose(-1)).toEqual(start);
+    expect(tourPose(2)).toEqual(tourPose(1));
   });
   it("bounds progress and prevents a hidden-tab time jump", () => {
     expect(tourChapter(-1)).toBe(0);
