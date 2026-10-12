@@ -685,21 +685,6 @@ a:focus-visible {
     font-size: 12px;
   }
 }
-html[data-motion="on"] .land-illustration {
-  transition: transform 1.8s cubic-bezier(0.2, 0.65, 0.3, 1);
-}
-.land-journey[data-stop="1"] .land-illustration {
-  transform: scale(1.18) translate(5%, 2%);
-  transform-origin: 45% 65%;
-}
-.land-journey[data-stop="2"] .land-illustration {
-  transform: scale(1.22) translate(-2%, 5%);
-  transform-origin: 50% 35%;
-}
-.land-journey[data-stop="3"] .land-illustration {
-  transform: scale(1.14) translate(-3%, -3%);
-  transform-origin: 70% 65%;
-}
 @media (max-width: 1000px) {
   .media-procession {
     grid-template-columns: 1fr 1.3fr;
@@ -1050,6 +1035,193 @@ html[data-motion="on"] .land-illustration {
 .land-webgl canvas {
   width: 100%;
   height: 100%;
+}
+/* Restore the original cutaway composition; one playback clock owns all motion. */
+.diorama-tour .land-stage {
+  background: #0d110e;
+  perspective: 1400px;
+  overflow: clip;
+}
+.diorama-scene {
+  position: absolute;
+  inset: 0;
+  perspective: 1400px;
+}
+.diorama-world {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.diorama-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.diorama-hotspot {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #121513e8;
+  color: #f0d291;
+  border: 1px solid #d8b578;
+  box-shadow:
+    0 0 0 7px #ba995d22,
+    0 8px 20px #0008;
+  transform: translate(-50%, -50%) translateZ(18px);
+  cursor: pointer;
+}
+.diorama-hotspot[aria-pressed="true"] {
+  background: #d2b278;
+  color: #121513;
+  box-shadow:
+    0 0 0 10px #ba995d35,
+    0 8px 24px #0008;
+}
+.diorama-photo {
+  position: absolute;
+  left: 48%;
+  top: 37%;
+  width: clamp(270px, 24vw, 370px);
+  transform-origin: 25% 100%;
+  z-index: 3;
+}
+.diorama-photo figure {
+  margin: 0;
+  background: #eee9dd;
+  color: #242820;
+  padding: 8px;
+  box-shadow:
+    10px 24px 45px #0009,
+    0 0 0 1px #ba995d88;
+}
+.diorama-photo figure[hidden] {
+  display: none;
+}
+.diorama-photo button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: zoom-in;
+  text-align: left;
+}
+.diorama-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.diorama-tour[data-stop="3"] .diorama-photo img {
+  object-fit: contain;
+  background: white;
+}
+.diorama-photo button > span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 5px 2px;
+  font: 11px/1.4 var(--sans);
+}
+.diorama-photo figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px;
+  font: 26px/1.1 var(--serif);
+}
+.diorama-photo figcaption > span {
+  font: 10px/1.4 var(--sans);
+}
+.diorama-tour .land-budget {
+  width: 300px;
+  bottom: 190px;
+  padding: 20px 24px;
+}
+.diorama-tour .land-budget strong {
+  font-size: 43px;
+}
+.diorama-tour .land-budget h3 {
+  font-size: 28px;
+}
+.diorama-console {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(850px, 92%);
+  background: #121513ed;
+  border: 1px solid #ba995d88;
+  border-radius: 18px;
+  padding: 12px 24px 8px;
+  z-index: 4;
+}
+.diorama-console .photo-tour-playback {
+  gap: 15px;
+}
+.diorama-console .tour-play {
+  font-size: 25px;
+}
+.diorama-console .photo-tour-chapters {
+  margin: 0;
+  gap: 15px;
+}
+.diorama-console .photo-tour-chapters button {
+  min-height: 42px;
+  font-size: 20px;
+}
+.diorama-caption {
+  padding: 12px 4vw 25px;
+}
+.diorama-caption .photo-tour-caption {
+  min-height: 0;
+}
+.diorama-caption .photo-tour-note {
+  max-width: 1000px;
+  margin: 8px auto 0;
+  font-size: 13px;
+}
+.land-photo-dialog {
+  position: fixed;
+  border: 1px solid #ba995d88;
+  padding: 20px;
+  width: min(1100px, 94vw);
+  max-height: 92svh;
+  background: #121513;
+  color: #eee9dd;
+}
+.land-photo-dialog::backdrop {
+  background: #050806dc;
+}
+.land-photo-dialog img {
+  display: block;
+  width: 100%;
+  max-height: 68svh;
+  object-fit: contain;
+}
+.land-photo-dialog p {
+  margin: 15px 0 0;
+}
+.land-photo-close {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 15px auto;
+  background: none;
+  color: #eee9dd;
+  border: 1px solid #ba995d88;
+  min-height: 44px;
+  padding: 8px 15px;
+  font: 16px var(--sans);
+  cursor: pointer;
 }
 .proposed-callout {
   position: absolute;
@@ -1578,6 +1750,133 @@ html[data-motion="on"] .land-illustration {
   .land-mode p {
     max-width: 300px;
     margin-left: auto;
+  }
+  .diorama-tour .land-stage {
+    height: auto;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 0 22px;
+  }
+  .diorama-tour .land-heading {
+    position: relative;
+    inset: auto;
+    margin: 0 6vw 24px;
+    order: 1;
+  }
+  .diorama-tour .land-heading h2 {
+    font-size: clamp(48px, 10vw, 76px);
+  }
+  .diorama-tour .land-heading p {
+    font-size: 20px;
+  }
+  .diorama-tour .land-mode {
+    position: relative;
+    inset: auto;
+    margin: 0 6vw;
+    order: 2;
+    max-width: none;
+    text-align: left;
+  }
+  .diorama-tour .land-mode p {
+    margin-left: 0;
+  }
+  .diorama-world {
+    top: 0;
+    bottom: 0;
+    left: -12%;
+    right: -12%;
+  }
+  .diorama-art {
+    object-fit: contain;
+  }
+  .diorama-scene {
+    position: relative;
+    inset: auto;
+    height: 330px;
+    flex: 0 0 330px;
+    order: 3;
+    margin-top: 8px;
+  }
+  .diorama-hotspot {
+    width: 42px;
+    height: 42px;
+  }
+  .diorama-photo {
+    top: 35px;
+    left: 38%;
+    width: min(220px, 54vw);
+  }
+  .diorama-photo figcaption {
+    font-size: 23px;
+  }
+  .diorama-photo figcaption > span {
+    display: none;
+  }
+  .diorama-photo button > span {
+    font-size: 10px;
+  }
+  .diorama-tour .land-budget {
+    position: relative;
+    inset: auto;
+    margin: 20px 6vw 0;
+    order: 5;
+    width: auto;
+    padding: 12px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2px 8px;
+  }
+  .diorama-tour .land-budget h3 {
+    font-size: 24px;
+    margin: 0;
+  }
+  .diorama-tour .land-budget strong {
+    font-size: 34px;
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .diorama-tour .land-budget > p {
+    margin: 0;
+    font-size: 17px;
+  }
+  .diorama-tour .land-budget a {
+    grid-column: 1 / -1;
+    margin-top: 7px;
+    font-size: 14px;
+  }
+  .diorama-console {
+    position: relative;
+    inset: auto;
+    transform: none;
+    margin: 0 auto;
+    order: 4;
+    padding: 10px 16px;
+    width: 88%;
+  }
+  .diorama-console .photo-tour-playback {
+    gap: 5px 10px;
+  }
+  .diorama-console .tour-play {
+    font-size: 23px;
+  }
+  .diorama-console .tour-scrubber {
+    font-size: 11px;
+  }
+  .diorama-console .tour-scrubber input {
+    min-height: 30px;
+  }
+  .diorama-console .photo-tour-chapters {
+    gap: 0 12px;
+  }
+  .diorama-console .photo-tour-chapters button {
+    padding: 5px;
+    font-size: 18px;
+    min-height: 36px;
+  }
+  .diorama-caption .photo-tour-caption {
+    min-height: 0;
   }
   .land-budget {
     bottom: 120px;

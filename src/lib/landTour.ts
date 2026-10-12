@@ -38,3 +38,21 @@ export function advanceTour(progress: number, elapsedSeconds: number) {
       Math.max(0, Math.min(elapsedSeconds, 0.1)) / tourDuration,
   );
 }
+
+/** A single clock drives the illustrated camera and photographs, including pause/seek. */
+export function tourPose(progress: number) {
+  const p = Math.min(1, Math.max(0, Number.isFinite(progress) ? progress : 0));
+  const chapter = tourChapter(p);
+  const local = Math.min(1, p * 4 - chapter);
+  const lift = Math.sin((Math.min(1, local / 0.22) * Math.PI) / 2);
+  return {
+    chapter,
+    x: Math.sin(p * Math.PI * 2) * 3.5,
+    y: Math.sin(p * Math.PI) * 2,
+    scale: 1 + Math.sin(p * Math.PI) * 0.16,
+    yaw: Math.sin(p * Math.PI * 2) * 7,
+    pitch: Math.sin(p * Math.PI * 2) * 2.5,
+    photoLift: lift,
+    photoYaw: (1 - lift) * -34 + Math.sin(local * Math.PI * 2) * 3,
+  };
+}
