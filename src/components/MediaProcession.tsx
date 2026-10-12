@@ -123,7 +123,7 @@ export function MediaProcession() {
           </p>
         </div>
         <a className="text-link" href="/archive">
-          Browse all media <ArrowRight size={19} />
+          Listen to meeting recordings <ArrowRight size={19} />
         </a>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { convexTest } from "convex-test";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import schema from "../convex/schema";
 import { api, internal } from "../convex/_generated/api";
 import { approvalStart } from "../convex/ledger";
@@ -31,6 +31,40 @@ async function setup() {
   };
 }
 describe("Household and accounting boundaries", () => {
+  it("blocks test-key checkout outside explicitly enabled sandbox mode", async () => {
+    const { t, alice } = await setup();
+    try {
+      vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_unusable");
+      vi.stubEnv("APPROVED_STRIPE_ACCOUNT_ID", "acct_example");
+      vi.stubEnv("STRIPE_WEBHOOK_SECRET", "example");
+      vi.stubEnv("PAYMENTS_TEST_MODE", "false");
+      vi.stubEnv("CARD_PAYMENTS_DISABLED", "false");
+      expect((await t.query(api.paymentRecords.availability, {})).card).toBe(
+        false,
+      );
+      await expect(
+        alice.action(api.payments.checkout, {
+          amountCents: 2000,
+          fund: "general",
+          frequency: "once",
+          requestId: "production-payment-guard",
+        }),
+      ).rejects.toThrow("not activated");
+      expect(
+        await t.run((ctx) => ctx.db.query("donations").collect()),
+      ).toHaveLength(0);
+      vi.stubEnv("PAYMENTS_TEST_MODE", "true");
+      expect((await t.query(api.paymentRecords.availability, {})).card).toBe(
+        true,
+      );
+      vi.stubEnv("CARD_PAYMENTS_DISABLED", "true");
+      expect((await t.query(api.paymentRecords.availability, {})).card).toBe(
+        false,
+      );
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
   it("consolidates only a reviewed unapproved spouse application without moving financial history", async () => {
     const { admin, alice } = await setup();
     await alice.mutation(api.members.save, {

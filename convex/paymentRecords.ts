@@ -8,7 +8,11 @@ export const availability = query({
     // Chase ACH is a separate rail. Mock API access is not activation.
     ach: false,
     card: !!(
+      process.env.CARD_PAYMENTS_DISABLED !== "true" &&
       process.env.STRIPE_SECRET_KEY &&
+      (process.env.STRIPE_SECRET_KEY.startsWith("sk_live_") ||
+        (process.env.PAYMENTS_TEST_MODE === "true" &&
+          process.env.STRIPE_SECRET_KEY.startsWith("sk_test_"))) &&
       process.env.APPROVED_STRIPE_ACCOUNT_ID &&
       process.env.STRIPE_WEBHOOK_SECRET
     ),

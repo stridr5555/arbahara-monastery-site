@@ -23,6 +23,16 @@ export const checkout = action({
   handler: async (ctx, a): Promise<string> => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Please sign in before continuing.");
+    const sandbox =
+      process.env.PAYMENTS_TEST_MODE === "true" &&
+      process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
+    if (
+      process.env.CARD_PAYMENTS_DISABLED === "true" ||
+      (!sandbox && !process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_"))
+    )
+      throw new Error(
+        "Card giving is not activated. Please use Zelle or contact the office.",
+      );
     if (
       !process.env.APPROVED_STRIPE_ACCOUNT_ID ||
       !process.env.STRIPE_WEBHOOK_SECRET
@@ -34,9 +44,6 @@ export const checkout = action({
     const account = await stripe.accounts.retrieve(
       process.env.APPROVED_STRIPE_ACCOUNT_ID,
     );
-    const sandbox =
-      process.env.PAYMENTS_TEST_MODE === "true" &&
-      process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_");
     if (
       account.id !== process.env.APPROVED_STRIPE_ACCOUNT_ID ||
       (!sandbox &&
@@ -72,7 +79,13 @@ export const checkout = action({
         stripeCustomerId: created.id,
       });
     }
-    const metadata = { app: "arbahara", userId, donationId, fund: a.fund, paymentRail: "card" };
+    const metadata = {
+      app: "arbahara",
+      userId,
+      donationId,
+      fund: a.fund,
+      paymentRail: "card",
+    };
     const site = process.env.SITE_URL || "https://www.haramonastery.org";
     const session = await stripe.checkout.sessions.create(
       {

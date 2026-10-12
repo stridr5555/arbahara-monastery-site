@@ -1,9 +1,77 @@
 # Redesign implementation — development milestone, 12 October 2026
 
-This is a development milestone, not a production release or a claim that every
-requested feature and provider activation is complete. The additive schema was
+The initial work was a development milestone, not a claim that every requested
+feature and provider activation is complete. The additive schema was
 deployed to `cautious-meadowlark-132` after exporting its data and stored files to
-an ignored, owner-only local backup. Production `energetic-orca-365` is unchanged.
+an ignored, owner-only local backup. Production was unchanged at that milestone.
+
+## Authorized production-release safeguards
+
+The owner subsequently approved publishing a production-safe release. A fresh
+production data/storage snapshot was exported before deploying the additive
+schema to `energetic-orca-365`; schema validation passed without index deletions.
+Production frontend builds must use `https://energetic-orca-365.convex.cloud`
+and its `.site` HTTP origin, never the development deployment. Stage with
+production configuration before assigning the live domains.
+
+Production currently has a Stripe test key, even though its test-mode flag is
+false. A new server guard blocks that combination before any checkout or donation
+record is created. `CARD_PAYMENTS_DISABLED=true` is also set in production.
+Card giving requires separately verified live monastery credentials, live webhook
+configuration and deliberate removal of that kill switch. Existing Stripe history
+and webhook processing are preserved; no live payment was made for release QA.
+Chase ACH, Plaid access and automatic Google calendar synchronization remain
+inactive; the existing Zelle route remains available. The public calendar and
+dated calendar download do not require a Google grant.
+
+The existing office admin bootstrap is preserved alongside the two requested
+verified admin emails. No historical roster or financial data is silently imported
+or approved. The release payment-guard and usability regressions bring the suite to 51 passing
+tests. This rollout does not remove the unfinished work listed below.
+
+## Collection discoverability and photographic flight
+
+The media page no longer has a collection accordion or mutually exclusive
+category filters. All four sections are ordinary visible document sections, with
+plain-language jump links at the top, full-size photo-link descriptions and
+instructions for playing films. Videos retain `preload="none"`; none autoplay.
+The archive link now says “Listen to meeting recordings” instead of implying that
+it contains all photographs and films.
+
+The former property animation was only a decorative line above a still image.
+It is replaced by a forty-second camera flight through actual aerial/residence
+photographs arranged as textured planes in Three.js. It starts on entering view,
+pauses offscreen, stops at the end, and supports pause/replay, keyboard-accessible
+scrubbing, previous/next and four chapters. Hidden-tab time cannot cause a large
+playback jump. Missing WebGL/textures and motion-off preferences retain readable
+HTML, original photographs and working chapter controls. Heavy WebGL remains
+lazy; rendering resources and image textures are disposed on unmount.
+
+This is explicitly a **photo-based 3D animation, not photogrammetry, a surveyed
+terrain model or drone recording**. The source aerial is only 480×270 pixels;
+we retain its real content rather than invent details through AI upscaling.
+The future chapter uses the supplied conceptual campus plan, not completed
+facilities. Better aerial source imagery is needed for a sharper flight, and a
+literal reconstructed tour needs suitable drone/photogrammetry capture.
+
+Design comparison: the preview-only generated concept is
+`exec-81372e92-e06d-4c30-8344-38ac75988e79.png` in the session's generated images.
+The implemented dark-olive/ivory/gold palette, centered serif heading, open photo
+canvas, playback rail, four underlined chapters and budget band follow that
+direction. Intentional factual deviations: original low-resolution aerial replaces
+the concept's reimagined aerial; photo positions evolve with the actual camera
+path rather than being a fixed right-hand mockup; no invented vegetation glyph.
+Native controls, readable disclaimers, 48px targets and two-column phone chapters
+take precedence over raster UI details. Core new labels/captions have Amharic
+catalog entries; fluent human review remains required.
+
+Browser checks use the in-app browser: 1536×1024 desktop and 390×844 phone;
+real camera progress, pause, chapter transitions, End-key scrubbing and motion-off
+fallback were exercised. All collection sections render without disclosure and
+the property jump link reaches the photo section. No horizontal overflow or
+relevant browser warnings/errors were observed. Production-style Vite preview is
+used for collection QA because the development server can serve a preserved
+legacy `gallery/index.html`; the release prerender replaces that entry correctly.
 
 ## Working implementation
 
@@ -85,7 +153,7 @@ The membership bank form is clearly labelled a non-enrolling amount preview.
 6. Complete Amharic human review, original-media descriptions/captions, keyboard
    and screen-reader audits, low-end-device performance checks, and final visual
    sign-off of authenticated portal/treasury screens.
-7. Stage and test production schema before promoting a production frontend. Keep
+7. Stage and test future production changes before promoting a frontend. Keep
    preview builds pointed at development; never point unreviewed imports at live
    data. Preserve historical Stripe ACH subscriptions until a reviewed transition
    prevents duplicate collection. No live charge was made during this milestone.

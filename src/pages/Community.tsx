@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { DepthFrame } from "../components/Motion";
 import { ArrowUpRight, MapPin, Mail, Phone } from "lucide-react";
 import { site, phases, resources, invocation } from "../content";
@@ -321,170 +320,192 @@ const photoLabels: Record<number, string> = {
   10: "Bathroom, virtually staged",
 };
 export function Gallery() {
-  const [filter, setFilter] = useState("collection");
   return (
     <>
+      <div className="wrap">
+        <PageIntro title="Photographs and films">
+          Our community, our property, and the memories we share. Everything is
+          on this page—scroll down, or go directly to a section below.
+        </PageIntro>
+        <nav
+          className="collection-jump-links"
+          aria-label="Photographs and films sections"
+        >
+          {[
+            ["community-photographs", "Community photographs"],
+            ["property-photographs", "Property photographs"],
+            ["sacred-art", "Sacred art"],
+            ["community-films", "Watch community films"],
+          ].map(([key, label]) => (
+            <a key={key} href={`#${key}`}>
+              {label} <ArrowUpRight size={17} />
+            </a>
+          ))}
+        </nav>
+      </div>
       <MediaProcession />
       <div className="wrap" id="community">
-        <PageIntro title="A place. A people. A shared memory.">
-          Photographs and films preserved from the monastery’s existing
-          collection.
-        </PageIntro>
-        <details className="preserved-collection">
-          <summary>Browse the preserved collection</summary>
-          <div className="filter-row" aria-label="Gallery collections">
+        <section
+          className="collection-section"
+          id="community-photographs"
+          aria-labelledby="community-photos-heading"
+        >
+          <h2 id="community-photos-heading">Community photographs</h2>
+          <p>Select a photograph to open the full-size image in a new tab.</p>
+          <p className="small">
+            The photographs, sacred images, and visual records from our original
+            website. Historical images are preserved as part of the collection,
+            not as photographs of completed facilities in Texas.
+          </p>
+          <div className="original-gallery">
             {[
-              ["collection", "Original collection"],
-              ["property", "The property"],
-              ["sacred", "Sacred art"],
-              ["films", "Community films"],
-            ].map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                aria-pressed={filter === key}
-                onClick={() => setFilter(key)}
-              >
-                {label}
-              </button>
+              [
+                "meditation-portrait.png",
+                "Portrait from the original collection",
+              ],
+              ["community-gathering.jpg", "Community gathering"],
+              ["pilgrims.jpg", "Pilgrimage"],
+              ["mountain-temple.jpg", "Mountain sanctuary"],
+              ["choral-procession.jpg", "Choral procession"],
+              ["hall-night.jpg", "Evening gathering place"],
+              ["calcite.jpg", "Stone detail"],
+              ["assembly.jpg", "Assembly"],
+              ["jesus-icon.png", "Icon of Christ"],
+              ["saint-portrait.jpg", "Sacred portrait"],
+              ["announcement.jpg", "Community announcement"],
+              ["view-terrace.jpg", "Terrace view"],
+              ["flowers.jpg", "Garden flowers"],
+              ["arch-mural.jpg", "Arch and mural"],
+              ["axum-vision.png", "Axum visual reference"],
+            ].map(([file, label]) => (
+              <DepthFrame key={file}>
+                <figure>
+                  <a
+                    href={`/assets/images/${file}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`View larger: ${label} (opens in a new tab)`}
+                  >
+                    <img
+                      src={`/assets/images/${file}`}
+                      alt={`${label} from the original monastery collection`}
+                      loading="lazy"
+                    />
+                  </a>
+                  <figcaption>{label}</figcaption>
+                </figure>
+              </DepthFrame>
             ))}
           </div>
-          {filter === "collection" ? (
-            <>
-              <p className="small">
-                The photographs, sacred images, and visual records from our
-                original website. Historical images are preserved as part of the
-                collection, not as photographs of completed facilities in Texas.
-              </p>
-              <div className="original-gallery">
-                {[
-                  [
-                    "meditation-portrait.png",
-                    "Portrait from the original collection",
-                  ],
-                  ["community-gathering.jpg", "Community gathering"],
-                  ["pilgrims.jpg", "Pilgrimage"],
-                  ["mountain-temple.jpg", "Mountain sanctuary"],
-                  ["choral-procession.jpg", "Choral procession"],
-                  ["hall-night.jpg", "Evening gathering place"],
-                  ["calcite.jpg", "Stone detail"],
-                  ["assembly.jpg", "Assembly"],
-                  ["jesus-icon.png", "Icon of Christ"],
-                  ["saint-portrait.jpg", "Sacred portrait"],
-                  ["announcement.jpg", "Community announcement"],
-                  ["view-terrace.jpg", "Terrace view"],
-                  ["flowers.jpg", "Garden flowers"],
-                  ["arch-mural.jpg", "Arch and mural"],
-                  ["axum-vision.png", "Axum visual reference"],
-                ].map(([file, label]) => (
-                  <DepthFrame key={file}>
-                    <figure>
-                      <a
-                        href={`/assets/images/${file}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <img
-                          src={`/assets/images/${file}`}
-                          alt={`${label} from the original monastery collection`}
-                          loading="lazy"
-                        />
-                      </a>
-                      <figcaption>{label}</figcaption>
-                    </figure>
-                  </DepthFrame>
-                ))}
-              </div>
-            </>
-          ) : filter === "property" ? (
-            <>
-              <p className="small">
-                Original property listing photographs. Images marked “Virtually
-                Staged” contain illustrative furnishings and do not document the
-                monastery’s current interior.
-              </p>
-              <div className="photo-grid">
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                  <figure key={n}>
-                    <a
-                      href={`/assets/property/land-${String(n).padStart(2, "0")}.webp`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <img
-                        src={`/assets/property/land-${String(n).padStart(2, "0")}.webp`}
-                        alt={photoLabels[n]}
-                        loading="lazy"
-                        width="2150"
-                        height="1428"
-                      />
-                    </a>
-                    <figcaption>{photoLabels[n]}</figcaption>
-                  </figure>
-                ))}
-              </div>
-              <TextLink href="/assets/property/user-map-overhead.jpg" external>
-                Property map from the original collection
-              </TextLink>
-            </>
-          ) : filter === "sacred" ? (
-            <div className="sacred-gallery">
-              <figure>
-                <img
-                  src="/assets/images/jesus-icon.png"
-                  alt="Icon of Christ from the original monastery website"
-                />
+        </section>
+        <section
+          className="collection-section"
+          id="property-photographs"
+          aria-labelledby="property-photos-heading"
+        >
+          <h2 id="property-photos-heading">Property photographs</h2>
+          <p className="small">
+            Original property listing photographs. Images marked “Virtually
+            Staged” contain illustrative furnishings and do not document the
+            monastery’s current interior.
+          </p>
+          <div className="photo-grid">
+            {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+              <figure key={n}>
+                <a
+                  href={`/assets/property/land-${String(n).padStart(2, "0")}.webp`}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`View larger: ${photoLabels[n]} (opens in a new tab)`}
+                >
+                  <img
+                    src={`/assets/property/land-${String(n).padStart(2, "0")}.webp`}
+                    alt={photoLabels[n]}
+                    loading="lazy"
+                    width="2150"
+                    height="1428"
+                  />
+                </a>
+                <figcaption>{photoLabels[n]}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <TextLink href="/assets/property/user-map-overhead.jpg" external>
+            Property map from the original collection
+          </TextLink>
+        </section>
+        <section
+          className="collection-section"
+          id="sacred-art"
+          aria-labelledby="sacred-art-heading"
+        >
+          <h2 id="sacred-art-heading">Sacred art</h2>
+          <div className="sacred-gallery">
+            <figure>
+              <img
+                src="/assets/images/jesus-icon.png"
+                alt="Icon of Christ from the original monastery website"
+                loading="lazy"
+              />
+              <figcaption>Icon of Christ from the original website.</figcaption>
+            </figure>
+            <figure>
+              <img
+                src="/assets/images/saint-portrait.jpg"
+                alt="Sacred portrait from the monastery collection"
+                loading="lazy"
+              />
+              <figcaption>
+                Sacred portrait preserved from the original website.
+              </figcaption>
+            </figure>
+            <p>
+              We preserve this image as part of the monastery’s existing
+              collection. For its history and identification, please ask the
+              monastery office.
+            </p>
+          </div>
+        </section>
+        <section
+          className="collection-section"
+          id="community-films"
+          aria-labelledby="community-films-heading"
+        >
+          <h2 id="community-films-heading">Watch community films</h2>
+          <p>
+            Press the Play button on a film to watch. Sound starts only when you
+            play it.
+          </p>
+          <div className="photo-grid">
+            {[
+              "230552_179",
+              "230555_407",
+              "230601_446",
+              "230724_600",
+              "230814_250",
+              "230849_742",
+              "230855_830",
+            ].map((id, i) => (
+              <figure key={id}>
+                <video
+                  controls
+                  preload="none"
+                  poster={`/assets/images/video-VID_20220607_${id}.jpg`}
+                  aria-label={`Community film ${i + 1}`}
+                >
+                  <source
+                    src={`/assets/videos/VID_20220607_${id}.mp4`}
+                    type="video/mp4"
+                  />
+                </video>
                 <figcaption>
-                  Icon of Christ from the original website.
+                  Community film {i + 1} · original 2022 collection. Captions
+                  and detailed descriptions are not yet available.
                 </figcaption>
               </figure>
-              <figure>
-                <img
-                  src="/assets/images/saint-portrait.jpg"
-                  alt="Sacred portrait from the monastery collection"
-                />
-                <figcaption>
-                  Sacred portrait preserved from the original website.
-                </figcaption>
-              </figure>
-              <p>
-                We preserve this image as part of the monastery’s existing
-                collection. For its history and identification, please ask the
-                monastery office.
-              </p>
-            </div>
-          ) : (
-            <div className="photo-grid">
-              {[
-                "230552_179",
-                "230555_407",
-                "230601_446",
-                "230724_600",
-                "230814_250",
-                "230849_742",
-                "230855_830",
-              ].map((id, i) => (
-                <figure key={id}>
-                  <video
-                    controls
-                    preload="none"
-                    poster={`/assets/images/video-VID_20220607_${id}.jpg`}
-                    aria-label={`Community film ${i + 1}`}
-                  >
-                    <source
-                      src={`/assets/videos/VID_20220607_${id}.mp4`}
-                      type="video/mp4"
-                    />
-                  </video>
-                  <figcaption>
-                    Community film {i + 1} · original 2022 collection. Captions
-                    and detailed descriptions are not yet available.
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
-        </details>
+            ))}
+          </div>
+        </section>
         <section className="callout">
           <h2>Help us preserve the names and stories.</h2>
           <p>

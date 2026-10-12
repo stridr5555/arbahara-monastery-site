@@ -1,6 +1,14 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Pause,
+  RotateCcw,
+} from "lucide-react";
 import { useMotion } from "./Motion";
+import { advanceTour, tourChapter, tourChapters } from "../lib/landTour";
 import {
   constructionProjects,
   constructionSource,
@@ -13,105 +21,188 @@ const dollars = (n: number) =>
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(n);
-const stops = [
-  {
-    name: "Land",
-    text: "Ten acres in Crandall, Texas. A place to gather, serve and grow.",
-  },
-  {
-    name: "Prayer",
-    text: "An existing residence and garage offer a beginning. Preparation for congregational prayer remains subject to professional review and the Church’s guidance.",
-  },
-  {
-    name: "Water",
-    text: "Care for the existing lake, and assess a proposed aquifer well. Drilling, safety and sacred use require the appropriate permissions and ecclesiastical guidance.",
-  },
-  {
-    name: "Hospitality",
-    text: "A temporary dormitory is part of the service-readiness proposal. It is a future concept, not a completed building.",
-  },
-];
 export function LandJourney({ full = false }: { full?: boolean }) {
-  const [future, setFuture] = useState(false),
-    [stop, setStop] = useState(0),
-    [visible, setVisible] = useState(false);
+  const [stop, setStop] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const [ended, setEnded] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [sceneStatus, setSceneStatus] = useState<
+    "loading" | "ready" | "fallback"
+  >("loading");
   const root = useRef<HTMLElement>(null);
+  const progress = useRef(0);
+  const scrubber = useRef<HTMLInputElement>(null);
   const { enabled } = useMotion();
   useEffect(() => {
     const node = root.current;
     if (!node) return;
     const observer = new IntersectionObserver(
       ([entry]) => setVisible(entry.isIntersecting),
-      { rootMargin: "150px" },
+      { threshold: 0.15 },
     );
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+  useEffect(() => {
+    if (!visible || !enabled || !playing || sceneStatus === "loading") return;
+    let frame = 0;
+    let last = 0;
+    const tick = (now: number) => {
+      if (!document.hidden) {
+        progress.current = advanceTour(
+          progress.current,
+          last ? (now - last) / 1000 : 0,
+        );
+        if (scrubber.current) scrubber.current.value = String(progress.current);
+        setStop((old) => {
+          const next = tourChapter(progress.current);
+          return old === next ? old : next;
+        });
+        if (progress.current >= 1) {
+          setPlaying(false);
+          setEnded(true);
+          return;
+        }
+      }
+      last = now;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [visible, enabled, playing, sceneStatus]);
+  const goTo = (next: number) => {
+    progress.current = Math.min(3, Math.max(0, next)) / 4;
+    setStop(tourChapter(progress.current));
+    setPlaying(false);
+    setEnded(false);
+    if (scrubber.current) scrubber.current.value = String(progress.current);
+  };
+  const toggle = () => {
+    if (ended) {
+      progress.current = 0;
+      setStop(0);
+      setEnded(false);
+    }
+    setPlaying(ended || !playing);
+  };
   return (
     <section
       ref={root}
-      className={`land-journey ${full ? "full" : ""}`}
+      className={`land-journey photo-tour ${full ? "full" : ""}`}
       id="land"
       data-stop={stop}
     >
-      <div className="land-stage">
+      <header className="photo-tour-heading">
+        <h2>Walk the land.</h2>
+        <p>A guided journey through our Crandall property.</p>
+      </header>
+      <div
+        className="photo-tour-stage"
+        data-scene={visible && enabled ? sceneStatus : "fallback"}
+      >
         <img
-          className="land-illustration"
-          src="/assets/images/land-illustration.webp"
-          width="1536"
-          height="1024"
+          className="photo-tour-fallback"
+          src={tourChapters[stop].image}
           loading="lazy"
-          alt="Illustrative cutaway reconstruction of the existing property, based on its aerial photograph; not a survey"
+          alt={tourChapters[stop].alt}
         />
         {visible && enabled ? (
           <Suspense fallback={null}>
-            <LandScene stop={stop} future={future} />
+            <LandScene progress={progress} onStatus={setSceneStatus} />
           </Suspense>
         ) : null}
-        <div className="land-heading">
-          <h2>
-            Rooted here.
-            <br />
-            For generations.
-          </h2>
-          <p aria-live="polite">{stops[stop].text}</p>
+        <span className="photo-tour-location">
+          {stop === 3
+            ? "Future campus · concept only"
+            : "Crandall, Texas · original property photographs"}
+        </span>
+      </div>
+      <div className="photo-tour-console">
+        <div className="photo-tour-playback">
+          <button className="tour-play" onClick={toggle} disabled={!enabled}>
+            {ended ? (
+              <RotateCcw size={23} />
+            ) : playing && enabled ? (
+              <Pause size={23} />
+            ) : (
+              <Play size={23} />
+            )}
+            {ended
+              ? "Replay tour"
+              : playing && enabled
+                ? "Pause tour"
+                : "Play tour"}
+          </button>
+          <label className="tour-scrubber">
+            Tour progress
+            <input
+              ref={scrubber}
+              type="range"
+              min="0"
+              max="1"
+              step="0.001"
+              defaultValue="0"
+              aria-label="Tour progress"
+              onChange={(e) => {
+                progress.current = Number(e.target.value);
+                setStop(tourChapter(progress.current));
+                setPlaying(false);
+                setEnded(progress.current >= 1);
+              }}
+            />
+          </label>
+          <button
+            aria-label="Previous tour chapter"
+            onClick={() => goTo(stop - 1)}
+            disabled={stop === 0}
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            aria-label="Next tour chapter"
+            onClick={() => goTo(stop + 1)}
+            disabled={stop === 3}
+          >
+            <ChevronRight size={24} />
+          </button>
         </div>
-        <div className="land-mode">
-          <div className="calendar-switch">
-            <button aria-pressed={!future} onClick={() => setFuture(false)}>
-              Existing property
+        <nav
+          className="photo-tour-chapters"
+          aria-label="Property tour chapters"
+        >
+          {tourChapters.map((s, i) => (
+            <button
+              key={s.name}
+              aria-pressed={stop === i}
+              onClick={() => goTo(i)}
+            >
+              {i + 1} {s.name}
             </button>
-            <button aria-pressed={future} onClick={() => setFuture(true)}>
-              Future vision
-            </button>
-          </div>
-          <p>
-            {future
-              ? "Proposed massing only. No buildings shown are approved construction drawings."
-              : "Illustrative reconstruction. Explore the original property photographs below."}
-          </p>
-        </div>
-        {future ? (
-          <div className="proposed-callout">
-            Future prayer and hospitality spaces
-            <br />
-            <small>Conceptual positions, not surveyed locations</small>
-          </div>
-        ) : null}
-        <aside className="land-budget" id="future">
+          ))}
+        </nav>
+        <p
+          className="photo-tour-caption"
+          aria-live={playing && enabled ? "off" : "polite"}
+        >
+          {tourChapters[stop].text}
+        </p>
+        <p className="photo-tour-note">
+          {!enabled
+            ? "Animations are off. You can still view every chapter using the buttons above. "
+            : sceneStatus === "fallback"
+              ? "Showing photographs: the 3D view is unavailable on this device. "
+              : "Photo-based 3D animation · "}
+          Not a surveyed model or drone recording.{" "}
+          <a href="/gallery#property-photographs">
+            See all original photographs
+          </a>
+          .
+        </p>
+        <aside className="photo-tour-budget" id="future">
           <h3>Preparing for service</h3>
-          <strong>{dollars(constructionTotal)}</strong>
-          <p>estimated need</p>
-          <dl>
-            <div>
-              <dt>Temporary liturgy temple</dt>
-              <dd>$350,000</dd>
-            </div>
-            <div>
-              <dt>40-room temporary dormitory</dt>
-              <dd>$400,000</dd>
-            </div>
-          </dl>
+          <p>
+            <strong>{dollars(constructionTotal)}</strong> estimated need
+          </p>
           <a
             className="text-link"
             href={full ? "#project-budget" : "/monastery#project-budget"}
@@ -119,34 +210,7 @@ export function LandJourney({ full = false }: { full?: boolean }) {
             Explore all 19 projects <ArrowRight size={17} />
           </a>
         </aside>
-        <div className="land-tour-controls" aria-label="Property tour chapters">
-          <span>Guided tour</span>
-          {stops.map((s, i) => (
-            <button
-              key={s.name}
-              aria-pressed={stop === i}
-              onClick={() => setStop(i)}
-            >
-              {s.name}
-            </button>
-          ))}
-          <a href="/gallery">
-            Original photographs <ArrowRight size={15} />
-          </a>
-        </div>
       </div>
-      <p className="land-disclaimer">
-        Illustrative reconstruction from photographs and plans, not a measured
-        survey. Proposed structures are conceptual.{" "}
-        <a
-          href="/assets/property/user-map-overhead.jpg"
-          target="_blank"
-          rel="noreferrer"
-        >
-          View original aerial image
-        </a>
-        .
-      </p>
       {full ? (
         <section className="construction-budget wrap" id="project-budget">
           <div className="section-heading">
