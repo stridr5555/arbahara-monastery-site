@@ -4,6 +4,7 @@ import { site, phases, resources, invocation } from "../content";
 import { PageIntro, TextLink, LinkButton } from "../components/Layout";
 import { LandJourney } from "../components/LandJourney";
 import { MediaProcession } from "../components/MediaProcession";
+import { Teleconference } from "../components/Teleconference";
 export function Monastery() {
   return (
     <>
@@ -41,6 +42,13 @@ export function Monastery() {
               beginnings so that future generations can know the faith and care
               behind them.
             </p>
+            <h3>Gather with our spiritual family</h3>
+            <p>
+              Join the monthly Mahiber on the Ethiopian 27th, 7–8 p.m. Texas
+              time.
+            </p>
+            <Teleconference />
+            <TextLink href="/calendar">See gathering dates</TextLink>
           </div>
           <figure>
             <img
@@ -250,6 +258,14 @@ export function Visit() {
               </span>
             </div>
           </div>
+          <h3>Join the monthly Mahiber</h3>
+          <p>
+            Ethiopian 27th, 7–8 p.m. Texas time. This number is for the
+            teleconference; use the office contacts above for visits and other
+            questions.
+          </p>
+          <Teleconference />
+          <TextLink href="/calendar">See gathering dates</TextLink>
         </div>
         <aside className="visit-note">
           <span className="section-label">Your first visit</span>

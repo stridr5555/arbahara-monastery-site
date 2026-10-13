@@ -3,6 +3,7 @@ import { MotionToggle, usePageMotion } from "./Motion";
 import { LanguageSwitcher, TranslationController } from "./Translation";
 import { ArrowRight, Menu, X, ArrowUpRight } from "lucide-react";
 import { site } from "../content";
+import { Teleconference } from "./Teleconference";
 export function Cross() {
   return (
     <svg
@@ -150,6 +151,7 @@ export function Footer() {
           <h2>Stay connected</h2>
           <a href={`mailto:${site.email}`}>{site.email}</a>
           <a href="tel:+12148031347">{site.phone}</a>
+          <Teleconference />
           <a href={site.facebook} target="_blank" rel="noreferrer">
             Facebook <ArrowUpRight size={13} />
           </a>

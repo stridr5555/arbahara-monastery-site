@@ -1,8 +1,22 @@
 import { describe, expect, it, vi } from "vitest";
 import { Mesh, InstancedMesh } from "three";
 import { buildPropertyModel } from "../src/lib/propertyModel";
+import { aerialPoint, propertyLayout } from "../src/lib/propertyLayout";
 
 describe("Native property reconstruction", () => {
+  it("traces relative landmarks from one aerial coordinate system", () => {
+    expect(propertyLayout.residence).toEqual(aerialPoint(146, 190));
+    expect(propertyLayout.garage).toEqual(aerialPoint(132, 221));
+    expect(propertyLayout.drive[0]).toEqual(propertyLayout.entrance);
+    // Garage is nearby and south of the residence, not displaced far west.
+    expect(propertyLayout.garage[1] - propertyLayout.residence[1]).toBeCloseTo(
+      31 * 0.36,
+    );
+    expect(propertyLayout.garage[0] - propertyLayout.residence[0]).toBeCloseTo(
+      -14 * 0.36,
+    );
+    expect(propertyLayout.pond).toHaveLength(15);
+  });
   it("builds the photo-informed features as geometry, not photographic billboards", () => {
     const context = {
       fillStyle: "",
@@ -20,6 +34,16 @@ describe("Native property reconstruction", () => {
       expect(house.position.x).toBeLessThan(0);
       expect(house.position.z).toBeGreaterThan(0);
       expect(garage.position.x).toBeLessThan(house.position.x);
+      expect([house.position.x, house.position.z]).toEqual(
+        propertyLayout.residence,
+      );
+      expect([garage.position.x, garage.position.z]).toEqual(
+        propertyLayout.garage,
+      );
+      const pond = model.getObjectByName("Pond water")!;
+      expect([pond.position.x, pond.position.z]).toEqual(
+        propertyLayout.pondCenter,
+      );
       expect(
         house.children.filter((c) => c.name === "Dormer body"),
       ).toHaveLength(2);

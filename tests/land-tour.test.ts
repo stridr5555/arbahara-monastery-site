@@ -45,7 +45,9 @@ describe("Accessible collection and property tour", () => {
   it("flies through space, descends toward the residence and holds for inspection", () => {
     const start = tourPose(0);
     const house = tourPose(chapterProgress(1));
-    expect(house.position).toEqual(tourChapters[1].position);
+    house.position.forEach((value, axis) =>
+      expect(value).toBeCloseTo(tourChapters[1].position[axis], 12),
+    );
     expect(house.target).toEqual(tourChapters[1].target);
     expect(house.position[1]).toBeLessThan(start.position[1]);
     expect(tourPose(0.335)).toEqual(tourPose(0.39));

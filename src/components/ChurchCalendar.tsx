@@ -25,6 +25,8 @@ import {
 } from "../lib/calendarChanges";
 import { Live } from "./Live";
 import { CalendarUpdates } from "./CalendarUpdates";
+import { Teleconference } from "./Teleconference";
+import { teleconference } from "../lib/teleconference";
 const DAY = 86400000;
 const calendarExportUrl =
   import.meta.env.VITE_CONVEX_URL?.replace(
@@ -88,10 +90,14 @@ export function GatheringDetails({ event }: { event: Gathering }) {
         {timeLabel.format(event.startsAt)}–{timeLabel.format(event.endsAt)} ·
         Texas time
       </p>
-      <p>
-        <MapPin size={17} />
-        {event.location}
-      </p>
+      {event.kind === "mahiber" ? <Teleconference /> : null}
+      {event.kind !== "mahiber" ||
+      event.location !== `Teleconference · ${teleconference.number}` ? (
+        <p>
+          <MapPin size={17} />
+          {event.location}
+        </p>
+      ) : null}
     </article>
   );
 }
@@ -125,8 +131,8 @@ export function NextGatherings() {
         </p>
       )}
       <p className="small">
-        All times America/Chicago. Meeting access is provided by the monastery
-        office.
+        All times America/Chicago. Join the Mahiber by phone on the Ethiopian
+        27th, 7–8 p.m.
       </p>
     </section>
   );
@@ -175,6 +181,7 @@ export function ChurchCalendar() {
       <Live>
         <CalendarUpdates onChange={setChanges} />
       </Live>
+      <Teleconference />
       <section className="calendar-month" aria-label="Monthly calendar">
         <div className="calendar-toolbar">
           <div className="calendar-switch" aria-label="Calendar system">

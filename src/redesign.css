@@ -1041,6 +1041,10 @@ a:focus-visible {
   background: #0d110e;
   perspective: 1400px;
   overflow: clip;
+  min-height: 600px;
+}
+.flyover-tour .land-heading h2 {
+  font-size: clamp(48px, 8svh, 90px);
 }
 .diorama-scene {
   position: absolute;
@@ -1049,6 +1053,57 @@ a:focus-visible {
 }
 .property-flight {
   perspective: none;
+}
+.teleconference-contact {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.6;
+}
+.teleconference-contact > svg {
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+.teleconference-contact span[lang="am"] {
+  display: block;
+  font-size: 0.85em;
+}
+.teleconference-contact a {
+  display: block;
+  width: fit-content;
+  font-size: 1.2em;
+  font-variant-numeric: tabular-nums;
+  text-underline-offset: 4px;
+}
+.church-calendar > .teleconference-contact {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.property-reference {
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
+.property-reference-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.property-reference-images figure {
+  margin: 0;
+}
+.property-reference-images img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.property-reference-images figcaption {
+  margin-top: 10px;
+  font: 13px/1.6 var(--sans);
+}
+@media (max-width: 760px) {
+  .property-reference-images {
+    grid-template-columns: 1fr;
+  }
 }
 .property-canvas,
 .property-fallback {
@@ -1259,6 +1314,28 @@ a:focus-visible {
 }
 .diorama-tour .land-budget h3 {
   font-size: 28px;
+}
+.diorama-tour .land-budget.tour-budget-strip {
+  position: static;
+  width: auto;
+  margin: 0;
+  padding: 22px 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  box-shadow: none;
+}
+.tour-budget-strip div {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.tour-budget-strip p,
+.tour-budget-strip h3 {
+  margin: 0;
 }
 .diorama-console {
   position: absolute;
@@ -1907,8 +1984,8 @@ a:focus-visible {
     margin-top: 8px;
   }
   .property-flight {
-    height: 360px;
-    flex-basis: 360px;
+    height: 500px;
+    flex-basis: 500px;
   }
   .property-flight-label {
     left: 6vw;

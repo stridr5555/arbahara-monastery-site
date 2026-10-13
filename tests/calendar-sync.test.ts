@@ -43,6 +43,7 @@ describe("Primary calendar consent and sync", () => {
     expect(text.match(/BEGIN:VEVENT/g) || []).toHaveLength(24);
     expect(text).toContain("arbahara-mahiber-2020-1@haramonastery.org");
     expect(text).not.toContain("RRULE:");
+    expect(text.replace(/\r\n /g, "")).toContain("Dial 727-731-9374 to join");
   });
   it("encrypts tokens with provider/user binding and rejects tampering", () => {
     const encrypted = seal("not-a-real-token", "calendar:alice");
@@ -144,6 +145,11 @@ describe("Primary calendar consent and sync", () => {
     await t.finishAllScheduledFunctions(() => vi.runAllTimers());
     const before = saved.size;
     expect(before).toBeGreaterThan(20);
+    const mahiber = [...saved.values()].find(
+      (e) => e.summary === "Arbahara Teleconference Mahiber",
+    )!;
+    expect(mahiber.location).toContain("727-731-9374");
+    expect(mahiber.description).toContain("Dial 727-731-9374 to join");
     await member.action(api.calendarActions.sync, {});
     expect(saved.size).toBe(before);
     expect(

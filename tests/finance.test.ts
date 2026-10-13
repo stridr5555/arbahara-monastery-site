@@ -216,7 +216,18 @@ describe("Household and accounting boundaries", () => {
     await admin.mutation(api.households.approve, { id });
     const before = (await alice.query(api.households.mine, {}))!;
     expect(before.dues).toHaveLength(12);
-    const date = new Date().toISOString().slice(0, 10);
+    // Collections use the church's civil date, not tomorrow's UTC date after 7 p.m.
+    const parts = Object.fromEntries(
+      new Intl.DateTimeFormat("en", {
+        timeZone: "America/Chicago",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+        .formatToParts(new Date())
+        .map((p) => [p.type, p.value]),
+    );
+    const date = `${parts.year}-${parts.month}-${parts.day}`;
     const input = {
       householdId: id,
       date,
