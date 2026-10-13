@@ -4,7 +4,7 @@ import {
   internalQuery,
   internalMutation,
 } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { audit, requireRole, roleFor, clean } from "./security";
 import { internal } from "./_generated/api";
 import { FINANCE_ROLES } from "./finance";
@@ -22,16 +22,46 @@ export const status = query({
   handler: async (ctx) => {
     await requireRole(ctx, FINANCE_ROLES);
     const rows = await ctx.db.query("bankConnections").collect();
+    const missing = [
+      !process.env.PLAID_CLIENT_ID ? "PLAID_CLIENT_ID" : "",
+      !process.env.PLAID_SECRET ? "PLAID_SECRET" : "",
+      !["production", "sandbox"].includes(process.env.PLAID_ENV || "")
+        ? "PLAID_ENV"
+        : "",
+      !/^[a-f0-9]{64}$/i.test(process.env.INTEGRATION_TOKEN_KEY || "")
+        ? "INTEGRATION_TOKEN_KEY"
+        : "",
+      !process.env.PLAID_REDIRECT_URI ? "PLAID_REDIRECT_URI" : "",
+    ].filter(Boolean);
+    let redirectReady = false;
+    try {
+      const url = new URL(process.env.PLAID_REDIRECT_URI || "");
+      redirectReady =
+        url.protocol === "https:" &&
+        url.origin ===
+          new URL(process.env.SITE_URL || "https://www.haramonastery.org")
+            .origin;
+    } catch {
+      /* Not configured. */
+    }
     return {
-      configured: !!(
-        process.env.PLAID_CLIENT_ID &&
-        process.env.PLAID_SECRET &&
-        ["production", "sandbox"].includes(process.env.PLAID_ENV || "") &&
-        /^[a-f0-9]{64}$/i.test(process.env.INTEGRATION_TOKEN_KEY || "")
-      ),
+      configured:
+        redirectReady &&
+        !!(
+          process.env.PLAID_CLIENT_ID &&
+          process.env.PLAID_SECRET &&
+          ["production", "sandbox"].includes(process.env.PLAID_ENV || "") &&
+          /^[a-f0-9]{64}$/i.test(process.env.INTEGRATION_TOKEN_KEY || "")
+        ),
+      missing:
+        !redirectReady && !missing.includes("PLAID_REDIRECT_URI")
+          ? [...missing, "PLAID_REDIRECT_URI"]
+          : missing,
       environment:
         process.env.PLAID_ENV === "sandbox" ? "sandbox" : "production",
-      connections: rows.map(({ encryptedToken, cursor, owner, ...r }) => r),
+      connections: rows.map(
+        ({ encryptedToken, cursor, owner, itemId, ...r }) => r,
+      ),
     };
   },
 });
@@ -40,10 +70,10 @@ export const identity = internalQuery({
   handler: async (ctx, a) => {
     const user = await ctx.db.get(a.userId);
     if (!user?.emailVerificationTime)
-      throw new Error("Verified sign-in required.");
+      throw new ConvexError("Verified sign-in required.");
     const role = await roleFor(ctx, a.userId);
     if (!(a.admin ? ["admin"] : FINANCE_ROLES).includes(role))
-      throw new Error("Staff permission required.");
+      throw new ConvexError("Staff permission required.");
     return { email: user.email };
   },
 });
@@ -52,8 +82,19 @@ export const save = internalMutation({
     owner: v.id("users"),
     institution: v.string(),
     encryptedToken: v.string(),
+    itemId: v.optional(v.string()),
   },
   handler: async (ctx, a) => {
+    if (
+      a.itemId &&
+      (await ctx.db
+        .query("bankConnections")
+        .withIndex("by_item", (q) => q.eq("itemId", a.itemId))
+        .first())
+    )
+      throw new ConvexError(
+        "This bank connection already exists. Update the existing connection instead.",
+      );
     const id = await ctx.db.insert("bankConnections", {
       ...a,
       status: "connected",
@@ -69,9 +110,33 @@ export const save = internalMutation({
     return id;
   },
 });
+export const reconnected = internalMutation({
+  args: { id: v.id("bankConnections"), actor: v.id("users") },
+  handler: async (ctx, a) => {
+    const old = await ctx.db.get(a.id);
+    if (!old?.encryptedToken || old.status === "disconnected")
+      throw new ConvexError("Connection unavailable.");
+    await ctx.db.patch(a.id, { status: "connected", lastError: undefined });
+    await audit(
+      ctx,
+      a.actor,
+      "bank.reconnected",
+      a.id,
+      "Existing read-only bank connection restored; transaction cursor retained.",
+    );
+  },
+});
 export const grant = internalQuery({
   args: { id: v.id("bankConnections") },
   handler: (ctx, a) => ctx.db.get(a.id),
+});
+export const hasItem = internalQuery({
+  args: { itemId: v.string() },
+  handler: async (ctx, a) =>
+    !!(await ctx.db
+      .query("bankConnections")
+      .withIndex("by_item", (q) => q.eq("itemId", a.itemId))
+      .first()),
 });
 export const rows = query({
   args: { id: v.id("bankConnections") },
@@ -99,9 +164,9 @@ export const applySync = internalMutation({
       connection.status !== "connected" ||
       connection.cursor !== a.expectedCursor
     )
-      throw new Error("Bank connection changed during sync; retry.");
+      throw new ConvexError("Bank connection changed during sync; retry.");
     if (a.changes.length + a.removedIds.length > 2000)
-      throw new Error("Bank sync batch too large.");
+      throw new ConvexError("Bank sync batch too large.");
     for (const change of a.changes) {
       validDate(change.date);
       if (
@@ -109,7 +174,7 @@ export const applySync = internalMutation({
         Math.abs(change.amountCents) > 10000000000 ||
         change.name.length > 250
       )
-        throw new Error("Invalid bank activity.");
+        throw new ConvexError("Invalid bank activity.");
       const old = await ctx.db
         .query("bankTransactions")
         .withIndex("by_provider", (q) =>
@@ -195,7 +260,8 @@ export const result = internalMutation({
 export const disconnect = internalMutation({
   args: { id: v.id("bankConnections"), actor: v.id("users") },
   handler: async (ctx, a) => {
-    if (!(await ctx.db.get(a.id))) throw new Error("Bank connection missing.");
+    if (!(await ctx.db.get(a.id)))
+      throw new ConvexError("Bank connection missing.");
     await ctx.db.patch(a.id, {
       status: "disconnected",
       encryptedToken: undefined,
@@ -223,7 +289,7 @@ export const match = mutation({
       txn.matchedJournalId ||
       journal.reversedBy
     )
-      throw new Error(
+      throw new ConvexError(
         "Choose an unmatched posted transaction and an unreversed journal.",
       );
     const bankDelta = journal.lines
@@ -233,7 +299,7 @@ export const match = mutation({
       bankDelta !== -txn.amountCents ||
       Math.abs(Date.parse(journal.date) - Date.parse(txn.date)) > 7 * 86400000
     )
-      throw new Error(
+      throw new ConvexError(
         "Journal bank amount and date do not match this activity.",
       );
     if (
@@ -242,7 +308,9 @@ export const match = mutation({
         .withIndex("by_journal", (q) => q.eq("matchedJournalId", a.journalId))
         .first()
     )
-      throw new Error("Journal already matched to another bank transaction.");
+      throw new ConvexError(
+        "Journal already matched to another bank transaction.",
+      );
     await ctx.db.patch(txn._id, {
       matchedJournalId: journal._id,
       matchedBy: actor._id,
@@ -256,7 +324,7 @@ export const unmatch = mutation({
   handler: async (ctx, a) => {
     const actor = await requireRole(ctx, FINANCE_ROLES),
       txn = await ctx.db.get(a.id);
-    if (!txn?.matchedJournalId) throw new Error("No match to remove.");
+    if (!txn?.matchedJournalId) throw new ConvexError("No match to remove.");
     const reason = clean(a.reason, 400, "Reason");
     await ctx.db.patch(a.id, {
       matchedJournalId: undefined,

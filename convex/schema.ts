@@ -4,9 +4,48 @@ import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
   ...authTables,
+  achChallenges: defineTable({
+    userId: v.id("users"),
+    householdId: v.id("households"),
+    keyId: v.string(),
+    expiresAt: v.number(),
+    consumedBy: v.optional(v.id("achRequests")),
+    fingerprint: v.optional(v.string()),
+  }).index("by_expiry", ["expiresAt"]),
+  achRequests: defineTable({
+    userId: v.id("users"),
+    householdId: v.id("households"),
+    encryptedDetails: v.optional(v.string()),
+    lastFour: v.string(),
+    accountHolder: v.string(),
+    bankName: v.string(),
+    accountType: v.union(v.literal("checking"), v.literal("savings")),
+    ownership: v.union(v.literal("personal"), v.literal("business")),
+    frequency: v.union(v.literal("monthly"), v.literal("annual")),
+    amountCents: v.number(),
+    consentVersion: v.string(),
+    consentText: v.string(),
+    status: v.union(
+      v.literal("submitted"),
+      v.literal("needs_information"),
+      v.literal("ready_for_chase"),
+      v.literal("entered_in_chase"),
+      v.literal("withdrawn"),
+    ),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    reviewedBy: v.optional(v.id("users")),
+    authorizationReference: v.optional(v.string()),
+    chasePayorReference: v.optional(v.string()),
+    memberMessage: v.optional(v.string()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_status", ["status"])
+    .index("by_household", ["householdId"]),
   bankConnections: defineTable({
     owner: v.id("users"),
     institution: v.string(),
+    itemId: v.optional(v.string()),
     status: v.union(
       v.literal("connected"),
       v.literal("reconnect"),
@@ -17,7 +56,9 @@ export default defineSchema({
     lastSyncedAt: v.optional(v.number()),
     lastError: v.optional(v.string()),
     createdAt: v.number(),
-  }).index("by_status", ["status"]),
+  })
+    .index("by_status", ["status"])
+    .index("by_item", ["itemId"]),
   bankTransactions: defineTable({
     connectionId: v.id("bankConnections"),
     providerId: v.string(),

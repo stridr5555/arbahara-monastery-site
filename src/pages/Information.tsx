@@ -7,7 +7,7 @@ export function Privacy() {
   return (
     <div className="wrap narrow">
       <PageIntro title="Your trust matters.">
-        Privacy notice · Updated September 23, 2026
+        Privacy notice · Updated October 13, 2026
       </PageIntro>
       <div className="prose">
         <h2>Information we keep</h2>
@@ -45,10 +45,30 @@ export function Privacy() {
           provider. If you choose Google or Facebook sign-in, that provider
           shares your account identifier, name, email address, and profile image
           when available. We request identity information for sign-in, not
-          access to your posts or contacts. Where bank giving is enabled, Stripe
-          handles bank-account collection, authorization, and payment
-          processing. We do not store your bank login, account number, or
-          routing number. Zelle transfers take place through your bank.
+          access to your posts or contacts. Stripe processes new card payments;
+          Zelle transfers take place through your bank. Plaid, when configured
+          and connected by an authorized administrator, provides read-only
+          monastery bank activity for reconciliation. It does not initiate
+          payments through this website.
+        </p>
+        <h2>Manual bank payment setup</h2>
+        <p>
+          If you submit the dedicated bank setup form, your routing and account
+          numbers are encrypted in your browser before submission and stored
+          encrypted by the server. Routine lists and personal exports show only
+          the last four account digits. Authorized administrators and treasurers
+          can temporarily view full details after a separate debit authorization
+          has been reviewed; each view is audited. Secretaries see masked
+          requests. We do not request or store your bank login or PIN.
+        </p>
+        <p>
+          This form requests bank-information sharing, not permission to debit
+          your account. The office obtains the bank-approved authorization
+          separately and enters the payor in Chase. The website does not
+          initiate ACH collections. You can withdraw your request to remove full
+          bank details from active records. This does not cancel existing Chase
+          instructions; contact the office separately. Protected backups may
+          retain earlier encrypted records until their retention period ends.
         </p>
         <p>
           Some archived films use the existing Amazon S3 media host. Opening an
@@ -196,9 +216,8 @@ export function Amharic() {
           <a href={`mailto:${site.email}`}>{site.email}</a>
         </p>
         <p>
-          ይህ ገጽ የአማርኛ አቀባበልና አስፈላጊ መመሪያዎችን ይሰጣል። በድረ ገጹ ላይ ከእንግሊዝኛና
-          ከአማርኛ አንዱን ቋንቋ መምረጥ ይችላሉ። የመንፈሳዊ ቃላት ማብራሪያ ወይም የቋንቋ እርዳታ
-          ካስፈለገዎት የገዳሙን ቢሮ ያነጋግሩ።
+          ይህ ገጽ የአማርኛ አቀባበልና አስፈላጊ መመሪያዎችን ይሰጣል። በድረ ገጹ ላይ ከእንግሊዝኛና ከአማርኛ አንዱን
+          ቋንቋ መምረጥ ይችላሉ። የመንፈሳዊ ቃላት ማብራሪያ ወይም የቋንቋ እርዳታ ካስፈለገዎት የገዳሙን ቢሮ ያነጋግሩ።
         </p>
       </div>
     </div>

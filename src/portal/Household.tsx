@@ -2,6 +2,7 @@ import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
 import { money } from "./Giving";
+import { ManualAch } from "./ManualAch";
 export function HouseholdDues({ compact = false }: { compact?: boolean }) {
   const data = useQuery(api.households.mine);
   const [annual, setAnnual] = useState(false);
@@ -101,7 +102,7 @@ export function HouseholdDues({ compact = false }: { compact?: boolean }) {
                 . The office confirms allocations against the actual collection.
                 Historical blanks are not treated as arrears.
               </p>
-              <BankAuthorization />
+              <ManualAch />
             </>
           ) : null}
         </>
@@ -142,51 +143,6 @@ export function HouseholdDues({ compact = false }: { compact?: boolean }) {
           ) : null}
         </>
       )}
-    </section>
-  );
-}
-function BankAuthorization() {
-  const [extra, setExtra] = useState("0");
-  const amount = 20 + (Number(extra) || 0);
-  return (
-    <section className="bank-pending">
-      <h3>
-        Monthly bank authorization
-        <br />
-        <small lang="am">ወርሃዊ የባንክ ክፍያ ፈቃድ</small>
-      </h3>
-      <p>
-        Membership dues: $20/month. You may choose an additional voluntary gift.
-      </p>
-      <label>
-        Additional monthly gift / <span lang="am">ተጨማሪ ወርሃዊ ስጦታ</span>
-        <input
-          type="number"
-          min="0"
-          max="100000"
-          step="0.01"
-          value={extra}
-          onChange={(e) => setExtra(e.target.value)}
-        />
-      </label>
-      <p>
-        Proposed monthly total:{" "}
-        <strong>{money(Math.round(amount * 100))}</strong> · dues {money(2000)}{" "}
-        + gift {money(Math.round((Number(extra) || 0) * 100))}
-      </p>
-      <p>
-        <strong>Chase ACH is not activated.</strong> This preview does not
-        enroll autopay or authorize a debit. Bank verification, the
-        bank-confirmed draft schedule and the final mandate must be provided
-        through the enabled secure bank connection. No routing or account
-        numbers are collected here.
-      </p>
-      <a
-        className="text-link"
-        href="mailto:support@haramonastery.org?subject=Membership%20dues%20payment"
-      >
-        Ask the office about payment options
-      </a>
     </section>
   );
 }

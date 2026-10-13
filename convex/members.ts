@@ -225,6 +225,12 @@ export const exportMine = query({
       schemaVersion: 2,
       exportedAt: new Date().toISOString(),
       email: u.email,
+      bankSetupRequests: (
+        await ctx.db
+          .query("achRequests")
+          .withIndex("by_user", (q) => q.eq("userId", u._id))
+          .collect()
+      ).map(({ encryptedDetails, reviewedBy, ...r }) => r),
       household,
       duesCharges: charges,
       householdCollections: receipts.map(

@@ -21,8 +21,16 @@ function localDate() {
   );
   return `${p.year}-${p.month}-${p.day}`;
 }
-export default function FinanceAdmin({ role }: { role: string }) {
-  const [tab, setTab] = useState("overview"),
+export default function FinanceAdmin({
+  role,
+  initialTab = "overview",
+  hideNavigation = false,
+}: {
+  role: string;
+  initialTab?: string;
+  hideNavigation?: boolean;
+}) {
+  const [tab, setTab] = useState(initialTab),
     [through, setThrough] = useState(localDate),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
@@ -87,21 +95,23 @@ export default function FinanceAdmin({ role }: { role: string }) {
         path from collection to reconciliation. Only reconciled collections
         belong here; a member report is not proof of payment.
       </p>
-      <div className="filter-row finance-tabs">
-        {tabs.map(([key, label]) => (
-          <button
-            key={key}
-            aria-pressed={tab === key}
-            onClick={() => {
-              setTab(key);
-              setError("");
-              setNotice("");
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {!hideNavigation ? (
+        <div className="filter-row finance-tabs">
+          {tabs.map(([key, label]) => (
+            <button
+              key={key}
+              aria-pressed={tab === key}
+              onClick={() => {
+                setTab(key);
+                setError("");
+                setNotice("");
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : null}
       <ErrorMessage message={error} />
       {notice ? <p role="status">{notice}</p> : null}
       {tab === "bank" ? <BankActivity role={role} /> : null}
@@ -174,10 +184,10 @@ export default function FinanceAdmin({ role }: { role: string }) {
           <div className="bank-pending">
             <h3>Bank connections</h3>
             <p>
-              Chase ACH: production activation pending. Plaid Transactions:
-              connection pending. Reading bank activity does not activate
-              automatic debits. No live balance or settlement is implied by
-              these ledger figures.
+              Manual Chase setup requests are reviewed in Bank setup. Direct
+              JPMorgan API debit origination is not enabled. Check Bank activity
+              for the actual Plaid configuration and connection status. Ledger
+              figures are not a live bank balance or proof of settlement.
             </p>
           </div>
         </>

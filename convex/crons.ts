@@ -2,6 +2,12 @@ import { cronJobs } from "convex/server";
 import { internal } from "./_generated/api";
 const crons = cronJobs();
 crons.daily(
+  "Remove expired bank intake challenges",
+  { hourUTC: 9, minuteUTC: 45 },
+  internal.achRecords.cleanupChallenges,
+  {},
+);
+crons.daily(
   "Extend approved household dues horizon",
   { hourUTC: 13, minuteUTC: 30 },
   internal.households.extendDues,

@@ -63,8 +63,9 @@ checkout.session.async_payment_failed, checkout.session.expired, invoice.paid,
 invoice.payment_failed, customer.subscription.created/updated/deleted,
 charge.refunded, and charge.dispute.created/closed. Create a billing-portal
 configuration supporting payment-method updates, invoice history, and cancellation
-at the end of the current period. The member portal uses Stripe Checkout and does
-not collect bank details itself. Confirm production behavior with an authorized
+at the end of the current period. The member portal uses Stripe Checkout for cards
+and a separate encrypted manual Chase setup form. See BANK-SETUP.md for the
+authorization-review workflow and restrictions. Confirm production behavior with an authorized
 controlled payment when the account owner is ready; do not infer settlement from
 the return URL.
 
