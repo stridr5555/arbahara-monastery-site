@@ -5,6 +5,7 @@ import type { Id } from "../../convex/_generated/dataModel";
 import { ErrorMessage, message } from "../components/Live";
 import { money } from "./Giving";
 import { coverageMonths } from "../../convex/ledger";
+import { householdMatches } from "../lib/householdSearch";
 function today() {
   const p = new Intl.DateTimeFormat("en", {
     timeZone: "America/Chicago",
@@ -39,12 +40,7 @@ export default function RecordPayment() {
     [saved, setSaved] = useState<Payment | null>(null);
   const form = useRef<HTMLFormElement>(null);
   const household = households?.find((h) => h._id === householdId);
-  const found =
-    households?.filter((h) =>
-      `${h.name} ${h.email || ""} ${h.phone}`
-        .toLowerCase()
-        .includes(search.toLowerCase()),
-    ) || [];
+  const found = households?.filter((h) => householdMatches(h, search)) || [];
   return (
     <section className="panel">
       <h2>Record a received payment</h2>
@@ -193,9 +189,19 @@ export default function RecordPayment() {
               </select>
             </label>
             {household ? (
-              <p data-no-translate>
-                {household.name} · {household.phone} · {household.email}
-              </p>
+              <div>
+                <p data-no-translate>
+                  {household.name} · {household.phone} · {household.email}
+                </p>
+                <p>
+                  Linked family members:{" "}
+                  <span data-no-translate>
+                    {household.linkedAccounts
+                      .map((a) => a.name || a.email)
+                      .join(" · ") || "—"}
+                  </span>
+                </p>
+              </div>
             ) : null}
             <div className="office-form-grid">
               <label>

@@ -8,6 +8,7 @@ import { downloadCsv } from "../lib/spreadsheet";
 import { money } from "./Giving";
 import { RosterImport } from "./RosterImport";
 import { BankActivity } from "./BankActivity";
+import { householdMatches } from "../lib/householdSearch";
 function localDate() {
   const p = Object.fromEntries(
     new Intl.DateTimeFormat("en", {
@@ -222,6 +223,9 @@ export default function FinanceAdmin({
                   "Exempt",
                   "Dues start",
                   "Source row",
+                  "Linked member names",
+                  "Linked account emails",
+                  "Linked member phones",
                 ],
                 ...(households || []).map((h) => [
                   h.name,
@@ -232,6 +236,9 @@ export default function FinanceAdmin({
                   h.exempt,
                   h.duesStart,
                   h.sourceRow,
+                  h.linkedAccounts.map((a) => a.name).join("; "),
+                  h.linkedAccounts.map((a) => a.email).join("; "),
+                  h.linkedAccounts.map((a) => a.phone).join("; "),
                 ]),
               ])
             }
@@ -250,16 +257,17 @@ export default function FinanceAdmin({
               </thead>
               <tbody>
                 {households
-                  ?.filter((h) =>
-                    `${h.name} ${h.email || ""} ${h.phone}`
-                      .toLowerCase()
-                      .includes(search.toLowerCase()),
-                  )
+                  ?.filter((h) => householdMatches(h, search))
                   .map((h) => (
                     <tr key={h._id}>
                       <td data-no-translate>
                         {h.name}
                         <small>{h.sourceRow || h.source}</small>
+                        {h.linkedAccounts.map((a) => (
+                          <small key={a.email}>
+                            {a.name} · {a.email} · {a.phone}
+                          </small>
+                        ))}
                       </td>
                       <td data-no-translate>
                         {h.email}

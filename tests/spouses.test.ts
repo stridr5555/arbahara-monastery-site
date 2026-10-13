@@ -3,6 +3,7 @@ import { describe, it, expect } from "vitest";
 import schema from "../convex/schema";
 import { api, internal } from "../convex/_generated/api";
 import { familyContact } from "../src/lib/familyContact";
+import { householdMatches } from "../src/lib/householdSearch";
 import { approvalStart, shiftMonth } from "../convex/ledger";
 const modules = import.meta.glob("../convex/**/*.{ts,js}");
 const fields = {
@@ -82,6 +83,27 @@ describe("Private spouse connections and one family obligation", () => {
       expect(() => familyContact("phone", bad)).toThrow();
     }
     expect(() => familyContact("email", "bad email")).toThrow();
+  });
+  it("finds a shared family using either spouse's name, email or formatted phone", () => {
+    const h = {
+      name: "Alice family",
+      phone: "",
+      linkedAccounts: [
+        {
+          name: "Bob member",
+          email: "bob@example.com",
+          phone: "(214) 555-0102",
+        },
+      ],
+    };
+    for (const text of [
+      "Alice",
+      "Bob member",
+      "BOB@EXAMPLE.COM",
+      "214-555-0102",
+    ])
+      expect(householdMatches(h, text)).toBe(true);
+    expect(householdMatches(h, "Charlie")).toBe(false);
   });
   it("requires verified identity, consent and another person's contact", async () => {
     const s = await setup();
@@ -193,6 +215,13 @@ describe("Private spouse connections and one family obligation", () => {
     expect((await s.bob.query(api.households.mine, {}))!.household._id).toBe(
       s.a,
     );
+    const family = (await s.admin.query(api.households.list, {})).find(
+      (h) => h._id === s.a,
+    )!;
+    expect(family.linkedAccounts.map((a) => a.email).sort()).toEqual([
+      "alice@example.com",
+      "bob@example.com",
+    ]);
     await s.bob.mutation(api.members.save, { ...fields, name: "Bob updated" });
     expect((await s.alice.query(api.households.mine, {}))!.household.name).toBe(
       "Alice",

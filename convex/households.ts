@@ -61,7 +61,32 @@ export const list = query({
       throw new Error(
         "Use a paginated roster export for more than 1000 households.",
       );
-    return rows;
+    return Promise.all(
+      rows.map(async (h) => ({
+        ...h,
+        linkedAccounts: await Promise.all(
+          (
+            await ctx.db
+              .query("householdLinks")
+              .withIndex("by_household", (q) => q.eq("householdId", h._id))
+              .collect()
+          ).map(async (link) => {
+            const [user, profile] = await Promise.all([
+              ctx.db.get(link.userId),
+              ctx.db
+                .query("members")
+                .withIndex("by_user", (q) => q.eq("userId", link.userId))
+                .unique(),
+            ]);
+            return {
+              name: profile?.name || "",
+              email: user?.email || "",
+              phone: profile?.phone || "",
+            };
+          }),
+        ),
+      })),
+    );
   },
 });
 export const create = mutation({
