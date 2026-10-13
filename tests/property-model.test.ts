@@ -7,7 +7,9 @@ describe("Native property reconstruction", () => {
   it("traces relative landmarks from one aerial coordinate system", () => {
     expect(propertyLayout.residence).toEqual(aerialPoint(146, 190));
     expect(propertyLayout.garage).toEqual(aerialPoint(132, 221));
-    expect(propertyLayout.drive[0]).toEqual(propertyLayout.entrance);
+    expect(propertyLayout.drive[1]).toEqual(propertyLayout.entrance);
+    expect(propertyLayout.drive[0][0]).toBeGreaterThanOrEqual(66 - 3.5 / 2);
+    expect(propertyLayout.drive[0][0]).toBeLessThanOrEqual(66 + 3.5 / 2);
     // Garage is nearby and south of the residence, not displaced far west.
     expect(propertyLayout.garage[1] - propertyLayout.residence[1]).toBeCloseTo(
       31 * 0.36,
