@@ -100,6 +100,34 @@ export async function translationSources(directory = "src") {
     }
   }
   await scan(directory);
+  if (directory === "src") {
+    // A narrow allowlist of public, static error messages. Never read runtime
+    // records, provider responses, env files or private integration helpers.
+    for (const file of [
+      "achActions",
+      "achRecords",
+      "bankActions",
+      "bankRecords",
+      "finance",
+    "spouses",
+    "households",
+    ]) {
+      const ast = parse(await fs.readFile(`convex/${file}.ts`, "utf8"), {
+        sourceType: "module",
+        plugins: ["typescript"],
+      });
+      traverse(ast, {
+        NewExpression(p) {
+          if (
+            p.node.callee.type === "Identifier" &&
+            p.node.callee.name === "ConvexError"
+          )
+            for (const arg of p.node.arguments)
+              if (arg.type === "StringLiteral") add(arg.value);
+        },
+      });
+    }
+  }
   // Labels that browsers format dynamically are handled with Intl in React.
   return [...texts].sort();
 }

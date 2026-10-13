@@ -22,6 +22,13 @@ export function ErrorMessage({ message }: { message: string }) {
   ) : null;
 }
 export function message(error: unknown) {
+  if (
+    error &&
+    typeof error === "object" &&
+    "data" in error &&
+    typeof error.data === "string"
+  )
+    return error.data;
   const text = error instanceof Error ? error.message : String(error);
   return (
     text

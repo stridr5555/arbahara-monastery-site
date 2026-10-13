@@ -8,6 +8,7 @@ import { downloadCsv } from "../lib/spreadsheet";
 import { money } from "./Giving";
 import { RosterImport } from "./RosterImport";
 import { BankActivity } from "./BankActivity";
+import { householdMatches } from "../lib/householdSearch";
 function localDate() {
   const p = Object.fromEntries(
     new Intl.DateTimeFormat("en", {
@@ -21,8 +22,16 @@ function localDate() {
   );
   return `${p.year}-${p.month}-${p.day}`;
 }
-export default function FinanceAdmin({ role }: { role: string }) {
-  const [tab, setTab] = useState("overview"),
+export default function FinanceAdmin({
+  role,
+  initialTab = "overview",
+  hideNavigation = false,
+}: {
+  role: string;
+  initialTab?: string;
+  hideNavigation?: boolean;
+}) {
+  const [tab, setTab] = useState(initialTab),
     [through, setThrough] = useState(localDate),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
@@ -87,21 +96,23 @@ export default function FinanceAdmin({ role }: { role: string }) {
         path from collection to reconciliation. Only reconciled collections
         belong here; a member report is not proof of payment.
       </p>
-      <div className="filter-row finance-tabs">
-        {tabs.map(([key, label]) => (
-          <button
-            key={key}
-            aria-pressed={tab === key}
-            onClick={() => {
-              setTab(key);
-              setError("");
-              setNotice("");
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {!hideNavigation ? (
+        <div className="filter-row finance-tabs">
+          {tabs.map(([key, label]) => (
+            <button
+              key={key}
+              aria-pressed={tab === key}
+              onClick={() => {
+                setTab(key);
+                setError("");
+                setNotice("");
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : null}
       <ErrorMessage message={error} />
       {notice ? <p role="status">{notice}</p> : null}
       {tab === "bank" ? <BankActivity role={role} /> : null}
@@ -174,10 +185,10 @@ export default function FinanceAdmin({ role }: { role: string }) {
           <div className="bank-pending">
             <h3>Bank connections</h3>
             <p>
-              Chase ACH: production activation pending. Plaid Transactions:
-              connection pending. Reading bank activity does not activate
-              automatic debits. No live balance or settlement is implied by
-              these ledger figures.
+              Manual Chase setup requests are reviewed in Bank setup. Direct
+              JPMorgan API debit origination is not enabled. Check Bank activity
+              for the actual Plaid configuration and connection status. Ledger
+              figures are not a live bank balance or proof of settlement.
             </p>
           </div>
         </>
@@ -212,6 +223,9 @@ export default function FinanceAdmin({ role }: { role: string }) {
                   "Exempt",
                   "Dues start",
                   "Source row",
+                  "Linked member names",
+                  "Linked account emails",
+                  "Linked member phones",
                 ],
                 ...(households || []).map((h) => [
                   h.name,
@@ -222,6 +236,9 @@ export default function FinanceAdmin({ role }: { role: string }) {
                   h.exempt,
                   h.duesStart,
                   h.sourceRow,
+                  h.linkedAccounts.map((a) => a.name).join("; "),
+                  h.linkedAccounts.map((a) => a.email).join("; "),
+                  h.linkedAccounts.map((a) => a.phone).join("; "),
                 ]),
               ])
             }
@@ -240,16 +257,17 @@ export default function FinanceAdmin({ role }: { role: string }) {
               </thead>
               <tbody>
                 {households
-                  ?.filter((h) =>
-                    `${h.name} ${h.email || ""} ${h.phone}`
-                      .toLowerCase()
-                      .includes(search.toLowerCase()),
-                  )
+                  ?.filter((h) => householdMatches(h, search))
                   .map((h) => (
                     <tr key={h._id}>
                       <td data-no-translate>
                         {h.name}
                         <small>{h.sourceRow || h.source}</small>
+                        {h.linkedAccounts.map((a) => (
+                          <small key={a.email}>
+                            {a.name} · {a.email} · {a.phone}
+                          </small>
+                        ))}
                       </td>
                       <td data-no-translate>
                         {h.email}

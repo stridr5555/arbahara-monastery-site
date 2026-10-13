@@ -1677,6 +1677,229 @@ a:focus-visible {
 .portal-main {
   min-width: 0;
 }
+.office-workspace {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.office-sidebar {
+  background: var(--ink);
+  color: var(--sand);
+  padding: 24px 16px;
+}
+.office-sidebar h2 {
+  font-size: 25px;
+  margin: 0 8px 20px;
+}
+.office-sidebar button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-left: 3px solid transparent;
+  font: 500 16px/1.4 var(--sans);
+  padding: 11px 12px;
+  min-height: 46px;
+}
+.office-sidebar button[aria-current="page"] {
+  border-left-color: var(--gold);
+  background: #ffffff12;
+  color: var(--gold);
+}
+.office-sidebar .office-return {
+  border-top: 1px solid #ffffff30;
+  margin-top: 18px;
+  padding-top: 18px;
+}
+.office-main {
+  min-width: 0;
+}
+.office-main .panel {
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.office-main h2,
+.manual-ach h2 {
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.2;
+}
+.office-main fieldset,
+.manual-ach fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+  margin: 24px 0;
+}
+.office-main legend,
+.manual-ach legend {
+  font: 600 18px/1.4 var(--sans);
+  margin-bottom: 18px;
+}
+.office-main label,
+.manual-ach label {
+  font: 500 16px/1.5 var(--sans);
+}
+.office-main input,
+.office-main select,
+.office-main textarea,
+.manual-ach input,
+.manual-ach select {
+  min-height: 48px;
+  font: 400 16px/1.5 var(--sans);
+}
+.office-main input[type="checkbox"],
+.manual-ach input[type="checkbox"] {
+  width: 22px;
+  min-height: 22px;
+  flex: 0 0 22px;
+}
+.office-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+}
+.office-form-grid label {
+  min-width: 0;
+}
+.office-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  padding: 18px 18px 18px 36px;
+  background: var(--sand);
+  font: 500 15px/1.5 var(--sans);
+}
+.office-work-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 28px;
+}
+.office-work-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+.office-work-list button {
+  text-align: left;
+}
+.office-action-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+.office-action-list button {
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 22px 24px 22px 0;
+  font-family: var(--sans);
+}
+.office-action-list strong {
+  display: block;
+  font-size: 19px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.office-action-list span {
+  display: block;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.office-action-list button:hover {
+  background: var(--sand);
+}
+.office-review,
+.office-reveal {
+  background: var(--sand);
+  border-left: 3px solid var(--gold);
+  padding: 24px;
+  margin: 24px 0;
+}
+.office-review dl {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) 2fr;
+  gap: 10px 20px;
+}
+.office-review dt {
+  font-weight: 600;
+}
+.office-review dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.office-request {
+  border-top: 1px solid var(--line);
+  margin-top: 28px;
+  padding-top: 24px;
+}
+.office-request header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.office-empty {
+  padding: 32px 0;
+}
+.office-reveal code {
+  font-size: 20px;
+  user-select: text;
+}
+@media (max-width: 900px) {
+  .office-workspace {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .office-sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .office-sidebar h2 {
+    flex-basis: 100%;
+  }
+  .office-sidebar button {
+    width: auto;
+    font-size: 15px;
+  }
+  .office-sidebar .office-return {
+    margin-top: 0;
+    padding-top: 11px;
+    border-top: 0;
+  }
+}
+@media (max-width: 600px) {
+  .office-form-grid,
+  .office-action-list {
+    grid-template-columns: 1fr;
+  }
+  .office-review {
+    padding: 18px;
+  }
+  .office-review dl {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .office-review dd {
+    margin-bottom: 12px;
+  }
+}
+@media print {
+  .office-reveal {
+    display: none !important;
+  }
+}
 .portal-main > h2 {
   font-size: 45px;
 }

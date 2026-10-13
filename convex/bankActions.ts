@@ -7,7 +7,7 @@ import {
   CountryCode,
 } from "plaid";
 import { action, internalAction } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "./_generated/api";
 import { seal, unseal } from "./tokenVault";
@@ -18,7 +18,7 @@ function plaid() {
     !process.env.PLAID_SECRET ||
     !(env === "production" || env === "sandbox")
   )
-    throw new Error("Plaid bank read access is not configured yet.");
+    throw new ConvexError("Plaid bank read access is not configured yet.");
   return new PlaidApi(
     new Configuration({
       basePath: PlaidEnvironments[env],
@@ -33,13 +33,16 @@ function plaid() {
   );
 }
 export const linkToken = action({
-  args: { confirmMonasteryAccount: v.boolean() },
+  args: {
+    confirmMonasteryAccount: v.boolean(),
+    connectionId: v.optional(v.id("bankConnections")),
+  },
   handler: async (ctx, a): Promise<string> => {
     const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Sign in first.");
+    if (!userId) throw new ConvexError("Sign in first.");
     await ctx.runQuery(internal.bankRecords.identity, { userId, admin: true });
     if (!a.confirmMonasteryAccount)
-      throw new Error(
+      throw new ConvexError(
         "Confirm this is the monastery’s account and you have authority to connect it.",
       );
     await ctx.runMutation(internal.security.limit, {
@@ -48,22 +51,76 @@ export const linkToken = action({
       windowMs: 3600000,
     });
     try {
+      const grant = a.connectionId
+        ? await ctx.runQuery(internal.bankRecords.grant, { id: a.connectionId })
+        : null;
+      if (
+        a.connectionId &&
+        (!grant?.encryptedToken || grant.status === "disconnected")
+      )
+        throw new ConvexError("Connection unavailable.");
+      const redirect = process.env.PLAID_REDIRECT_URI;
+      if (
+        !redirect ||
+        new URL(redirect).protocol !== "https:" ||
+        new URL(redirect).origin !==
+          new URL(process.env.SITE_URL || "https://www.haramonastery.org")
+            .origin
+      )
+        throw new ConvexError(
+          "Configure a same-site HTTPS Plaid OAuth return URL.",
+        );
       return (
         await plaid().linkTokenCreate({
           user: { client_user_id: userId },
           client_name: "Arbahara Monastery",
-          products: [Products.Transactions],
+          ...(grant?.encryptedToken
+            ? {
+                access_token: unseal(
+                  grant.encryptedToken,
+                  `bank:${grant.owner}`,
+                ),
+              }
+            : {
+                products: [Products.Transactions],
+                transactions: { days_requested: 90 },
+              }),
           country_codes: [CountryCode.Us],
           language: "en",
-          transactions: { days_requested: 90 },
-          ...(process.env.PLAID_REDIRECT_URI
-            ? { redirect_uri: process.env.PLAID_REDIRECT_URI }
-            : {}),
+          redirect_uri: redirect,
         })
       ).data.link_token;
     } catch {
-      throw new Error(
+      throw new ConvexError(
         "Bank linking is unavailable. Check Plaid configuration and institution eligibility.",
+      );
+    }
+  },
+});
+export const completeUpdate = action({
+  args: { id: v.id("bankConnections") },
+  handler: async (ctx, a): Promise<void> => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Sign in first.");
+    await ctx.runQuery(internal.bankRecords.identity, { userId, admin: true });
+    const grant = await ctx.runQuery(internal.bankRecords.grant, a);
+    if (!grant?.encryptedToken || grant.status === "disconnected")
+      throw new ConvexError("Connection unavailable.");
+    try {
+      const result = (
+        await plaid().itemGet({
+          access_token: unseal(grant.encryptedToken, `bank:${grant.owner}`),
+        })
+      ).data.item;
+      if (result.error) throw new ConvexError("Bank access needs attention.");
+      await ctx.runMutation(internal.bankRecords.reconnected, {
+        id: a.id,
+        actor: userId,
+      });
+      await ctx.scheduler.runAfter(0, internal.bankActions.syncConnection, a);
+    } catch {
+      throw new ConvexError(
+        "Bank access was not restored. Complete the bank verification and try again.",
       );
     }
   },
@@ -72,16 +129,23 @@ export const exchange = action({
   args: { publicToken: v.string() },
   handler: async (ctx, a): Promise<string> => {
     const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Sign in first.");
+    if (!userId) throw new ConvexError("Sign in first.");
     await ctx.runQuery(internal.bankRecords.identity, { userId, admin: true });
-    if (a.publicToken.length > 1000) throw new Error("Invalid Link response.");
+    if (a.publicToken.length > 1000)
+      throw new ConvexError("Invalid Link response.");
     let access: string | undefined;
+    let existingItem = false;
     try {
       const client = plaid();
       access = (
         await client.itemPublicTokenExchange({ public_token: a.publicToken })
       ).data.access_token;
       const item = (await client.itemGet({ access_token: access })).data.item;
+      existingItem = await ctx.runQuery(internal.bankRecords.hasItem, {
+        itemId: item.item_id,
+      });
+      if (existingItem)
+        throw new ConvexError("Use the existing bank connection.");
       const institution = item.institution_id
         ? (
             await client.institutionsGetById({
@@ -93,6 +157,7 @@ export const exchange = action({
       const id = await ctx.runMutation(internal.bankRecords.save, {
         owner: userId,
         institution,
+        itemId: item.item_id,
         encryptedToken: seal(access, `bank:${userId}`),
       });
       await ctx.scheduler.runAfter(0, internal.bankActions.syncConnection, {
@@ -100,12 +165,12 @@ export const exchange = action({
       });
       return id;
     } catch {
-      if (access) {
+      if (access && !existingItem) {
         try {
           await plaid().itemRemove({ access_token: access });
         } catch {}
       }
-      throw new Error(
+      throw new ConvexError(
         "Bank connection was not saved. Please try again from Link.",
       );
     }
@@ -143,7 +208,7 @@ export const syncConnection = internalAction({
             ).data;
             for (const txn of [...page.added, ...page.modified]) {
               if (txn.iso_currency_code !== "USD")
-                throw new Error("Unsupported currency.");
+                throw new ConvexError("Unsupported currency.");
               changes.push({
                 providerId: txn.transaction_id,
                 accountId: txn.account_id,
@@ -157,7 +222,7 @@ export const syncConnection = internalAction({
             cursor = page.next_cursor;
             hasMore = page.has_more;
             if (changes.length + removedIds.length > 2000)
-              throw new Error("Sync batch exceeds review limit.");
+              throw new ConvexError("Sync batch exceeds review limit.");
           }
           await ctx.runMutation(internal.bankRecords.applySync, {
             id: a.id,
@@ -192,7 +257,7 @@ export const syncConnection = internalAction({
           : "Bank sync did not complete. The saved cursor and ledger are unchanged; retry later.",
         reconnect,
       });
-      throw new Error(
+      throw new ConvexError(
         reconnect ? "Reconnect bank access." : "Bank sync did not complete.",
       );
     }
@@ -202,7 +267,7 @@ export const sync = action({
   args: { id: v.id("bankConnections") },
   handler: async (ctx, a): Promise<{ updated: number }> => {
     const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Sign in first.");
+    if (!userId) throw new ConvexError("Sign in first.");
     await ctx.runQuery(internal.bankRecords.identity, { userId });
     await ctx.runMutation(internal.security.limit, {
       key: `bank-sync:${userId}`,
@@ -216,7 +281,7 @@ export const disconnect = action({
   args: { id: v.id("bankConnections") },
   handler: async (ctx, a): Promise<{ removed: boolean }> => {
     const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Sign in first.");
+    if (!userId) throw new ConvexError("Sign in first.");
     await ctx.runQuery(internal.bankRecords.identity, { userId, admin: true });
     const grant = await ctx.runQuery(internal.bankRecords.grant, a);
     await ctx.runMutation(internal.bankRecords.disconnect, {

@@ -11,16 +11,18 @@ function LinkButton({
   token,
   onSuccess,
   onExit,
+  receivedRedirectUri,
 }: {
   token: string;
   onSuccess: (token: string) => void;
   onExit: () => void;
+  receivedRedirectUri?: string;
 }) {
   const { open, ready } = usePlaidLink({
     token,
+    receivedRedirectUri,
     onSuccess: (publicToken) => {
-      if (publicToken) onSuccess(publicToken);
-      else onExit();
+      onSuccess(publicToken || "");
     },
     onExit,
   });
@@ -34,9 +36,38 @@ export function BankActivity({ role }: { role: string }) {
   const status = useQuery(api.bankRecords.status),
     linkToken = useAction(api.bankActions.linkToken),
     exchange = useAction(api.bankActions.exchange),
+    completeUpdate = useAction(api.bankActions.completeUpdate),
     disconnect = useAction(api.bankActions.disconnect);
   const [confirmed, setConfirmed] = useState(false),
-    [token, setToken] = useState<string | null>(null),
+    [flow, setFlow] = useState<{
+      token: string;
+      id?: Id<"bankConnections">;
+      receivedRedirectUri?: string;
+    } | null>(() => {
+      if (
+        typeof window === "undefined" ||
+        !new URLSearchParams(window.location.search).has("oauth_state_id")
+      )
+        return null;
+      try {
+        const saved = JSON.parse(
+          sessionStorage.getItem("arbahara-plaid-return") || "null",
+        );
+        if (
+          saved &&
+          typeof saved.token === "string" &&
+          saved.expiresAt > Date.now()
+        )
+          return {
+            token: saved.token,
+            id: saved.id,
+            receivedRedirectUri: window.location.href,
+          };
+      } catch {
+        /* A cancelled or expired flow can be restarted. */
+      }
+      return null;
+    }),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
@@ -52,6 +83,40 @@ export function BankActivity({ role }: { role: string }) {
       setBusy(false);
     }
   }
+  function clearFlow() {
+    setFlow(null);
+    try {
+      sessionStorage.removeItem("arbahara-plaid-return");
+    } catch {
+      /* Storage unavailable. */
+    }
+    if (new URLSearchParams(window.location.search).has("oauth_state_id")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("oauth_state_id");
+      history.replaceState(null, "", url);
+    }
+  }
+  async function start(connectionId?: Id<"bankConnections">) {
+    const token = await linkToken({
+      confirmMonasteryAccount: confirmed,
+      connectionId,
+    });
+    try {
+      sessionStorage.setItem(
+        "arbahara-plaid-return",
+        JSON.stringify({
+          token,
+          id: connectionId,
+          expiresAt: Date.now() + 30 * 60000,
+        }),
+      );
+    } catch {
+      throw new Error(
+        "This browser cannot keep the temporary bank-link session. Enable session storage or use another private browser window.",
+      );
+    }
+    setFlow({ token, id: connectionId });
+  }
   return (
     <section>
       <h3>Bank activity & reconciliation</h3>
@@ -66,10 +131,33 @@ export function BankActivity({ role }: { role: string }) {
       {!status ? (
         <p>Checking bank connection configuration…</p>
       ) : !status.configured ? (
-        <p className="bank-pending">
-          Plaid is not configured in this environment. No bank is connected and
-          no live bank figures are being displayed.
-        </p>
+        <div className="bank-pending">
+          <h4>Plaid is ready for configuration</h4>
+          <p>
+            Bank linking is disabled until the server keys and OAuth return URL
+            are configured. No live account connection is implied. Previously
+            saved history, if any, remains available below.
+          </p>
+          {role === "admin" ? (
+            <>
+              <p>Missing server settings:</p>
+              <ul data-no-translate>
+                {status.missing.map((key) => (
+                  <li key={key}>
+                    <code>{key}</code>
+                  </li>
+                ))}
+              </ul>
+              <p>
+                Add these in the intended Convex environment, not in a website
+                form. Start with separate sandbox keys; configure production
+                keys only after Plaid grants access.
+              </p>
+            </>
+          ) : (
+            <p>Ask an administrator to finish the Plaid setup.</p>
+          )}
+        </div>
       ) : (
         <>
           {status.environment === "sandbox" ? (
@@ -89,14 +177,17 @@ export function BankActivity({ role }: { role: string }) {
                 I have authority to connect the monastery’s bank account for
                 read-only accounting access.
               </label>
-              {token ? (
+              {flow ? (
                 <LinkButton
-                  token={token}
-                  onExit={() => setToken(null)}
+                  token={flow.token}
+                  receivedRedirectUri={flow.receivedRedirectUri}
+                  onExit={clearFlow}
                   onSuccess={(publicToken) => {
-                    setToken(null);
+                    const id = flow.id;
+                    clearFlow();
                     void run(async () => {
-                      await exchange({ publicToken });
+                      if (id) await completeUpdate({ id });
+                      else await exchange({ publicToken });
                       setNotice(
                         "Bank read access connected. Initial transaction sync has been queued.",
                       );
@@ -107,13 +198,7 @@ export function BankActivity({ role }: { role: string }) {
                 <button
                   className="button"
                   disabled={busy || !confirmed}
-                  onClick={() =>
-                    void run(async () =>
-                      setToken(
-                        await linkToken({ confirmMonasteryAccount: confirmed }),
-                      ),
-                    )
-                  }
+                  onClick={() => void run(() => start())}
                 >
                   Connect bank for reconciliation
                 </button>
@@ -140,27 +225,37 @@ export function BankActivity({ role }: { role: string }) {
             <p role="status">{connection.lastError}</p>
           ) : null}
           {role === "admin" && connection.status !== "disconnected" ? (
-            <button
-              className="text-button"
-              disabled={busy}
-              onClick={() => {
-                if (
-                  window.confirm(
-                    "Stop bank read access? Historical activity and ledger entries will be retained.",
+            <>
+              <button
+                className="button secondary"
+                type="button"
+                disabled={busy || !confirmed || !status.configured}
+                onClick={() => void run(() => start(connection._id))}
+              >
+                Update bank access
+              </button>
+              <button
+                className="text-button"
+                disabled={busy}
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      "Stop bank read access? Historical activity and ledger entries will be retained.",
+                    )
                   )
-                )
-                  void run(async () => {
-                    const result = await disconnect({ id: connection._id });
-                    setNotice(
-                      result.removed
-                        ? "Bank read access disconnected; historical records retained."
-                        : "Local access stopped. Plaid could not confirm revocation; remove access in your bank/Plaid account too.",
-                    );
-                  });
-              }}
-            >
-              Disconnect read access
-            </button>
+                    void run(async () => {
+                      const result = await disconnect({ id: connection._id });
+                      setNotice(
+                        result.removed
+                          ? "Bank read access disconnected; historical records retained."
+                          : "Local access stopped. Plaid could not confirm revocation; remove access in your bank/Plaid account too.",
+                      );
+                    });
+                }}
+              >
+                Disconnect read access
+              </button>
+            </>
           ) : null}
           <Transactions
             id={connection._id}

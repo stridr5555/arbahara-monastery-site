@@ -1,5 +1,5 @@
 import { mutation, query, type MutationCtx } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import { audit, clean, requireRole } from "./security";
 import {
@@ -47,7 +47,7 @@ export async function postJournal(
       prior.reference !== reference ||
       JSON.stringify(prior.lines) !== JSON.stringify(lines)
     )
-      throw new Error(
+      throw new ConvexError(
         "This request was already posted with different details.",
       );
     return prior._id;
@@ -58,7 +58,7 @@ export async function postJournal(
       .withIndex("by_month", (q) => q.eq("month", date.slice(0, 7)))
       .unique()
   )
-    throw new Error(
+    throw new ConvexError(
       "This accounting period is closed. Use an open-period adjusting entry.",
     );
   const id = await ctx.db.insert("journals", {
@@ -89,7 +89,7 @@ export async function ensureCharge(
     !household.duesStart ||
     month < household.duesStart
   )
-    throw new Error("This household cannot be charged for that month.");
+    throw new ConvexError("This household cannot be charged for that month.");
   const prior = await ctx.db
     .query("duesCharges")
     .withIndex("by_household_month", (q) =>
@@ -128,7 +128,7 @@ export const dashboard = query({
       .withIndex("by_date", (q) => q.lte("date", a.through))
       .take(5001);
     if (journals.length > 5000)
-      throw new Error(
+      throw new ConvexError(
         "This report exceeds the interactive limit. Export and review the ledger with the office.",
       );
     const balances = summarizeJournals(journals, a.through);
@@ -211,17 +211,19 @@ export const closePeriod = mutation({
     const actor = await requireRole(ctx, ["admin", "treasurer"]);
     validMonth(a.month);
     if (!a.confirm)
-      throw new Error("Confirm that reconciliation and review are complete.");
+      throw new ConvexError(
+        "Confirm that reconciliation and review are complete.",
+      );
     const current = shiftMonth(approvalStart(Date.now()), -1);
     if (a.month >= current)
-      throw new Error("Only completed months can be closed.");
+      throw new ConvexError("Only completed months can be closed.");
     if (
       await ctx.db
         .query("accountingPeriods")
         .withIndex("by_month", (q) => q.eq("month", a.month))
         .unique()
     )
-      throw new Error("Period already closed.");
+      throw new ConvexError("Period already closed.");
     const id = await ctx.db.insert("accountingPeriods", {
       month: a.month,
       closedBy: actor._id,
@@ -236,14 +238,14 @@ export const reverse = mutation({
   handler: async (ctx, a) => {
     const actor = await requireRole(ctx, FINANCE_ROLES),
       old = await ctx.db.get(a.id);
-    if (!old) throw new Error("Journal not found.");
-    if (old.reversedBy) throw new Error("Already reversed.");
+    if (!old) throw new ConvexError("Journal not found.");
+    if (old.reversedBy) throw new ConvexError("Already reversed.");
     if (!old.requestId.startsWith("manual:"))
-      throw new Error(
+      throw new ConvexError(
         "Reverse this entry through its receipt or membership workflow.",
       );
     if (a.date < old.date)
-      throw new Error("A reversal cannot predate its original journal.");
+      throw new ConvexError("A reversal cannot predate its original journal.");
     const id = await postJournal(
       ctx,
       actor._id,
@@ -287,7 +289,7 @@ export const recordReceipt = mutation({
       a.date >
       `${shiftMonth(approvalStart(Date.now()), -1)}-${new Intl.DateTimeFormat("en", { timeZone: "America/Chicago", day: "2-digit" }).format(Date.now())}`
     )
-      throw new Error("A received collection cannot be future-dated.");
+      throw new ConvexError("A received collection cannot be future-dated.");
     cents(a.duesCents, true);
     cents(a.giftCents, true);
     const amount = cents(a.duesCents + a.giftCents);
@@ -321,7 +323,7 @@ export const recordReceipt = mutation({
         old.method !== a.method ||
         (old.intent && old.intent !== intent)
       )
-        throw new Error("Request already used for a different receipt.");
+        throw new ConvexError("Request already used for a different receipt.");
       return old._id;
     }
     if (
@@ -330,16 +332,17 @@ export const recordReceipt = mutation({
         .withIndex("by_reference", (q) => q.eq("reference", reference))
         .first()
     )
-      throw new Error(
+      throw new ConvexError(
         "Reference already recorded. Check for a duplicate collection.",
       );
     const household = a.householdId ? await ctx.db.get(a.householdId) : null;
-    if (a.householdId && !household) throw new Error("Household not found.");
+    if (a.householdId && !household)
+      throw new ConvexError("Household not found.");
     if (
       a.duesCents &&
       (!household || household.status !== "active" || household.exempt)
     )
-      throw new Error("Dues require an approved, non-exempt household.");
+      throw new ConvexError("Dues require an approved, non-exempt household.");
     const cash =
       a.method === "cash" ? "1010" : a.method === "card" ? "1020" : "1000";
     const lines: JournalLine[] = [];
@@ -481,9 +484,9 @@ export const reverseReceipt = mutation({
     const actor = await requireRole(ctx, FINANCE_ROLES),
       receipt = await ctx.db.get(a.id);
     if (!receipt || receipt.reversedBy)
-      throw new Error("Receipt missing or already reversed.");
+      throw new ConvexError("Receipt missing or already reversed.");
     if (a.date < receipt.date)
-      throw new Error("A reversal cannot predate the collection.");
+      throw new ConvexError("A reversal cannot predate the collection.");
     const reason = clean(a.reason, 400, "Reason"),
       original = (await ctx.db.get(receipt.journalId))!;
     const id = await postJournal(
@@ -529,7 +532,7 @@ export const allocateUnapplied = mutation({
     const actor = await requireRole(ctx, FINANCE_ROLES),
       receipt = await ctx.db.get(a.id);
     if (!receipt || receipt.reversedBy || !receipt.householdId)
-      throw new Error("Choose a current household dues receipt.");
+      throw new ConvexError("Choose a current household dues receipt.");
     const all = await ctx.db
       .query("duesAllocations")
       .withIndex("by_receipt", (q) => q.eq("receiptId", receipt._id))
@@ -538,7 +541,7 @@ export const allocateUnapplied = mutation({
       receipt.duesCents -
       all.filter((a) => !a.reversedAt).reduce((s, a) => s + a.amountCents, 0);
     if (left <= 0)
-      throw new Error("This receipt has no unapplied dues balance.");
+      throw new ConvexError("This receipt has no unapplied dues balance.");
     const current = shiftMonth(approvalStart(Date.now()), -1),
       today = `${current}-${new Intl.DateTimeFormat("en", { timeZone: "America/Chicago", day: "2-digit" }).format(Date.now())}`;
     for (const month of coverageMonths(a.firstMonth, a.months)) {

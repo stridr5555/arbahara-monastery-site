@@ -8,11 +8,15 @@
  * @module
  */
 
+import type * as achActions from "../achActions.js";
+import type * as achRecords from "../achRecords.js";
+import type * as achValidation from "../achValidation.js";
 import type * as administration from "../administration.js";
 import type * as archive from "../archive.js";
 import type * as auth from "../auth.js";
 import type * as authOptions from "../authOptions.js";
 import type * as bankActions from "../bankActions.js";
+import type * as bankDetailVault from "../bankDetailVault.js";
 import type * as bankRecords from "../bankRecords.js";
 import type * as calendarActions from "../calendarActions.js";
 import type * as calendarRecords from "../calendarRecords.js";
@@ -25,9 +29,11 @@ import type * as http from "../http.js";
 import type * as imports from "../imports.js";
 import type * as ledger from "../ledger.js";
 import type * as members from "../members.js";
+import type * as office from "../office.js";
 import type * as paymentRecords from "../paymentRecords.js";
 import type * as payments from "../payments.js";
 import type * as security from "../security.js";
+import type * as spouses from "../spouses.js";
 import type * as tokenVault from "../tokenVault.js";
 
 import type {
@@ -37,11 +43,15 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  achActions: typeof achActions;
+  achRecords: typeof achRecords;
+  achValidation: typeof achValidation;
   administration: typeof administration;
   archive: typeof archive;
   auth: typeof auth;
   authOptions: typeof authOptions;
   bankActions: typeof bankActions;
+  bankDetailVault: typeof bankDetailVault;
   bankRecords: typeof bankRecords;
   calendarActions: typeof calendarActions;
   calendarRecords: typeof calendarRecords;
@@ -54,9 +64,11 @@ declare const fullApi: ApiFromModules<{
   imports: typeof imports;
   ledger: typeof ledger;
   members: typeof members;
+  office: typeof office;
   paymentRecords: typeof paymentRecords;
   payments: typeof payments;
   security: typeof security;
+  spouses: typeof spouses;
   tokenVault: typeof tokenVault;
 }>;
 

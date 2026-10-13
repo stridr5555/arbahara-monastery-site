@@ -101,8 +101,9 @@ export function Profile({
       <p lang="am">የአባልነት ምዝገባ</p>
       <p>
         A few details help us welcome your household. General membership is $20
-        per Gregorian month after approval; exempt households remain exempt.
-        Giving is not required to submit this application.
+        per family per Gregorian month after approval, not per spouse; exempt
+        households remain exempt. Giving is not required to submit this
+        application.
       </p>
       <ol className="signup-steps">
         {[
@@ -115,6 +116,14 @@ export function Profile({
           </li>
         ))}
       </ol>
+      {profile && (
+        <p>
+          <a className="text-link" href="/members?view=family">
+            Connect your spouse’s account by email or phone
+          </a>
+          . Entering a spouse’s name here alone does not link their account.
+        </p>
+      )}
       <form
         className="profile-form"
         onSubmit={async (e) => {

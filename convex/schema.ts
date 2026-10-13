@@ -4,9 +4,79 @@ import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
   ...authTables,
+  spouseConnections: defineTable({
+    senderId: v.id("users"),
+    recipientId: v.optional(v.id("users")),
+    contactKind: v.union(v.literal("email"), v.literal("phone")),
+    contact: v.string(),
+    contactKey: v.string(),
+    senderHouseholdId: v.id("households"),
+    householdId: v.optional(v.id("households")),
+    effectiveMonth: v.optional(v.string()),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("phone_review"),
+      v.literal("household_review"),
+      v.literal("linked"),
+      v.literal("declined"),
+      v.literal("cancelled"),
+    ),
+    senderConsentedAt: v.number(),
+    recipientConsentedAt: v.optional(v.number()),
+    consentVersion: v.string(),
+    consentText: v.string(),
+    expiresAt: v.number(),
+    updatedAt: v.number(),
+    officeVerifiedBy: v.optional(v.id("users")),
+    officeReference: v.optional(v.string()),
+    reviewReason: v.optional(v.string()),
+  })
+    .index("by_sender", ["senderId"])
+    .index("by_recipient", ["recipientId"])
+    .index("by_contact", ["contactKey", "status"])
+    .index("by_status", ["status"]),
+  achChallenges: defineTable({
+    userId: v.id("users"),
+    householdId: v.id("households"),
+    keyId: v.string(),
+    expiresAt: v.number(),
+    consumedBy: v.optional(v.id("achRequests")),
+    fingerprint: v.optional(v.string()),
+  }).index("by_expiry", ["expiresAt"]),
+  achRequests: defineTable({
+    userId: v.id("users"),
+    householdId: v.id("households"),
+    encryptedDetails: v.optional(v.string()),
+    lastFour: v.string(),
+    accountHolder: v.string(),
+    bankName: v.string(),
+    accountType: v.union(v.literal("checking"), v.literal("savings")),
+    ownership: v.union(v.literal("personal"), v.literal("business")),
+    frequency: v.union(v.literal("monthly"), v.literal("annual")),
+    amountCents: v.number(),
+    consentVersion: v.string(),
+    consentText: v.string(),
+    status: v.union(
+      v.literal("submitted"),
+      v.literal("needs_information"),
+      v.literal("ready_for_chase"),
+      v.literal("entered_in_chase"),
+      v.literal("withdrawn"),
+    ),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    reviewedBy: v.optional(v.id("users")),
+    authorizationReference: v.optional(v.string()),
+    chasePayorReference: v.optional(v.string()),
+    memberMessage: v.optional(v.string()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_status", ["status"])
+    .index("by_household", ["householdId"]),
   bankConnections: defineTable({
     owner: v.id("users"),
     institution: v.string(),
+    itemId: v.optional(v.string()),
     status: v.union(
       v.literal("connected"),
       v.literal("reconnect"),
@@ -17,7 +87,9 @@ export default defineSchema({
     lastSyncedAt: v.optional(v.number()),
     lastError: v.optional(v.string()),
     createdAt: v.number(),
-  }).index("by_status", ["status"]),
+  })
+    .index("by_status", ["status"])
+    .index("by_item", ["itemId"]),
   bankTransactions: defineTable({
     connectionId: v.id("bankConnections"),
     providerId: v.string(),
@@ -141,12 +213,19 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_household", ["householdId"]),
+  formerHouseholdLinks: defineTable({
+    userId: v.id("users"),
+    householdId: v.id("households"),
+    connectionId: v.id("spouseConnections"),
+    createdAt: v.number(),
+  }).index("by_user", ["userId"]),
   duesCharges: defineTable({
     householdId: v.id("households"),
     month: v.string(),
     amountCents: v.number(),
     journalId: v.id("journals"),
     createdAt: v.number(),
+    cancelledBy: v.optional(v.id("journals")),
   }).index("by_household_month", ["householdId", "month"]),
   receipts: defineTable({
     householdId: v.optional(v.id("households")),
