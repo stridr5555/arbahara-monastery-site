@@ -154,6 +154,13 @@ Google Translate service builds a cached catalog from public source-code strings
 private member records are never sent for translation. Names, amounts, references,
 and newly entered records stay as entered. Regenerate the catalog after copy edits
 with `npm run translations`, supplying the existing Google Translate key securely.
+`npm run translations:check` also runs at the start of every production build;
+missing source-text translations fail the build without making an API request.
+The language choice also localizes Gregorian date/time formatting in the church
+calendar, archive and event tickets, while preserving the Gregorian calendar and
+the separate Ethiopian dates. Static template wrappers preserve interpolated
+values. New dynamic office records and third-party documents/media remain in
+their original language unless a separate translation is supplied.
 The common Trinitarian invocation and church-name translations have explicit
 overrides. Other translations remain machine-assisted and need clergy/language review.
 
