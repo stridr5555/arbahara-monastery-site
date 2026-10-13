@@ -54,7 +54,7 @@ export function FamilyConnection() {
       <p className="notice">
         <strong>$20 per month for the whole family.</strong> Both spouses share
         one household dues record. A $240 collection covers 12 months for the
-        family, not one person.
+        family, not one person. Office-approved exemptions remain in effect.
       </p>
       <p>
         Keep separate sign-ins. Each spouse must first save a membership

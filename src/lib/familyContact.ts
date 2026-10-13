@@ -1,6 +1,6 @@
 export const FAMILY_CONSENT_VERSION = "family-sharing-v1";
 export const FAMILY_CONSENT =
-  "I confirm this person is my spouse and agree to share our household membership, address, dues coverage and household payment records. Personal giving history, passwords, staff permissions and full bank account details remain separate. Our family owes $20 per month total, not $20 per spouse. Existing separate financial records or payment instructions require office review before consolidation.";
+  "I confirm this person is my spouse and agree to share our household membership, address, dues coverage and household payment records. Personal giving history, passwords, staff permissions and full bank account details remain separate. General family dues are $20 per month total, not $20 per spouse; office-approved exemptions remain in effect. Existing separate financial records or payment instructions require office review before consolidation.";
 export function familyContact(kind: "email" | "phone", raw: string) {
   const value = raw.trim();
   if (kind === "email") {
