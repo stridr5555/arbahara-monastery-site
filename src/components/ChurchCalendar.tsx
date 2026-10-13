@@ -27,23 +27,35 @@ import { Live } from "./Live";
 import { CalendarUpdates } from "./CalendarUpdates";
 import { Teleconference } from "./Teleconference";
 import { teleconference } from "../lib/teleconference";
+import { useLanguage } from "./Translation";
+import { languageLocale } from "../lib/translation";
+import type { Language } from "../lib/translation";
 const DAY = 86400000;
 const calendarExportUrl =
   import.meta.env.VITE_CONVEX_URL?.replace(
     /\.convex\.cloud\/?$/,
     ".convex.site",
   ) + "/calendar.ics";
-const dateLabel = new Intl.DateTimeFormat("en-US", {
-  timeZone: "UTC",
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-});
-const timeLabel = new Intl.DateTimeFormat("en-US", {
-  timeZone: CHURCH_ZONE,
-  hour: "numeric",
-  minute: "2-digit",
-});
+const dateFormatter = (locale: string) =>
+  new Intl.DateTimeFormat(locale, {
+    timeZone: "UTC",
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+const timeFormatter = (locale: string) =>
+  new Intl.DateTimeFormat(locale, {
+    timeZone: CHURCH_ZONE,
+    hour: "numeric",
+    minute: "2-digit",
+  });
+function gatheringTitle(event: Gathering, language: Language) {
+  if (language !== "am") return event.title;
+  if (event.title === "Arbahara Teleconference Mahiber")
+    return "የአርባሐራ ቴሌኮንፈረንስ ማኅበር";
+  if (event.title === "Arbahara Medhanialem Ziker") return "የአርባሐራ መድኃኔዓለም ዝክር";
+  return event.title; // Preserve newly entered office content verbatim.
+}
 function periodStart(d: Date, mode: "gregorian" | "ethiopian") {
   return mode === "gregorian"
     ? new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1, 12))
@@ -77,6 +89,9 @@ export function downloadCalendar(events: Gathering[]) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 export function GatheringDetails({ event }: { event: Gathering }) {
+  const locale = languageLocale(useLanguage());
+  const dateLabel = dateFormatter(locale);
+  const timeLabel = timeFormatter(locale);
   return (
     <article className={`gathering-detail ${event.kind}`}>
       <h3>{event.title}</h3>
@@ -138,6 +153,9 @@ export function NextGatherings() {
   );
 }
 export function ChurchCalendar() {
+  const language = useLanguage();
+  const locale = languageLocale(language);
+  const dateLabel = dateFormatter(locale);
   const [mode, setMode] = useState<"gregorian" | "ethiopian">("gregorian");
   const [cursor, setCursor] = useState(() => civilDate("2026-10-01"));
   const [selected, setSelected] = useState<string | null>(null);
@@ -169,7 +187,7 @@ export function ChurchCalendar() {
   const e = ethiopianDate(start);
   const title =
     mode === "gregorian"
-      ? new Intl.DateTimeFormat("en-US", {
+      ? new Intl.DateTimeFormat(locale, {
           month: "long",
           year: "numeric",
           timeZone: "UTC",
@@ -221,11 +239,7 @@ export function ChurchCalendar() {
             </button>
           </div>
         </div>
-        <div
-          className="calendar-grid"
-          role="group"
-          aria-label={`${title} · choose a day for its agenda`}
-        >
+        <div className="calendar-grid" role="group" aria-label={title}>
           <div className="calendar-week" aria-hidden="true">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
               <span key={d}>{d}</span>
@@ -247,7 +261,7 @@ export function ChurchCalendar() {
                 <button
                   key={date}
                   className={`calendar-day ${selected === date ? "selected" : ""}`}
-                  aria-label={`${dateLabel.format(d)}, ${ethiopianLabel(d)}${daily.map((e) => `, ${e.title}`).join("")}`}
+                  aria-label={`${dateLabel.format(d)}, ${ethiopianLabel(d)}${daily.map((e) => `, ${gatheringTitle(e, language)}`).join("")}`}
                   aria-pressed={selected === date}
                   onClick={() => setSelected(selected === date ? null : date)}
                 >
@@ -257,7 +271,7 @@ export function ChurchCalendar() {
                   <small>
                     {mode === "gregorian"
                       ? `${ETHIOPIAN_MONTHS[eth.month - 1]} ${eth.day}`
-                      : new Intl.DateTimeFormat("en-US", {
+                      : new Intl.DateTimeFormat(locale, {
                           month: "short",
                           day: "numeric",
                           timeZone: "UTC",

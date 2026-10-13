@@ -9,11 +9,12 @@
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/verify-media.mjs && tsc --noEmit && vite build && node scripts/build-static.mjs",
+    "build": "node scripts/update-translations.mjs --check && node scripts/verify-media.mjs && tsc --noEmit && vite build && node scripts/build-static.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "translations": "node scripts/update-translations.mjs",
+    "translations:check": "node scripts/update-translations.mjs --check",
     "process:recordings": "node scripts/process-meeting-recordings.mjs",
     "sync:drive": "node scripts/sync-drive-recordings.mjs",
     "sync:drive:publish": "node scripts/sync-drive-recordings.mjs --commit"

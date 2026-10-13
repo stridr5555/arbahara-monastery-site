@@ -10,6 +10,15 @@
   --gold: #ba995d;
   --green: #234539;
 }
+html[data-language="am"] {
+  --serif: "Noto Sans Ethiopic", sans-serif;
+  --sans: "Noto Sans Ethiopic", sans-serif;
+}
+html[data-language="am"] .site-header .brand,
+html[data-language="am"] .section-label,
+html[data-language="am"] .chapter-number {
+  letter-spacing: 0;
+}
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 90px;

@@ -3,13 +3,15 @@ import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { ErrorMessage, message } from "../components/Live";
-export function eventDate(ms: number) {
+import { useLanguage } from "../components/Translation";
+import { languageLocale, type Language } from "../lib/translation";
+export function eventDate(ms: number, language: Language = "en") {
   return (
-    new Intl.DateTimeFormat("en-US", {
+    new Intl.DateTimeFormat(languageLocale(language), {
       dateStyle: "full",
       timeStyle: "short",
       timeZone: "America/Chicago",
-    }).format(ms) + " (Central time)"
+    }).format(ms) + (language === "am" ? " (የቴክሳስ ሰዓት)" : " (Central time)")
   );
 }
 function calendar(event: Doc<"events">) {
@@ -53,6 +55,7 @@ function Ticket({
 }: {
   ticket: Doc<"tickets"> & { event: Doc<"events"> | null };
 }) {
+  const language = useLanguage();
   const [qr, setQr] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -85,7 +88,7 @@ function Ticket({
         {ticket.event ? (
           <>
             <p>
-              {eventDate(ticket.event.startsAt)}
+              {eventDate(ticket.event.startsAt, language)}
               <br />
               {ticket.event.location}
             </p>
@@ -168,6 +171,8 @@ export function MyTickets() {
   );
 }
 export function EventList({ signedIn = false }: { signedIn?: boolean }) {
+  const language = useLanguage();
+  const locale = languageLocale(language);
   const events = useQuery(api.events.upcoming);
   const register = useAction(api.events.register);
   const [error, setError] = useState("");
@@ -198,13 +203,13 @@ export function EventList({ signedIn = false }: { signedIn?: boolean }) {
             <article className="event panel" key={event._id}>
               <div className="event-date">
                 <strong>
-                  {new Date(event.startsAt).toLocaleDateString("en-US", {
+                  {new Date(event.startsAt).toLocaleDateString(locale, {
                     day: "2-digit",
                     timeZone: "America/Chicago",
                   })}
                 </strong>
                 <span>
-                  {new Date(event.startsAt).toLocaleDateString("en-US", {
+                  {new Date(event.startsAt).toLocaleDateString(locale, {
                     month: "short",
                     year: "numeric",
                     timeZone: "America/Chicago",
@@ -215,7 +220,7 @@ export function EventList({ signedIn = false }: { signedIn?: boolean }) {
                 <h2>{event.title}</h2>
                 <p>{event.description}</p>
                 <p>
-                  {eventDate(event.startsAt)}
+                  {eventDate(event.startsAt, language)}
                   <br />
                   {event.location}
                 </p>

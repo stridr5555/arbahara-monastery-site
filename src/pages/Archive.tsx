@@ -13,6 +13,8 @@ import { api } from "../../convex/_generated/api";
 import { archiveItems, type ArchiveItem, resources } from "../content";
 import { PageIntro, TextLink } from "../components/Layout";
 import { Live, ErrorMessage, message } from "../components/Live";
+import { useLanguage } from "../components/Translation";
+import { languageLocale } from "../lib/translation";
 function NewArchive({ search, filter }: { search: string; filter: string }) {
   const items = useQuery(api.archive.list);
   const token = useAuthToken();
@@ -79,6 +81,7 @@ export function Catalogue({
   items: ArchiveItem[];
   onDownload?: (item: ArchiveItem) => void;
 }) {
+  const locale = languageLocale(useLanguage());
   return (
     <div className="catalogue">
       {items.map((item) => (
@@ -100,7 +103,7 @@ export function Catalogue({
                   <span>·</span>
                   <time dateTime={item.date}>
                     {new Date(item.date + "T12:00:00").toLocaleDateString(
-                      "en-US",
+                      locale,
                       { year: "numeric", month: "long", day: "numeric" },
                     )}
                   </time>

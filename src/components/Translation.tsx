@@ -1,23 +1,38 @@
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+import { createTranslator, type Language } from "../lib/translation";
 const preference = "haramonastery-lang";
 const eventName = "arbahara-language";
+let chosenLanguage: Language = "en";
+function readLanguage(): Language {
+  try {
+    const stored = localStorage.getItem(preference);
+    return stored === "am" || stored === "en" ? stored : chosenLanguage;
+  } catch {
+    return chosenLanguage;
+  }
+}
+function subscribeLanguage(notify: () => void) {
+  window.addEventListener(eventName, notify);
+  window.addEventListener("storage", notify);
+  return () => {
+    window.removeEventListener(eventName, notify);
+    window.removeEventListener("storage", notify);
+  };
+}
+export function useLanguage() {
+  return useSyncExternalStore(
+    subscribeLanguage,
+    readLanguage,
+    () => "en" as const,
+  );
+}
 export function LanguageSwitcher() {
-  const [language, setLanguage] = useState("en");
-  useEffect(() => {
-    const sync = () => {
-      try {
-        setLanguage(localStorage.getItem(preference) === "am" ? "am" : "en");
-      } catch {}
-    };
-    sync();
-    window.addEventListener(eventName, sync);
-    return () => window.removeEventListener(eventName, sync);
-  }, []);
-  function choose(lang: string) {
+  const language = useLanguage();
+  function choose(lang: Language) {
+    chosenLanguage = lang;
     try {
       localStorage.setItem(preference, lang);
     } catch {}
-    setLanguage(lang);
     window.dispatchEvent(new Event(eventName));
     if (lang === "en" && window.location.pathname === "/am")
       window.location.assign("/");
@@ -50,10 +65,12 @@ export function LanguageSwitcher() {
 }
 export function TranslationController() {
   useEffect(() => {
-    let language = "en",
-      catalog: Record<string, string> = {},
+    let language: Language = "en";
+    let translate = createTranslator({});
+    let loaded = false,
       alive = true,
       frame = 0;
+    const originalTitle = document.title;
     const originals = new WeakMap<
       Text,
       { source: string; translated: string }
@@ -62,26 +79,32 @@ export function TranslationController() {
       Element,
       Record<string, { source: string; translated: string }>
     >();
-    const normalize = (s: string) => s.replace(/\s+/g, " ").trim();
-    const translated = (s: string) => {
-      const value = catalog[normalize(s)];
-      if (language !== "am" || !value) return s;
-      return (
-        (s.match(/^\s+/)?.[0] || "") + value + (s.match(/\s+$/)?.[0] || "")
-      );
-    };
-    const excluded = (element: Element | null) => {
+    const translated = (s: string) => translate(s, language);
+    const excluded = (element: Element | null, attribute = false) => {
       if (!element) return true;
-      const localized = element.closest('[lang="am"]');
+      // The nearest language annotation wins: an English paragraph inside an
+      // Amharic welcome page must still participate in the language switch.
+      const localized = element.closest("[lang]");
       return (
         !!element.closest(
-          "script,style,code,pre,textarea,input,[data-no-translate]",
-        ) || !!(localized && localized !== document.documentElement)
+          attribute
+            ? "script,style,code,pre,[data-no-translate]"
+            : "script,style,code,pre,textarea,[data-no-translate]",
+        ) ||
+        !!(
+          localized?.getAttribute("lang") === "am" &&
+          localized !== document.documentElement
+        )
       );
     };
     const observer = new MutationObserver(() => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(apply);
+      // Dynamic sections may update continuously. Coalesce, but never postpone
+      // the translation indefinitely by cancelling each preceding frame.
+      if (!frame)
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          apply();
+        });
     });
     function apply() {
       if (!alive) return;
@@ -108,7 +131,7 @@ export function TranslationController() {
       for (const el of root.querySelectorAll(
         "[aria-label],[placeholder],[alt],[title]",
       )) {
-        if (excluded(el)) continue;
+        if (excluded(el, true)) continue;
         let records = attributeOriginals.get(el) || {};
         for (const attribute of ["aria-label", "placeholder", "alt", "title"]) {
           const value = el.getAttribute(attribute);
@@ -127,29 +150,34 @@ export function TranslationController() {
       }
       document.documentElement.lang = language;
       document.documentElement.dataset.language = language;
+      document.title = translated(originalTitle);
       window.dispatchEvent(new Event("arbahara-layout-change"));
       observer.observe(root, {
         subtree: true,
         childList: true,
         characterData: true,
+        attributes: true,
+        attributeFilter: ["aria-label", "placeholder", "alt", "title"],
       });
     }
     async function sync() {
-      try {
-        language = localStorage.getItem(preference) === "am" ? "am" : "en";
-      } catch {}
-      if (language === "am" && !Object.keys(catalog).length) {
-        catalog = (await import("../i18n/am.json")).default;
+      language = readLanguage();
+      if (language === "am" && !loaded) {
+        const catalog = (await import("../i18n/am.json")).default;
+        translate = createTranslator(catalog);
+        loaded = true;
+        // A user can switch back while the lazy catalog is loading.
+        language = readLanguage();
       }
       if (alive) apply();
     }
     void sync();
-    window.addEventListener(eventName, sync);
+    const unsubscribe = subscribeLanguage(sync);
     return () => {
       alive = false;
       cancelAnimationFrame(frame);
       observer.disconnect();
-      window.removeEventListener(eventName, sync);
+      unsubscribe();
     };
   }, []);
   return null;
