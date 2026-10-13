@@ -1,4 +1,5 @@
 import * as T from "three";
+import { propertyLayout } from "./propertyLayout";
 
 /** Original, photo-informed geometry. Coordinates are illustrative, not survey data.
  * South is +Z, the road is east (+X); house southwest of the north–south pond. */
@@ -33,7 +34,7 @@ export function buildPropertyModel() {
           const v = Math.floor(random() * 30);
           ctx.fillStyle =
             kind === "roof"
-              ? `rgb(${110 + v},${68 + v},${60 + v})`
+              ? `rgb(${138 + v},${99 + v},${94 + v})`
               : `rgb(${155 + v},${147 + v},${125 + v})`;
           ctx.fillRect(x + (((y / h) % 2) * w) / 2, y, w - 1, h - 1);
         }
@@ -74,7 +75,7 @@ export function buildPropertyModel() {
   grass.bumpMap = grass.map;
   const stone = material("#eee1c8", { map: texture("stone"), bumpScale: 0.08 });
   stone.bumpMap = stone.map;
-  const roof = material("#c39c87", { map: texture("roof"), bumpScale: 0.06 });
+  const roof = material("#b8aca4", { map: texture("roof"), bumpScale: 0.06 });
   roof.bumpMap = roof.map;
   const ivory = material("#e7e0cd"),
     dark = material("#273832"),
@@ -102,10 +103,10 @@ export function buildPropertyModel() {
     parent.add(mesh);
     return mesh;
   };
-  const terrain = new T.Mesh(new T.BoxGeometry(113, 6, 141, 28, 2, 35), rock);
+  const terrain = new T.Mesh(new T.BoxGeometry(144, 6, 98, 36, 2, 25), rock);
   const tp = terrain.geometry.attributes.position;
   for (let i = 0; i < tp.count; i++)
-    if (Math.abs(tp.getX(i)) > 55 || Math.abs(tp.getZ(i)) > 69) {
+    if (Math.abs(tp.getX(i)) > 71 || Math.abs(tp.getZ(i)) > 48) {
       tp.setX(i, tp.getX(i) + (random() - 0.5) * 2.2);
       tp.setZ(i, tp.getZ(i) + (random() - 0.5) * 2.2);
     }
@@ -113,20 +114,14 @@ export function buildPropertyModel() {
   terrain.position.y = -3.2;
   terrain.receiveShadow = true;
   group.add(terrain);
-  const lawn = new T.Mesh(new T.PlaneGeometry(112, 140, 70, 85), grass);
+  const lawn = new T.Mesh(new T.PlaneGeometry(144, 98, 72, 49), grass);
   lawn.rotation.x = -Math.PI / 2;
   lawn.receiveShadow = true;
   group.add(lawn);
   // Continuous roadway and curving drive are native ribbons, not image planes.
-  const drive = new T.CatmullRomCurve3([
-    new T.Vector3(55, 0.12, -35),
-    new T.Vector3(39, 0.12, -24),
-    new T.Vector3(28, 0.12, 0),
-    new T.Vector3(27, 0.12, 39),
-    new T.Vector3(9, 0.12, 51),
-    new T.Vector3(-27, 0.12, 51),
-    new T.Vector3(-34, 0.12, 45),
-  ]);
+  const drive = new T.CatmullRomCurve3(
+    propertyLayout.drive.map(([x, z]) => new T.Vector3(x, 0.12, z)),
+  );
   const ribbon = (
     curve: T.CatmullRomCurve3,
     width: number,
@@ -166,28 +161,33 @@ export function buildPropertyModel() {
     mesh.receiveShadow = true;
     group.add(mesh);
   };
-  ribbon(drive, 3.2, gravel, "Curving gravel drive");
+  ribbon(drive, 1.6, gravel, "Curving gravel drive");
   box(
     group,
     "Eastern road context — not a property boundary",
-    58,
+    66,
     -0.05,
     0,
-    6,
+    3.5,
     0.15,
-    141,
+    98,
     material("#636560"),
   );
   const roadMark = material("#d8c689");
-  for (let z = -66; z < 70; z += 9)
-    box(group, "Road center marking", 58, 0.04, z, 0.15, 0.02, 3, roadMark);
+  for (let z = -47; z < 49; z += 6)
+    box(group, "Road center marking", 66, 0.04, z, 0.1, 0.02, 2, roadMark);
   // Irregular pond, earthen bank and water surface geometry.
   const pond = new T.Shape();
-  pond.moveTo(-10, -38);
-  pond.bezierCurveTo(-17, -27, -12, -8, -5, 1);
-  pond.bezierCurveTo(0, 7, 9, 2, 12, -10);
-  pond.bezierCurveTo(17, -24, 18, -39, 10, -43);
-  pond.bezierCurveTo(4, -47, -5, -44, -10, -38);
+  const [pondX, pondZ] = propertyLayout.pondCenter;
+  // Closed Catmull–Rom tracing preserves the narrow southern tip and broad north.
+  const closedShore = new T.CatmullRomCurve3(
+    propertyLayout.pond.map(([x, z]) => new T.Vector3(x - pondX, 0, z - pondZ)),
+    true,
+  );
+  const shorePoints = closedShore.getPoints(180);
+  pond.moveTo(shorePoints[0].x, shorePoints[0].z);
+  shorePoints.slice(1).forEach((p) => pond.lineTo(p.x, p.z));
+  pond.closePath();
   const pondMesh = (
     scale: number,
     y: number,
@@ -197,13 +197,13 @@ export function buildPropertyModel() {
     const mesh = new T.Mesh(new T.ShapeGeometry(pond, 60), mat);
     mesh.rotation.x = Math.PI / 2;
     mesh.scale.setScalar(scale);
-    mesh.position.set(1, y, -4);
+    mesh.position.set(pondX, y, pondZ);
     mesh.name = name;
     mesh.receiveShadow = true;
     group.add(mesh);
   };
   pondMesh(
-    1.09,
+    1.04,
     0.05,
     material("#958665", { side: T.DoubleSide }),
     "Natural pond bank",
@@ -211,10 +211,10 @@ export function buildPropertyModel() {
   pondMesh(
     1,
     0.09,
-    material("#b2ba8d", {
+    material("#b2a385", {
       map: texture("water"),
-      roughness: 0.28,
-      metalness: 0.28,
+      roughness: 0.48,
+      metalness: 0.12,
       side: T.DoubleSide,
     }),
     "Pond water",
@@ -222,7 +222,13 @@ export function buildPropertyModel() {
   // Main residence: cream stone, steep red-brown roof, two dormers, white chimney, porch.
   const house = new T.Group();
   house.name = "Residence";
-  house.position.set(-18, 0, 30);
+  house.position.set(
+    propertyLayout.residence[0],
+    0,
+    propertyLayout.residence[1],
+  );
+  house.scale.setScalar(0.48);
+  house.rotation.y = -Math.PI / 5;
   group.add(house);
   box(house, "Foundation", 0, 0.22, 0, 16.5, 0.45, 12.5, concrete);
   box(house, "Stone residence walls", 0, 3.2, 0, 16, 6, 12, stone);
@@ -346,7 +352,9 @@ export function buildPropertyModel() {
   box(house, "Front step", 0, 0.2, 10.8, 4.5, 0.3, 1.3, concrete);
   const garage = new T.Group();
   garage.name = "Two-door garage";
-  garage.position.set(-34, 0, 43);
+  garage.position.set(propertyLayout.garage[0], 0, propertyLayout.garage[1]);
+  garage.scale.setScalar(0.52);
+  garage.rotation.y = Math.PI / 2;
   group.add(garage);
   box(garage, "Garage walls", 0, 2.4, 0, 11, 4.8, 8, ivory);
   gable(garage, 0, 4.8, 0, 11.6, 2.7, 8.5, roof, ivory);
@@ -372,43 +380,59 @@ export function buildPropertyModel() {
         dark,
       );
   }
-  for (const z of [-32, -38])
-    box(group, "Entrance stone pier", 51, 1.25, z, 1.1, 2.5, 1.1, stone);
+  const [gateX, gateZ] = propertyLayout.entrance;
+  for (const z of [gateZ - 1.3, gateZ + 1.3])
+    box(group, "Entrance stone pier", gateX, 0.7, z, 0.6, 1.4, 0.6, stone);
   for (let i = 0; i < 12; i++)
     box(
       group,
       "Entrance gate rail",
-      51.1,
-      1.1,
-      -37.7 + i * 0.49,
+      gateX + 0.05,
+      0.65,
+      gateZ - 1.2 + i * 0.22,
       0.06,
-      1.5,
+      0.85,
       0.06,
       dark,
     );
-  for (const y of [0.5, 1.7])
-    box(group, "Gate horizontal rail", 51.1, y, -35, 0.08, 0.08, 5.8, dark);
-  for (let x = -44; x < 2; x += 4)
-    box(group, "Residence garden fence post", x, 0.9, 59, 0.1, 1.8, 0.1, dark);
-  for (const y of [0.4, 1.3])
-    box(group, "Garden fence rail", -22, y, 59, 46, 0.04, 0.04, dark);
+  for (const y of [0.3, 1])
+    box(
+      group,
+      "Gate horizontal rail",
+      gateX + 0.05,
+      y,
+      gateZ,
+      0.05,
+      0.05,
+      2.6,
+      dark,
+    );
   // Native instanced canopies retain parallax and shadows through every flight.
   const trees: { x: number; z: number; h: number; r: number }[] = [],
     drivePoints = drive.getPoints(45);
   for (let i = 0; i < 1100; i++) {
-    const x = -54 + random() * 106,
-      z = -68 + random() * 134;
+    const x = -70 + random() * 130,
+      z = -47 + random() * 94;
     const wooded =
-      x < -29 || z < -45 || (z < 10 && x > 17) || (x < -9 && z < 20);
+      x < -42 || z < -33 || (z < -12 && x > 22) || (x < -15 && z < 9);
     if (!wooded && random() > 0.075) continue;
-    if (((x - 1) / 18) ** 2 + ((z + 24) / 32) ** 2 < 1.25) continue;
-    if (Math.abs(x + 18) < 14 && Math.abs(z - 30) < 19) continue;
-    if (Math.abs(x + 34) < 10 && Math.abs(z - 43) < 11) continue;
-    if (drivePoints.some((p) => Math.hypot(x - p.x, z - p.z) < 5)) continue;
-    if (x > 47 || z > 53) continue;
-    trees.push({ x, z, h: 4.5 + random() * 5, r: 2 + random() * 2.2 });
+    if (((x - pondX) / 20) ** 2 + ((z - pondZ) / 27) ** 2 < 1.1) continue;
+    if (
+      Math.hypot(
+        x - propertyLayout.residence[0],
+        z - propertyLayout.residence[1],
+      ) < 10
+    )
+      continue;
+    if (
+      Math.hypot(x - propertyLayout.garage[0], z - propertyLayout.garage[1]) < 6
+    )
+      continue;
+    if (drivePoints.some((p) => Math.hypot(x - p.x, z - p.z) < 3)) continue;
+    if (x > 57 || z > 39) continue;
+    trees.push({ x, z, h: 3 + random() * 4, r: 1.5 + random() * 2 });
   }
-  trees.push({ x: -31, z: 24, h: 8, r: 4 }, { x: -3, z: 23, h: 7, r: 3.5 });
+  trees.push({ x: -44, z: 16, h: 6, r: 3 }, { x: -25, z: 20, h: 6, r: 3 });
   const trunk = new T.InstancedMesh(
     new T.CylinderGeometry(0.2, 0.4, 1, 7),
     bark,
@@ -420,7 +444,7 @@ export function buildPropertyModel() {
   leafCtx.fillStyle = "#cccccc";
   leafCtx.fillRect(0, 0, 256, 256);
   for (let i = 0; i < 8500; i++) {
-    const v = Math.floor(90 + random() * 165);
+    const v = Math.floor(180 + random() * 75);
     leafCtx.fillStyle = `rgb(${v},${v},${v})`;
     leafCtx.fillRect(
       random() * 256,
@@ -431,12 +455,12 @@ export function buildPropertyModel() {
   }
   const leafMap = new T.CanvasTexture(leafCanvas);
   leafMap.colorSpace = T.SRGBColorSpace;
-  const leafGeo = new T.IcosahedronGeometry(1, 2),
+  const leafGeo = new T.IcosahedronGeometry(1, 1),
     lp = leafGeo.attributes.position;
   for (let i = 0; i < lp.count; i++) {
     const v =
       1 +
-      0.08 *
+      0.22 *
         Math.sin(lp.getX(i) * 13 + lp.getY(i) * 7) *
         Math.cos(lp.getZ(i) * 11);
     lp.setXYZ(i, lp.getX(i) * v, lp.getY(i) * v, lp.getZ(i) * v);
@@ -457,10 +481,10 @@ export function buildPropertyModel() {
     material("#ffffff", {
       map: leafMap,
       bumpMap: leafMap,
-      bumpScale: 0.12,
+      bumpScale: 0.035,
       roughness: 1,
     }),
-    trees.length * 7,
+    trees.length * 24,
   );
   const dummy = new T.Object3D(),
     color = new T.Color();
@@ -473,29 +497,29 @@ export function buildPropertyModel() {
     dummy.rotation.set(0, 0, 0);
     dummy.updateMatrix();
     trunk.setMatrixAt(i, dummy.matrix);
-    for (let j = 0; j < 7; j++) {
+    for (let j = 0; j < 24; j++) {
       const angle = j * 2.4 + random(),
-        radius = j ? tree.r * 0.55 : 0;
+        radius = j ? tree.r * Math.sqrt(random()) * 0.8 : 0;
       dummy.position.set(
         tree.x + Math.cos(angle) * radius,
-        tree.h - 1 + random() * 1.6,
+        tree.h - 1.5 + random() * 2,
         tree.z + Math.sin(angle) * radius,
       );
       dummy.scale.set(
-        tree.r * (0.65 + random() * 0.2),
-        tree.r * (0.75 + random() * 0.2),
-        tree.r * (0.7 + random() * 0.2),
+        tree.r * (0.28 + random() * 0.18),
+        tree.r * (0.35 + random() * 0.18),
+        tree.r * (0.28 + random() * 0.18),
       );
       dummy.rotation.set(random(), random(), random());
       dummy.updateMatrix();
-      leaves.setMatrixAt(i * 7 + j, dummy.matrix);
+      leaves.setMatrixAt(i * 24 + j, dummy.matrix);
       color.setHSL(
         hue,
         saturation,
         lightness + random() * 0.025,
         T.SRGBColorSpace,
       );
-      leaves.setColorAt(i * 7 + j, color);
+      leaves.setColorAt(i * 24 + j, color);
     }
   });
   trunk.castShadow = leaves.castShadow = true;
@@ -509,8 +533,8 @@ export function buildPropertyModel() {
   for (let i = 0; i < 380; i++) {
     const along = random(),
       edge = i % 4;
-    const x = edge < 2 ? -56 + along * 112 : edge === 2 ? -56 : 56,
-      z = edge < 2 ? (edge === 0 ? -70 : 70) : -70 + along * 140;
+    const x = edge < 2 ? -72 + along * 144 : edge === 2 ? -72 : 72,
+      z = edge < 2 ? (edge === 0 ? -49 : 49) : -49 + along * 98;
     dummy.position.set(x, -2.3 - random(), z);
     dummy.scale.set(1 + random() * 2, 1.3 + random() * 2.5, 1 + random() * 2);
     dummy.rotation.set(random(), random(), random());
@@ -520,19 +544,23 @@ export function buildPropertyModel() {
   edgeRocks.castShadow = edgeRocks.receiveShadow = true;
   group.add(edgeRocks);
   const tufts = new T.InstancedMesh(
-    new T.ConeGeometry(0.09, 0.45, 3),
+    new T.ConeGeometry(0.035, 0.12, 3),
     material("#71734a"),
     14000,
   );
   for (let i = 0; i < 14000; i++) {
-    const x = -54 + random() * 106,
-      z = -68 + random() * 136;
+    const x = -70 + random() * 130,
+      z = -47 + random() * 94;
     const excluded =
-      ((x - 1) / 17) ** 2 + ((z + 24) / 30) ** 2 < 1.1 ||
-      (Math.abs(x + 18) < 10 && Math.abs(z - 30) < 12) ||
-      (Math.abs(x + 34) < 7 && Math.abs(z - 43) < 9) ||
+      ((x - pondX) / 18) ** 2 + ((z - pondZ) / 25) ** 2 < 1.1 ||
+      Math.hypot(
+        x - propertyLayout.residence[0],
+        z - propertyLayout.residence[1],
+      ) < 8 ||
+      Math.hypot(x - propertyLayout.garage[0], z - propertyLayout.garage[1]) <
+        5 ||
       drivePoints.some((p) => Math.hypot(x - p.x, z - p.z) < 2);
-    dummy.position.set(x, excluded ? -10 : 0.2, z);
+    dummy.position.set(x, excluded ? -10 : 0.05, z);
     dummy.scale.set(1, 0.5 + random(), 1);
     dummy.rotation.set(0, random() * 6, 0.15);
     dummy.updateMatrix();
@@ -545,8 +573,8 @@ export function buildPropertyModel() {
     36,
   );
   for (let i = 0; i < 36; i++) {
-    dummy.position.set(-25 + i * 0.44, 0.6, 40);
-    dummy.scale.set(0.5, 0.7, 0.55);
+    dummy.position.set(-43 + i * 0.22, 0.3, 26);
+    dummy.scale.set(0.24, 0.32, 0.25);
     dummy.rotation.set(0, 0, 0);
     dummy.updateMatrix();
     shrubs.setMatrixAt(i, dummy.matrix);
@@ -559,13 +587,13 @@ export function buildPropertyModel() {
     180,
   );
   for (let i = 0; i < 180; i++) {
-    const a = random() * Math.PI * 2;
-    dummy.position.set(
-      2 + Math.cos(a) * (14 + random()),
-      0.2,
-      -24 + Math.sin(a) * (24 + random()),
+    const p = closedShore.getPoint(i / 180);
+    dummy.position.set(pondX + p.x * 1.03, 0.1, pondZ + p.z * 1.03);
+    dummy.scale.set(
+      0.18 + random() * 0.3,
+      0.1 + random() * 0.2,
+      0.2 + random() * 0.3,
     );
-    dummy.scale.set(0.4 + random(), 0.3 + random() * 0.4, 0.5 + random());
     dummy.rotation.set(random(), random(), random());
     dummy.updateMatrix();
     stones.setMatrixAt(i, dummy.matrix);

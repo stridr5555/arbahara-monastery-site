@@ -8,7 +8,22 @@ import {
   nearestSunday,
   isoDate,
 } from "../src/lib/calendar";
+import { teleconference } from "../src/lib/teleconference";
 describe("Church calendar", () => {
+  it("includes the published dial-in in Mahiber records and calendar exports only", () => {
+    const events = gatheringsBetween("2026-11-01", "2026-11-30");
+    const mahiber = events.find((e) => e.kind === "mahiber")!;
+    expect(mahiber.location).toContain(teleconference.number);
+    expect(mahiber.description).toContain(
+      `Dial ${teleconference.number} to join`,
+    );
+    const ics = calendarIcs([mahiber]).replace(/\r\n /g, "");
+    expect(ics).toContain(`LOCATION:Teleconference · ${teleconference.number}`);
+    expect(ics).toContain(`Dial ${teleconference.number} to join`);
+    expect(events.find((e) => e.kind === "ziker")!.location).not.toContain(
+      teleconference.number,
+    );
+  });
   it("converts Ethiopian dates without a fixed September offset", () => {
     expect(ethiopianDate(civilDate("2026-11-06"))).toEqual({
       year: 2019,

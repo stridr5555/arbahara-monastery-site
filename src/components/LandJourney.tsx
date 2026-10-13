@@ -142,17 +142,6 @@ export function LandJourney({ full = false }: { full?: boolean }) {
             let the guided tour lead you.
           </p>
         </div>
-        <aside className="land-budget" id="future">
-          <h3>Preparing for service</h3>
-          <strong>{dollars(constructionTotal)}</strong>
-          <p>estimated need</p>
-          <a
-            className="text-link"
-            href={full ? "#project-budget" : "/monastery#project-budget"}
-          >
-            Explore all 19 projects <ArrowRight size={17} />
-          </a>
-        </aside>
         <div className="photo-tour-console diorama-console">
           <div className="photo-tour-playback">
             <button className="tour-play" onClick={toggle} disabled={!enabled}>
@@ -249,6 +238,19 @@ export function LandJourney({ full = false }: { full?: boolean }) {
           </div>
         </div>
       </div>
+      <aside className="land-budget tour-budget-strip" id="future">
+        <h3>Preparing for service</h3>
+        <div>
+          <strong>{dollars(constructionTotal)}</strong>
+          <p>estimated need</p>
+        </div>
+        <a
+          className="text-link"
+          href={full ? "#project-budget" : "/monastery#project-budget"}
+        >
+          Explore all 19 projects <ArrowRight size={17} />
+        </a>
+      </aside>
       <div className="diorama-caption">
         <p
           className="photo-tour-caption"
@@ -273,6 +275,71 @@ export function LandJourney({ full = false }: { full?: boolean }) {
           source of truth.
         </p>
       </div>
+      {full ? (
+        <section
+          className="property-reference wrap"
+          aria-label="Actual property aerial photographs"
+        >
+          <div className="section-heading">
+            <div>
+              <h2>The actual land</h2>
+              <p>Compare the tour with the original aerial photographs.</p>
+            </div>
+            <a
+              className="text-link"
+              href="https://www.realtor.com/realestateandhomes-detail/7029-FM-2757_Crandall_TX_75114_M97693-63657"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View Realtor listing <ArrowRight size={17} />
+            </a>
+          </div>
+          <div className="property-reference-images">
+            <figure>
+              <a
+                href="/assets/property/user-map-overhead.jpg"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src="/assets/property/user-map-overhead.jpg"
+                  width="480"
+                  height="270"
+                  loading="lazy"
+                  alt="Actual overhead aerial: the residence and nearby garage southwest of the irregular pond; the drive curves from the eastern road around the pond"
+                />
+              </a>
+              <figcaption>
+                Overhead reference · used to trace the pond, drive and building
+                positions.
+              </figcaption>
+            </figure>
+            <figure>
+              <a
+                href="/assets/property/user-map-oblique.jpg"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src="/assets/property/user-map-oblique.jpg"
+                  width="480"
+                  height="270"
+                  loading="lazy"
+                  alt="Actual oblique aerial showing the residence, garage, wooded grounds, lake and curving driveway"
+                />
+              </a>
+              <figcaption>
+                Oblique reference · the real buildings and wooded setting.
+              </figcaption>
+            </figure>
+          </div>
+          <p className="small">
+            The tour is an illustrative reconstruction from these photographs,
+            not Realtor’s captured 3D model. Aerial images show surrounding land
+            as context, not surveyed ownership boundaries.
+          </p>
+        </section>
+      ) : null}
       {full ? (
         <section className="construction-budget wrap" id="project-budget">
           <div className="section-heading">

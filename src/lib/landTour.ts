@@ -1,3 +1,4 @@
+import { propertyLayout } from "./propertyLayout";
 export type Point3 = readonly [number, number, number];
 export type CameraPose = { position: Point3; target: Point3 };
 export const tourDuration = 70;
@@ -5,32 +6,32 @@ export const tourChapters = [
   {
     name: "The land",
     text: "Begin above the wooded property, then descend toward the places that make it a home for our community.",
-    position: [88, 86, 116],
-    target: [0, -9, 0],
+    position: [73, 94, 92],
+    target: [-4, -4, 0],
   },
   {
     name: "The residence",
     text: "Study the residence’s steep red-brown roof, two dormer windows, chimney and sheltered front porch, reconstructed from the property photographs.",
-    position: [1, 19, 68],
-    target: [-18, 5, 30],
+    position: [-47, 14, 36],
+    target: [propertyLayout.residence[0], 3, propertyLayout.residence[1]],
   },
   {
     name: "The garage",
     text: "The existing two-door garage is a proposed beginning for congregational prayer. Any conversion requires professional assessment, approvals and the Church’s guidance.",
-    position: [-13, 14, 73],
-    target: [-34, 3, 45],
+    position: [-25, 9, 43],
+    target: [propertyLayout.garage[0], 2, propertyLayout.garage[1]],
   },
   {
     name: "The lake",
     text: "Fly beyond the residence to the lake and wooded shoreline. A proposed well is separate from the lake and requires assessment, permissions and ecclesiastical guidance.",
-    position: [32, 32, 23],
-    target: [2, 0, -22],
+    position: [26, 29, 20],
+    target: [propertyLayout.pondCenter[0], 0, propertyLayout.pondCenter[1]],
   },
   {
     name: "The entrance",
     text: "Follow the curving drive back toward the eastern road and entrance. The model shows the setting, not surveyed boundaries or ownership of neighboring land.",
-    position: [74, 23, 14],
-    target: [49, 1, -32],
+    position: [76, 12, 6],
+    target: [propertyLayout.entrance[0], 1, propertyLayout.entrance[1]],
   },
 ] as const satisfies readonly ({ name: string; text: string } & CameraPose)[];
 const clamp = (p: number) =>
@@ -77,7 +78,7 @@ export function tourPose(progress: number, zoom = 1): CameraPose {
   const to = tourChapters[chapter];
   const from: CameraPose = chapter
     ? tourChapters[chapter - 1]
-    : { position: [100, 100, 140], target: [0, -9, 0] };
+    : { position: [78, 100, 100], target: [-4, -4, 0] };
   const t = smoothFlight(local / 0.65);
   const target = mixPoint(from.target, to.target, t);
   const base = mixPoint(from.position, to.position, t);

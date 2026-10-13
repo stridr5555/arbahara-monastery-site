@@ -66,7 +66,11 @@ export function createPropertyRenderer(
     if (disposed || document.hidden) return;
     pose = next;
     const mobile = host.clientWidth < 760;
-    const framing = mobile ? 1.2 : 1;
+    // Portrait overview needs width fitting; close-ups should not be pushed away.
+    const heightBlend = Math.min(1, Math.max(0, (next.position[1] - 20) / 60));
+    const framing = mobile
+      ? 1 + 0.45 * heightBlend * heightBlend * (3 - 2 * heightBlend)
+      : 1;
     camera.position
       .set(...next.position)
       .sub(new T.Vector3(...next.target))
@@ -85,6 +89,18 @@ export function createPropertyRenderer(
     if (!host.clientWidth || !host.clientHeight) return;
     renderer.setSize(host.clientWidth, host.clientHeight, false);
     camera.aspect = host.clientWidth / host.clientHeight;
+    if (host.clientWidth >= 760) {
+      // Leave the lower part of the frame for the playback dock rather than
+      // letting it cover the residence's porch or the entrance driveway.
+      camera.setViewOffset(
+        host.clientWidth,
+        host.clientHeight,
+        0,
+        host.clientHeight * 0.14,
+        host.clientWidth,
+        host.clientHeight,
+      );
+    } else camera.clearViewOffset();
     camera.updateProjectionMatrix();
     draw(pose);
   };

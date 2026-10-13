@@ -1,3 +1,4 @@
+import { teleconference } from "./teleconference";
 /** Civil dates use UTC noon; gathering instants use America/Chicago explicitly. */
 export const CHURCH_ZONE = "America/Chicago";
 export const ETHIOPIAN_MONTHS = [
@@ -122,11 +123,11 @@ export function gatheringsBetween(from: string, to: string): Gathering[] {
         endsAt: churchInstant(iso, hour + 1),
         location:
           kind === "mahiber"
-            ? "Teleconference · joining details from the monastery office"
+            ? `Teleconference · ${teleconference.number}`
             : "Mekane Selam St. Michael and St. Kidane Meheret Ethiopian Orthodox Tewahedo Church, 1709 North Garland Avenue, Garland, TX 75040",
         description:
           kind === "mahiber"
-            ? "Monthly gathering on the Ethiopian 27th. Contact the monastery office for joining details."
+            ? `Monthly gathering on the Ethiopian 27th, 7–8 p.m. America/Chicago. Dial ${teleconference.number} to join. የማኅበር ቴሌኮንፈረንስ ስልክ: ${teleconference.number}.`
             : "Monthly Ziker on the Sunday closest to the Ethiopian 27th.",
       });
     }

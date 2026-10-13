@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PageIntro, LinkButton } from "../components/Layout";
 import { site } from "../content";
 import { ErrorMessage, message } from "../components/Live";
+import { Teleconference } from "../components/Teleconference";
 export function Privacy() {
   return (
     <div className="wrap narrow">
@@ -40,14 +41,14 @@ export function Privacy() {
         <p>
           The website runs on Vercel. Convex hosts authentication and member
           records. Passwords are stored as protected hashes, not readable text.
-          Verification and password-reset codes use the configured email provider.
-          If you choose Google or Facebook sign-in, that provider shares your
-          account identifier, name, email address, and profile image when available.
-          We request identity information for sign-in, not access to your posts or contacts.
-          Where bank giving is enabled, Stripe handles bank-account collection,
-          authorization, and payment processing. We do not store your bank
-          login, account number, or routing number. Zelle transfers take place
-          through your bank.
+          Verification and password-reset codes use the configured email
+          provider. If you choose Google or Facebook sign-in, that provider
+          shares your account identifier, name, email address, and profile image
+          when available. We request identity information for sign-in, not
+          access to your posts or contacts. Where bank giving is enabled, Stripe
+          handles bank-account collection, authorization, and payment
+          processing. We do not store your bank login, account number, or
+          routing number. Zelle transfers take place through your bank.
         </p>
         <p>
           Some archived films use the existing Amazon S3 media host. Opening an
@@ -186,6 +187,7 @@ export function Amharic() {
           </LinkButton>
         </div>
         <h2>መገናኛ እና ጉብኝት</h2>
+        <Teleconference />
         <p>ከመጓዝዎ በፊት የአምልኮ ሰዓትና አድራሻ ለማረጋገጥ ያነጋግሩን።</p>
         <p>
           <a href="tel:+12148031347">214 803 1347</a> /{" "}
