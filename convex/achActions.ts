@@ -73,6 +73,11 @@ export const submit = action({
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Please sign in.");
     await ctx.runQuery(internal.achRecords.identity, { userId });
+    await ctx.runMutation(internal.security.limit, {
+      key: `ach-submit:${userId}`,
+      max: 20,
+      windowMs: 3600000,
+    });
     const c = await ctx.runQuery(internal.achRecords.getChallenge, {
       id: a.challengeId,
     });
