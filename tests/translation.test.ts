@@ -3,9 +3,17 @@ import { describe, expect, it } from "vitest";
 import catalog from "../src/i18n/am.json";
 import { createTranslator, languageLocale } from "../src/lib/translation";
 import { eventDate } from "../src/portal/Tickets";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Amharic } from "../src/pages/Information";
 const translate = createTranslator(catalog);
 
 describe("Complete Amharic interface", () => {
+  it("provides a native Amharic welcome without a hidden English-only note", () => {
+    const html = renderToStaticMarkup(createElement(Amharic));
+    expect(html).toContain("ይህ ገጽ የአማርኛ");
+    expect(html).not.toContain("This page provides an Amharic welcome");
+  });
   it("keeps the source catalog current across public pages and portal controls", () => {
     expect(
       execFileSync(

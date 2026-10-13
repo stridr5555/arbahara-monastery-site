@@ -195,10 +195,10 @@ export function Amharic() {
           <br />
           <a href={`mailto:${site.email}`}>{site.email}</a>
         </p>
-        <p lang="en">
-          This page provides an Amharic welcome and essential directions. The
-          English/Amharic switch is available throughout the website. Contact
-          the office for help with spiritual terminology or language assistance.
+        <p>
+          ይህ ገጽ የአማርኛ አቀባበልና አስፈላጊ መመሪያዎችን ይሰጣል። በድረ ገጹ ላይ ከእንግሊዝኛና
+          ከአማርኛ አንዱን ቋንቋ መምረጥ ይችላሉ። የመንፈሳዊ ቃላት ማብራሪያ ወይም የቋንቋ እርዳታ
+          ካስፈለገዎት የገዳሙን ቢሮ ያነጋግሩ።
         </p>
       </div>
     </div>
