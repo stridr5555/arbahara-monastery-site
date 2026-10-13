@@ -15,6 +15,7 @@ const CalendarAdmin = lazy(() =>
 const ManualAchAdmin = lazy(() => import("./ManualAchAdmin"));
 const OfficeHome = lazy(() => import("./OfficeHome"));
 const RecordPayment = lazy(() => import("./RecordPayment"));
+const FamilyAdmin = lazy(() => import("./FamilyAdmin"));
 export default function AdminRouter({
   role,
   initialView,
@@ -31,6 +32,7 @@ export default function AdminRouter({
           ["home", "Office tasks"],
           ["record", "Record payment"],
           ["households", "Households"],
+          ["family", "Family connections"],
           ["manual-ach", "Bank setup"],
           ["bank", "Bank activity"],
           ["treasury", "Verify Zelle reports"],
@@ -113,6 +115,8 @@ export default function AdminRouter({
             <OfficeHome choose={choose} />
           ) : tab === "record" ? (
             <RecordPayment />
+          ) : tab === "family" ? (
+            <FamilyAdmin role={role} />
           ) : tab === "manual-ach" ? (
             <ManualAchAdmin role={role} />
           ) : tab === "bank" ? (

@@ -37,6 +37,20 @@ export function Privacy() {
           Treasurers review reported gifts. Authorized event volunteers validate
           tickets. These permissions are checked by the server.
         </p>
+        <h2>Spouse connections and family membership</h2>
+        <p>
+          With both spouses’ confirmation, separate verified sign-ins can share
+          one household membership, address, dues coverage and household
+          collection history. Family dues are $20 per month total, not per
+          spouse. Personal giving, passwords, staff permissions and full bank
+          details remain separate. Your own older records from a consolidated
+          household remain available only to you and authorized finance staff.
+          Email requests appear privately in the spouse’s account; phone
+          requests require independent office identity verification. No email or
+          text invitation is sent. Ask the office to correct or end an existing
+          connection. Connecting a spouse does not authorize a debit or cancel
+          any bank instruction.
+        </p>
         <h2>Service providers</h2>
         <p>
           The website runs on Vercel. Convex hosts authentication and member

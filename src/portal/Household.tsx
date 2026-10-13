@@ -44,6 +44,9 @@ export function HouseholdDues({ compact = false }: { compact?: boolean }) {
         </span>
       </div>
       <h3>{household.name}</h3>
+      <a className="text-link" href="/members?view=family">
+        Connect with your spouse · one family membership
+      </a>
       {household.status !== "active" ? (
         <p>
           Your application is awaiting office review. Approval does not require
@@ -57,10 +60,10 @@ export function HouseholdDues({ compact = false }: { compact?: boolean }) {
       ) : (
         <>
           <p>
-            <strong>Monthly dues · $20</strong>
+            <strong>Family monthly dues · $20 total</strong>
             <br />
-            $240 covers 12 consecutive Gregorian months. Extra gifts are
-            separate.
+            $240 covers the whole family for 12 consecutive Gregorian months.
+            Extra gifts are separate.
           </p>
           <p>
             Due through this month: <strong>{money(outstanding)}</strong>

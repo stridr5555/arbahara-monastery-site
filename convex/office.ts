@@ -5,7 +5,14 @@ export const workQueue = query({
   args: {},
   handler: async (ctx) => {
     await requireRole(ctx, FINANCE_ROLES);
-    const [households, gifts, requests, ready] = await Promise.all([
+    const [
+      households,
+      gifts,
+      requests,
+      ready,
+      phoneFamilies,
+      reviewedFamilies,
+    ] = await Promise.all([
       ctx.db
         .query("households")
         .withIndex("by_status", (q) => q.eq("status", "pending"))
@@ -22,12 +29,21 @@ export const workQueue = query({
         .query("achRequests")
         .withIndex("by_status", (q) => q.eq("status", "ready_for_chase"))
         .take(101),
+      ctx.db
+        .query("spouseConnections")
+        .withIndex("by_status", (q) => q.eq("status", "phone_review"))
+        .take(101),
+      ctx.db
+        .query("spouseConnections")
+        .withIndex("by_status", (q) => q.eq("status", "household_review"))
+        .take(101),
     ]);
     return {
       households: households.length,
       gifts: gifts.length,
       requests: requests.length,
       ready: ready.length,
+      families: Math.min(101, phoneFamilies.length + reviewedFamilies.length),
     };
   },
 });

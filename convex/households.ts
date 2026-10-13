@@ -1,6 +1,6 @@
 import { query, mutation, internalMutation } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { audit, clean, requireUser, requireRole } from "./security";
 import {
   approvalStart,
@@ -27,17 +27,19 @@ export const mine = query({
       )
       .collect();
     const dues = await Promise.all(
-      charges.map(async (c) => ({
-        ...c,
-        paidCents: (
-          await ctx.db
-            .query("duesAllocations")
-            .withIndex("by_charge", (q) => q.eq("chargeId", c._id))
-            .collect()
-        )
-          .filter((x) => !x.reversedAt)
-          .reduce((s, x) => s + x.amountCents, 0),
-      })),
+      charges
+        .filter((c) => !c.cancelledBy)
+        .map(async (c) => ({
+          ...c,
+          paidCents: (
+            await ctx.db
+              .query("duesAllocations")
+              .withIndex("by_charge", (q) => q.eq("chargeId", c._id))
+              .collect()
+          )
+            .filter((x) => !x.reversedAt)
+            .reduce((s, x) => s + x.amountCents, 0),
+        })),
     );
     const receipts = await ctx.db
       .query("receipts")
@@ -96,6 +98,10 @@ export const approve = mutation({
     const actor = await requireRole(ctx, ["admin", "secretary"]),
       old = await ctx.db.get(a.id);
     if (!old) throw new Error("Household not found.");
+    if (old.status === "inactive")
+      throw new ConvexError(
+        "An inactive household cannot be approved. Review its existing family connection with the office.",
+      );
     if (old.approvedAt)
       throw new Error(
         "Household already approved. Use status review, not a second approval.",

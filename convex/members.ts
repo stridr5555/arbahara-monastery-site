@@ -113,7 +113,15 @@ export const save = mutation({
       if (
         household?.source === "application" &&
         household.status === "pending" &&
-        !household.approvedAt
+        !household.approvedAt &&
+        (
+          await ctx.db
+            .query("householdLinks")
+            .withIndex("by_household", (q) =>
+              q.eq("householdId", household._id),
+            )
+            .collect()
+        ).length === 1
       )
         await ctx.db.patch(household._id, {
           name,
@@ -222,9 +230,33 @@ export const exportMine = query({
           .collect()
       : [];
     return {
-      schemaVersion: 2,
+      schemaVersion: 3,
       exportedAt: new Date().toISOString(),
       email: u.email,
+      formerHouseholdRecords: await Promise.all(
+        (
+          await ctx.db
+            .query("formerHouseholdLinks")
+            .withIndex("by_user", (q) => q.eq("userId", u._id))
+            .collect()
+        ).map(async (link) => ({
+          household: await ctx.db.get(link.householdId),
+          charges: await ctx.db
+            .query("duesCharges")
+            .withIndex("by_household_month", (q) =>
+              q.eq("householdId", link.householdId),
+            )
+            .collect(),
+          receipts: (
+            await ctx.db
+              .query("receipts")
+              .withIndex("by_household", (q) =>
+                q.eq("householdId", link.householdId),
+              )
+              .collect()
+          ).map(({ createdBy, requestId, intent, ...r }) => r),
+        })),
+      ),
       bankSetupRequests: (
         await ctx.db
           .query("achRequests")

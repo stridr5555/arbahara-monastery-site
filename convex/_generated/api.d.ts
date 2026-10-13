@@ -33,6 +33,7 @@ import type * as office from "../office.js";
 import type * as paymentRecords from "../paymentRecords.js";
 import type * as payments from "../payments.js";
 import type * as security from "../security.js";
+import type * as spouses from "../spouses.js";
 import type * as tokenVault from "../tokenVault.js";
 
 import type {
@@ -67,6 +68,7 @@ declare const fullApi: ApiFromModules<{
   paymentRecords: typeof paymentRecords;
   payments: typeof payments;
   security: typeof security;
+  spouses: typeof spouses;
   tokenVault: typeof tokenVault;
 }>;
 

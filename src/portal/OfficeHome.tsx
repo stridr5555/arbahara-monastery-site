@@ -18,6 +18,11 @@ export default function OfficeHome({
       "Find the household record, review an application, and link its verified website account.",
     ],
     [
+      "family",
+      "Connect spouses and review family dues",
+      "Verify phone ownership or review separate household records before combining them into one $20 family membership.",
+    ],
+    [
       "manual-ach",
       "Review bank setup requests",
       "Review encrypted bank-information requests and the separate authorization before manual Chase entry.",
@@ -52,6 +57,7 @@ export default function OfficeHome({
         <ul className="office-work-list">
           {[
             ["households", "Households awaiting review", queue.households],
+            ["family", "Family connections needing review", queue.families],
             [
               "treasury",
               "Reported gifts awaiting bank verification",

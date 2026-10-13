@@ -12,6 +12,7 @@ import { ChurchCalendar, NextGatherings } from "../components/ChurchCalendar";
 import { announcements } from "../content";
 import { CalendarConnection } from "./CalendarConnection";
 import { ManualAch } from "./ManualAch";
+import { FamilyConnection } from "./FamilyConnection";
 const Admin = lazy(() => import("./AdminRouter"));
 function Dashboard() {
   const me = useQuery(api.members.me);
@@ -37,6 +38,7 @@ function Dashboard() {
     ["overview", "My household"],
     ["calendar", "Calendar"],
     ["dues", "Membership dues"],
+    ["family", "Family connection"],
     ["bank-setup", "Bank payment setup"],
     ["profile", "Household profile"],
     ["give", "Make an offering"],
@@ -142,6 +144,8 @@ function Dashboard() {
               </>
             ) : view === "dues" ? (
               <HouseholdDues />
+            ) : view === "family" ? (
+              <FamilyConnection />
             ) : view === "bank-setup" ? (
               <Suspense fallback={<p>Checking secure bank setup…</p>}>
                 <ManualAch />
