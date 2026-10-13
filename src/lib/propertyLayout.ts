@@ -11,6 +11,7 @@ export const propertyLayout = {
   entrance: aerialPoint(407, 79),
   pondCenter: aerialPoint(243, 101),
   drive: [
+    [425, 79], // Continue through the gate to meet the eastern road.
     [407, 79],
     [377, 94],
     [345, 115],
