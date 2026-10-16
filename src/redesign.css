@@ -1461,9 +1461,170 @@ a:focus-visible {
   text-align: center;
   margin-bottom: 16px;
 }
+.estimate-priority,
+.estimate-overview,
+.estimate-methodology {
+  padding: clamp(20px, 3vw, 36px);
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  background: var(--linen);
+}
+.estimate-priority {
+  border: 2px solid #a66b24;
+  background: #f5e8cf;
+}
+.estimate-priority h3,
+.estimate-overview h3,
+.estimate-methodology h3 {
+  font: 500 clamp(26px, 3vw, 38px)/1.2 var(--serif);
+  margin: 12px 0 20px;
+}
+.estimate-priority p,
+.estimate-overview p,
+.estimate-methodology p,
+.estimate-breakdown p {
+  line-height: 1.7;
+}
+.estimate-totals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 20px 0;
+}
+.estimate-totals span {
+  display: block;
+  font-size: 14px;
+}
+.estimate-totals strong {
+  display: block;
+  font: 500 clamp(28px, 4vw, 50px)/1.2 var(--serif);
+  color: var(--clay-dark);
+  overflow-wrap: anywhere;
+}
+.priority-badge {
+  display: inline-block !important;
+  width: fit-content;
+  padding: 4px 9px;
+  background: #784509;
+  color: #fffaf1;
+  font: 600 12px/1.5 var(--sans, sans-serif);
+  border-radius: 3px;
+  margin: 6px 0;
+}
+.planning-high-priority {
+  border-left: 5px solid #a66b24;
+}
+.estimate-table-wrap {
+  overflow-x: auto;
+  margin: 20px 0 32px;
+}
+.estimate-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+.estimate-table caption {
+  text-align: left;
+  padding: 12px 0;
+  font-weight: 600;
+}
+.estimate-table th,
+.estimate-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.estimate-table th:first-child {
+  width: 48%;
+}
+.estimate-table td,
+.estimate-table thead th:not(:first-child) {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.estimate-table th[scope="row"] {
+  font-weight: 500;
+}
+.estimate-table th a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.estimate-table th .priority-badge {
+  display: block !important;
+}
+.estimate-table thead,
+.estimate-table tfoot {
+  background: #eae3d5;
+}
+.estimate-table tfoot th,
+.estimate-table tfoot td {
+  font-weight: 700;
+}
+.estimate-priority-row {
+  background: #f5e8cf70;
+}
+.estimate-breakdown {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.estimate-breakdown h5 {
+  font-size: 17px;
+  margin: 20px 0 8px;
+}
+.estimate-sources {
+  padding-left: 20px;
+}
+.estimate-sources a {
+  text-decoration: underline;
+}
+.estimate-sources p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 5px 0 16px;
+}
+.planning-toggle {
+  scroll-margin-top: 110px;
+}
+@media (max-width: 700px) {
+  .estimate-totals {
+    gap: 14px;
+  }
+  .estimate-table {
+    font-size: 12px;
+  }
+  .estimate-table th,
+  .estimate-table td {
+    padding: 11px 7px;
+  }
+  .estimate-table th:first-child {
+    min-width: 128px;
+  }
+  .planning-budget .planning-cost small {
+    display: block;
+    font-size: 11px;
+    margin: 5px 0 0;
+  }
+}
 .planning-heading h2 {
   font: 500 clamp(36px, 4.2vw, 58px)/1.12 var(--serif);
   margin: 0 0 6px;
+}
+@media (max-width: 400px) {
+  .estimate-table {
+    font-size: 11px;
+  }
+  .estimate-table th,
+  .estimate-table td {
+    padding: 10px 5px;
+  }
+  .estimate-table th:first-child {
+    min-width: 85px;
+    width: 38%;
+  }
+  .estimate-table thead th {
+    font-size: 10px;
+  }
 }
 .planning-heading > strong {
   display: block;
