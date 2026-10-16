@@ -173,13 +173,59 @@ function Review({ row, canEdit }: { row: Row; canEdit: boolean }) {
 }
 export default function FamilyAdmin({ role }: { role: string }) {
   const queue = useQuery(api.spouses.officeQueue, {});
+  const automatic = useQuery(api.familyBilling.officeList, {});
   return (
     <section className="panel">
       <h2>Family connections</h2>
       <p>
-        One $20 monthly membership obligation for the family. Phone requests
-        need independent identity verification; both spouses must confirm
-        sharing before any consolidation.
+        Automatic email and phone matches establish one $20 monthly family dues
+        obligation without membership approval. Private account access stays
+        separate. Review historical accounting corrections below; do not start
+        or change bank collections without the payer’s authorization.
+      </p>
+      <h3>Automatic family billing connections</h3>
+      {automatic === undefined ? (
+        <p role="status">Loading automatic connections…</p>
+      ) : (
+        <div className="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Spouse contact</th>
+                <th>Primary family</th>
+                <th>Connection</th>
+                <th>Accounting follow-up</th>
+              </tr>
+            </thead>
+            <tbody>
+              {automatic.map((r) => (
+                <tr key={r._id}>
+                  <td data-no-translate>{r.requester}</td>
+                  <td data-no-translate>{r.contact}</td>
+                  <td data-no-translate>{r.primaryName || "—"}</td>
+                  <td>
+                    {r.status === "linked"
+                      ? "Linked automatically"
+                      : r.status === "cancelled"
+                        ? "Replaced contact"
+                        : "Contact saved for matching"}
+                  </td>
+                  <td>
+                    {r.reconciliationRequired
+                      ? "Review existing payments or bank instructions — membership remains active"
+                      : "No flagged correction"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <h3>Legacy requests for shared household access</h3>
+      <p>
+        These older requests concern sharing historical household records. They
+        do not block membership or automatic family billing.
       </p>
       {queue === undefined ? (
         <p role="status">Loading family review requests…</p>

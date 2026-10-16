@@ -10,7 +10,13 @@ import { seal, unseal } from "./tokenVault";
 import { validateBankDetails } from "./achValidation";
 export const availability = action({
   args: {},
-  handler: async (ctx): Promise<{ enabled: boolean; eligible: boolean }> => {
+  handler: async (
+    ctx,
+  ): Promise<{
+    enabled: boolean;
+    eligible: boolean;
+    familyHasSetup: boolean;
+  }> => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new ConvexError("Please sign in.");
     let enabled = false;
@@ -21,15 +27,17 @@ export const availability = action({
       /* Fail closed, without exposing configuration. */
     }
     let eligible = false;
+    let familyHasSetup = false;
     try {
       const identity = await ctx.runQuery(internal.achRecords.identity, {
         userId,
       });
       eligible = !!identity.householdId;
+      familyHasSetup = !!identity.familyHasSetup;
     } catch {
       /* Explain the requirement in the interface, without leaking records. */
     }
-    return { enabled, eligible };
+    return { enabled, eligible, familyHasSetup };
   },
 });
 export const prepare = action({

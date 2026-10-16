@@ -42,7 +42,15 @@ export function SignIn() {
     setBusy(true);
     setError("");
     try {
-      await signIn(provider, { redirectTo: "/members" });
+      const params = new URLSearchParams(window.location.search);
+      const view = params.get("view") === "give" ? "give" : "profile";
+      const method = params.get("method") === "card" ? "card" : "zelle";
+      await signIn(provider, {
+        redirectTo:
+          view === "give"
+            ? `/members?view=give&method=${method}&fund=general`
+            : "/members?view=profile",
+      });
     } catch {
       setError(
         "We could not connect to that provider. Please try again or use your password.",
@@ -62,12 +70,28 @@ export function SignIn() {
           Our shared life.
         </h2>
         <p>
-          Sign in to apply for membership, keep your giving records together,
-          and reserve tickets for published gatherings.
+          Become an official member with no office approval wait. Dues are $20
+          per month for the whole family. After registration, continue directly
+          to secure ACH setup.
         </p>
         <p>
-          You do not need to make a donation to become part of the community.
+          Prefer not to become a paying member? Donate through Stripe or Zelle
+          instead. A donation does not enroll you for membership dues.
         </p>
+        <div className="actions">
+          <a
+            className="button secondary"
+            href="/donate?method=card&fund=general"
+          >
+            Donate by card through Stripe
+          </a>
+          <a
+            className="button secondary"
+            href="/donate?method=zelle&fund=general"
+          >
+            Donate through Zelle
+          </a>
+        </div>
         <a className="text-link" href="/visit">
           Need help? Contact the office <ArrowRight size={16} />
         </a>

@@ -198,9 +198,11 @@ export default function FinanceAdmin({
           <h3>Household roster</h3>
           <p>
             Imported and offline households do not need an online account.
-            Review possible duplicates before approval. Approval creates future
-            $20 monthly charges beginning next Gregorian month; it never
-            rewrites historical dues.
+            Online registrations activate immediately, with $20 monthly dues per
+            family. Automatic spouse matches use one primary billing record.
+            Legacy imported or offline records can still be reviewed here;
+            approving one begins dues next Gregorian month and never rewrites
+            historical dues.
           </p>
           <label>
             Search households
@@ -281,6 +283,15 @@ export default function FinanceAdmin({
                             ? `Dues from ${h.duesStart}`
                             : "No charges yet"}
                         </small>
+                        {h.billingHouseholdId && (
+                          <small>
+                            Family billing only · no separate future dues.
+                            Primary family:{" "}
+                            <span data-no-translate>
+                              {h.billingFamilyName || h.billingHouseholdId}
+                            </span>
+                          </small>
+                        )}
                       </td>
                       <td>
                         {!h.approvedAt &&

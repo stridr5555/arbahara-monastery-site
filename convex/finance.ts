@@ -84,6 +84,8 @@ export async function ensureCharge(
   const household = await ctx.db.get(householdId);
   if (
     !household ||
+    (household.billingHouseholdId &&
+      month >= (household.billingEffectiveMonth || "0000-01")) ||
     household.status !== "active" ||
     household.exempt ||
     !household.duesStart ||

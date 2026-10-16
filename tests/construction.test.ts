@@ -48,5 +48,7 @@ describe("Illustrated service-readiness budget", () => {
     expect(html).toContain("Illustrative concept · not a completed project");
     expect(html).toContain("not approved specifications");
     expect(html).toContain("/donate?fund=construction");
+    expect(html).not.toContain("planning-hover-preview");
+    expect(html).not.toContain("Hover over a picture");
   });
 });

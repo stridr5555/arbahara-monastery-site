@@ -14,6 +14,32 @@ import {
   clean,
 } from "./security";
 import { FINANCE_ROLES } from "./finance";
+import type { Id } from "./_generated/dataModel";
+import type { QueryCtx, MutationCtx } from "./_generated/server";
+async function familyBankRequests(
+  ctx: QueryCtx | MutationCtx,
+  householdId: Id<"households">,
+) {
+  const h = await ctx.db.get(householdId);
+  if (!h) return [];
+  const primary = h.billingHouseholdId || h._id;
+  const secondary = await ctx.db
+    .query("households")
+    .withIndex("by_billing_household", (q) =>
+      q.eq("billingHouseholdId", primary),
+    )
+    .collect();
+  return (
+    await Promise.all(
+      [primary, ...secondary.map((s) => s._id)].map((id) =>
+        ctx.db
+          .query("achRequests")
+          .withIndex("by_household", (q) => q.eq("householdId", id))
+          .collect(),
+      ),
+    )
+  ).flat();
+}
 import {
   BANK_SHARING_TEXT,
   BANK_SHARING_VERSION,
@@ -56,7 +82,13 @@ export const identity = internalQuery({
       throw new ConvexError(
         "An active, non-exempt household membership is required.",
       );
-    return { role, householdId: h._id };
+    return {
+      role,
+      householdId: h._id,
+      familyHasSetup: (await familyBankRequests(ctx, h._id)).some(
+        (r) => r.status !== "withdrawn",
+      ),
+    };
   },
 });
 export const challenge = internalMutation({
@@ -114,10 +146,7 @@ export const save = internalMutation({
       throw new ConvexError(
         "Household membership changed. Ask the office to review it.",
       );
-    const current = await ctx.db
-      .query("achRequests")
-      .withIndex("by_household", (q) => q.eq("householdId", c.householdId))
-      .collect();
+    const current = await familyBankRequests(ctx, c.householdId);
     if (current.some((r) => r.status !== "withdrawn"))
       throw new ConvexError(
         "Your household already has a bank setup request. Withdraw it before replacing the account.",
@@ -175,11 +204,17 @@ export const queue = query({
     return {
       truncated: rows.length > 100,
       rows: await Promise.all(
-        rows.slice(0, 100).map(async (r) => ({
-          ...masked(r),
-          householdName:
-            (await ctx.db.get(r.householdId))?.name || "Household unavailable",
-        })),
+        rows.slice(0, 100).map(async (r) => {
+          const own = await ctx.db.get(r.householdId);
+          const primary = own?.billingHouseholdId
+            ? await ctx.db.get(own.billingHouseholdId)
+            : null;
+          return {
+            ...masked(r),
+            householdName: own?.name || "Household unavailable",
+            billingFamilyName: primary?.name,
+          };
+        }),
       ),
     };
   },

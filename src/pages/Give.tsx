@@ -25,7 +25,6 @@ export function OfferingForm({
   const [method, setMethod] = useState<"card" | "zelle">("zelle");
   const [qr, setQr] = useState("");
   useEffect(() => {
-    if (!onContinue) return;
     const p = new URLSearchParams(window.location.search);
     const selected = p.get("amount");
     if (
@@ -219,8 +218,9 @@ export function OfferingForm({
           : "Member sign-in keeps your giving records together."}
       </p>
       <p className="small">
-        Your contribution is voluntary. Membership and pastoral care are not
-        conditional on giving.
+        Donations are voluntary and do not enroll you for membership dues.
+        Official membership is a separate choice at $20 per month per family.
+        Pastoral care is not conditional on giving.
       </p>
     </form>
   );
@@ -306,7 +306,7 @@ export function Give() {
           ],
           [
             "Can I give every month?",
-            "Monthly card giving uses Stripe Checkout when available. Manage or cancel it through the portal. Chase bank ACH is a separate service and is not activated yet. For standing Zelle transfers, ask your bank about its options.",
+            "Monthly card giving uses Stripe Checkout when available. Manage or cancel it through the portal. Family membership dues use a separate Chase ACH setup process, not Stripe ACH. For standing Zelle transfers, ask your bank about its options.",
           ],
           [
             "Can I request a receipt or discuss a larger gift?",

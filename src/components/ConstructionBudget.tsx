@@ -16,47 +16,11 @@ const dollars = (amount: number) =>
 
 export function ConstructionBudget() {
   const [open, setOpen] = useState<string | null>(constructionDetails[0].id);
-  const [preview, setPreview] = useState<ConstructionProject | null>(null);
   const [enlarged, setEnlarged] = useState<ConstructionProject | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
-  const dismissed = useRef<string | null>(null);
-
-  function keepPreview() {
-    clearTimeout(closeTimer.current);
-  }
-  function leavePreview() {
-    clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setPreview(null), 220);
-  }
-  function showPreview(project: ConstructionProject, pointerType: string) {
-    if (
-      pointerType !== "mouse" ||
-      !window.matchMedia("(hover: hover) and (pointer: fine)").matches ||
-      dismissed.current === project.id
-    )
-      return;
-    keepPreview();
-    setPreview(project);
-  }
   function enlarge(project: ConstructionProject) {
-    keepPreview();
-    setPreview(null);
     setEnlarged(project);
   }
-  useEffect(() => {
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        dismissed.current = preview?.id ?? null;
-        setPreview(null);
-      }
-    };
-    document.addEventListener("keydown", escape);
-    return () => document.removeEventListener("keydown", escape);
-  }, [preview]);
-  useEffect(() => () => clearTimeout(closeTimer.current), []);
   useEffect(() => {
     const node = dialog.current;
     if (!enlarged || !node) return;
@@ -81,8 +45,8 @@ export function ConstructionBudget() {
         <p>19 estimated needs · not expenses incurred</p>
       </div>
       <p className="planning-instructions">
-        Open a project for its picture and details. Hover over a picture, or
-        select Enlarge image, for a closer look.
+        Open a project for its picture and details. Select Enlarge image for a
+        closer look.
       </p>
       <div className="planning-projects">
         {constructionDetails.map((project, index) => {
@@ -97,20 +61,10 @@ export function ConstructionBudget() {
                   aria-expanded={expanded}
                   aria-controls={`planning-panel-${project.id}`}
                   onClick={() => {
-                    setPreview(null);
                     setOpen(expanded ? null : project.id);
                   }}
                 >
-                  <span
-                    className="planning-thumbnail"
-                    onPointerEnter={(event) =>
-                      showPreview(project, event.pointerType)
-                    }
-                    onPointerLeave={() => {
-                      dismissed.current = null;
-                      leavePreview();
-                    }}
-                  >
+                  <span className="planning-thumbnail">
                     <img
                       src={project.thumbnail}
                       alt=""
@@ -153,13 +107,6 @@ export function ConstructionBudget() {
                         className="planning-image-button"
                         aria-label="Enlarge project image"
                         onClick={() => enlarge(project)}
-                        onPointerEnter={(event) =>
-                          showPreview(project, event.pointerType)
-                        }
-                        onPointerLeave={() => {
-                          dismissed.current = null;
-                          leavePreview();
-                        }}
                       >
                         <img
                           src={project.image}
@@ -218,48 +165,6 @@ export function ConstructionBudget() {
           Support the vision <ArrowRight size={17} />
         </a>
       </div>
-      {preview && !enlarged && (
-        <aside
-          className="planning-hover-preview"
-          aria-label="Image preview"
-          onPointerEnter={keepPreview}
-          onPointerLeave={leavePreview}
-        >
-          <button
-            type="button"
-            className="planning-preview-close"
-            aria-label="Close image preview"
-            onClick={() => {
-              dismissed.current = preview.id;
-              setPreview(null);
-            }}
-          >
-            <X size={20} />
-          </button>
-          <button
-            type="button"
-            className="planning-preview-image"
-            onClick={() => enlarge(preview)}
-            aria-label="Enlarge project image"
-          >
-            <img
-              src={preview.image}
-              alt={preview.title}
-              width="1536"
-              height="1024"
-            />
-          </button>
-          <strong>{preview.title}</strong>
-          <p>Illustrative concept · not a completed project</p>
-          <button
-            type="button"
-            className="planning-enlarge"
-            onClick={() => enlarge(preview)}
-          >
-            <Expand size={16} /> Enlarge image
-          </button>
-        </aside>
-      )}
       <dialog
         className="planning-lightbox"
         ref={dialog}
