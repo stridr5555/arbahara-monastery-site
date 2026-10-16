@@ -4,6 +4,13 @@ import { existsSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { ConstructionBudget } from "../src/components/ConstructionBudget";
 import {
+  establishmentBudget,
+  establishmentBudgetTarget,
+  establishmentBudgetTotal,
+  establishmentReserve,
+  priorityBudgetTotal,
+} from "../src/lib/establishmentBudget";
+import {
   constructionEstimates,
   estimateTotals,
   highPriorityIds,
@@ -18,6 +25,34 @@ import {
 } from "../src/lib/construction";
 
 describe("Illustrated service-readiness budget", () => {
+  it("allocates exactly $900,000 across all 19, with reserve included rather than added", () => {
+    expect(establishmentBudget.map((p) => p.id)).toEqual(
+      constructionDetails.map((p) => p.id),
+    );
+    expect(establishmentBudgetTotal).toBe(establishmentBudgetTarget);
+    expect(establishmentBudgetTotal).toBe(900000);
+    expect(establishmentReserve).toBe(90000);
+    expect(priorityBudgetTotal).toBe(515000);
+    expect(establishmentBudget.filter((p) => p.highPriority)).toHaveLength(6);
+    for (const project of establishmentBudget) {
+      expect(project.amounts).toHaveLength(6);
+      expect(project.reserve).toBe(project.allocation * 0.1);
+      expect(
+        project.amounts.every(
+          (amount) => Number.isInteger(amount) && amount > 0,
+        ),
+      ).toBe(true);
+      expect(project.scope.length).toBeGreaterThan(60);
+      expect(project.deferred.length).toBeGreaterThan(60);
+    }
+    expect(
+      establishmentBudget.find((p) => p.id === "temporary-dormitory")?.deferred,
+    ).toContain("does not build 40 finished rooms");
+    expect(
+      establishmentBudget.find((p) => p.id === "temporary-liturgy-temple")
+        ?.scope,
+    ).toContain("existing garage");
+  });
   it("estimates all 19 projects with economical options below normalized, without duplicating contingency", () => {
     expect(constructionEstimates.map((p) => p.id)).toEqual(
       constructionDetails.map((p) => p.id),
@@ -83,13 +118,19 @@ describe("Illustrated service-readiness budget", () => {
     expect(html.match(/class="planning-panel"/g)).toHaveLength(1);
     for (const project of constructionDetails) {
       expect(html).toContain(`aria-controls="planning-panel-${project.id}"`);
-      expect(html).toContain(project.amharic);
+      expect(html).toContain(
+        establishmentBudget.find((p) => p.id === project.id)?.amharic ??
+          project.amharic,
+      );
     }
     expect(html).toContain("Illustrative concept · not a completed project");
     expect(html).toContain("not approved specifications");
     expect(html).toContain("/donate?fund=construction");
     expect(html).toContain("High priority");
-    expect(html).toContain("Economical option");
+    expect(html).toContain("allocation breakdown");
+    expect(html).toContain("Earlier full-scope estimates — reference only");
+    expect(html).toContain("$900,000");
+    expect(html).toContain("$515,000");
     expect(html).toContain("2026 cost breakdown");
     expect(html).not.toContain("planning-hover-preview");
     expect(html).not.toContain("Conservative");
