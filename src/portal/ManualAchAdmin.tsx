@@ -9,6 +9,7 @@ import { money } from "./Giving";
 import { achLabels } from "./ManualAch";
 type SafeRequest = Omit<Doc<"achRequests">, "encryptedDetails"> & {
   householdName: string;
+  billingFamilyName?: string;
 };
 export default function ManualAchAdmin({ role }: { role: string }) {
   const [filter, setFilter] = useState<AchState>("submitted"),
@@ -159,6 +160,13 @@ function Request({
     <article className="office-request">
       <header>
         <h3 data-no-translate>{r.householdName}</h3>
+        {r.billingFamilyName && (
+          <p>
+            Primary family billing record:{" "}
+            <span data-no-translate>{r.billingFamilyName}</span>. Confirm there
+            is only one collection arrangement for this family.
+          </p>
+        )}
         <span>{achLabels[r.status]}</span>
       </header>
       <p data-no-translate>

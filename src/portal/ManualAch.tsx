@@ -29,6 +29,7 @@ export function ManualAch() {
     [busy, setBusy] = useState(false),
     [notice, setNotice] = useState("");
   const [eligible, setEligible] = useState(false);
+  const [familyHasSetup, setFamilyHasSetup] = useState(false);
   const [confirmWithdrawal, setConfirmWithdrawal] = useState(false);
   const active = mine?.find((r) => r.status !== "withdrawn");
   useEffect(() => {
@@ -38,6 +39,7 @@ export function ManualAch() {
         if (!cancelled) {
           setEnabled(r.enabled);
           setEligible(r.eligible);
+          setFamilyHasSetup(r.familyHasSetup);
         }
       })
       .catch(() => {
@@ -49,7 +51,13 @@ export function ManualAch() {
   }, [availability]);
   return (
     <section className="panel manual-ach">
-      <h2>Set up bank payment with the office</h2>
+      <h2 id="ach-setup-heading" tabIndex={-1}>
+        Set up ACH for your $20 monthly family membership
+      </h2>
+      <p>
+        Your official membership is active after registration. No membership
+        approval is required. ACH setup is separate from membership activation.
+      </p>
       <p>
         Provide your bank details securely for manual Chase ACH setup. The
         office will contact you for the bank-approved debit authorization and
@@ -144,11 +152,18 @@ export function ManualAch() {
             </div>
           )}
         </>
+      ) : familyHasSetup ? (
+        <p className="notice">
+          Your family already has a bank setup arrangement. Do not submit a
+          second request. Contact the office if the payer needs to change.
+          Another person’s account details are not shared here.
+        </p>
       ) : enabled && !eligible ? (
         <p className="bank-pending">
-          The office must link an active, non-exempt household membership before
-          you can submit a new bank setup request. Existing requests can still
-          be withdrawn here.
+          Complete official membership registration before submitting bank
+          details. Exempt households do not need dues collection. Existing
+          requests can still be withdrawn here.
+          <a href="/members?view=profile"> Continue registration</a>
         </p>
       ) : enabled ? (
         <BankIntakeForm

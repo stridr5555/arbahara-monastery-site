@@ -4,6 +4,27 @@ import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
   ...authTables,
+  familyBillingMatches: defineTable({
+    requesterId: v.id("users"),
+    spouseUserId: v.optional(v.id("users")),
+    contactKind: v.union(v.literal("email"), v.literal("phone")),
+    contact: v.string(),
+    contactKey: v.string(),
+    primaryHouseholdId: v.optional(v.id("households")),
+    secondaryHouseholdId: v.optional(v.id("households")),
+    status: v.union(
+      v.literal("waiting_for_match"),
+      v.literal("linked"),
+      v.literal("cancelled"),
+    ),
+    reconciliationRequired: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_requester", ["requesterId"])
+    .index("by_spouse", ["spouseUserId"])
+    .index("by_contact", ["contactKey", "status"])
+    .index("by_status", ["status"]),
   spouseConnections: defineTable({
     senderId: v.id("users"),
     recipientId: v.optional(v.id("users")),
@@ -160,8 +181,10 @@ export default defineSchema({
     spouseName: v.optional(v.string()),
     spouseBaptismalName: v.optional(v.string()),
     address: v.optional(v.string()),
+    phoneKey: v.optional(v.string()),
   })
     .index("by_user", ["userId"])
+    .index("by_phone", ["phoneKey"])
     .index("by_status", ["status"]),
   roles: defineTable({
     userId: v.id("users"),
@@ -198,12 +221,15 @@ export default defineSchema({
     approvedAt: v.optional(v.number()),
     approvedBy: v.optional(v.id("users")),
     duesStart: v.optional(v.string()),
+    billingHouseholdId: v.optional(v.id("households")),
+    billingEffectiveMonth: v.optional(v.string()),
     source: v.string(),
     sourceRow: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_status", ["status"])
+    .index("by_billing_household", ["billingHouseholdId"])
     .index("by_source_row", ["source", "sourceRow"]),
   householdLinks: defineTable({
     householdId: v.id("households"),

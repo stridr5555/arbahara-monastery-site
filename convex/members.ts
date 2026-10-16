@@ -1,7 +1,22 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { requireUser, requireRole, roleFor, audit, clean } from "./security";
+import {
+  requireUser,
+  requireRole,
+  roleFor,
+  audit,
+  clean,
+  rateLimit,
+} from "./security";
+import { ConvexError } from "convex/values";
+import {
+  normalizedPhone,
+  saveFamilyContact,
+  matchArrivingMember,
+} from "./familyBilling";
+import { approvalStart, shiftMonth, coverageMonths } from "./ledger";
+import { ensureCharge } from "./finance";
 
 export const me = query({
   args: {},
@@ -31,10 +46,24 @@ export const save = mutation({
     spouseName: v.optional(v.string()),
     spouseBaptismalName: v.optional(v.string()),
     address: v.optional(v.string()),
+    enroll: v.optional(v.boolean()),
+    spouseContactKind: v.optional(
+      v.union(v.literal("email"), v.literal("phone")),
+    ),
+    spouseContact: v.optional(v.string()),
+    familyConsent: v.optional(v.boolean()),
   },
   handler: async (ctx, a) => {
     const user = await requireUser(ctx);
+    // Older clients only saved an application. Enrollment is an explicit choice.
+    const enrolling = a.enroll === true;
+    if (a.spouseContact?.trim() && (!a.familyConsent || !a.spouseContactKind))
+      throw new ConvexError(
+        "Confirm this is your spouse and that you want one family dues account.",
+      );
     if (!a.consent) throw new Error("Please accept the privacy notice.");
+    if (a.spouseContact?.trim())
+      await rateLimit(ctx, `auto-family:${user._id}`, 5, 86400000);
     const name = clean(a.name, 120, "Name");
     if (
       [a.baptismalName, a.spouseName, a.spouseBaptismalName].some(
@@ -61,6 +90,7 @@ export const save = mutation({
     const values = {
       name,
       phone: a.phone.trim(),
+      phoneKey: normalizedPhone(a.phone),
       city: a.city.trim(),
       language: a.language,
       interests: a.interests,
@@ -81,11 +111,17 @@ export const save = mutation({
       : await ctx.db.insert("members", {
           ...values,
           userId: user._id,
-          status: "pending",
+          status: enrolling ? "active" : "pending",
           consentAt: Date.now(),
           memberNumber: `ARB-${user._id.slice(-8).toUpperCase()}`,
         });
-    if (old) await ctx.db.patch(id, values);
+    if (old)
+      await ctx.db.patch(id, {
+        ...values,
+        ...(enrolling && old.status !== "inactive"
+          ? { status: "active" as const }
+          : {}),
+      });
     const link = await ctx.db
       .query("householdLinks")
       .withIndex("by_user", (q) => q.eq("userId", user._id))
@@ -96,7 +132,7 @@ export const save = mutation({
         email: user.email,
         phone: a.phone.trim(),
         address: a.address?.trim() || a.city.trim(),
-        status: "pending",
+        status: enrolling ? "active" : "pending",
         exempt: false,
         source: "application",
         createdAt: Date.now(),
@@ -130,6 +166,69 @@ export const save = mutation({
           address: a.address?.trim() || a.city.trim(),
           updatedAt: Date.now(),
         });
+    }
+    if (enrolling) {
+      const ownLink = await ctx.db
+        .query("householdLinks")
+        .withIndex("by_user", (q) => q.eq("userId", user._id))
+        .unique();
+      const household = ownLink ? await ctx.db.get(ownLink.householdId) : null;
+      if (
+        !household ||
+        household.status === "inactive" ||
+        old?.status === "inactive"
+      )
+        throw new ConvexError(
+          "Your inactive membership needs an office correction before rejoining.",
+        );
+      const duesStart =
+        household.duesStart || shiftMonth(approvalStart(Date.now()), -1);
+      await ctx.db.patch(household._id, {
+        status: "active",
+        duesStart,
+        approvedAt: household.approvedAt || Date.now(),
+        approvedBy: household.approvedBy || user._id,
+        updatedAt: Date.now(),
+      });
+      if (a.spouseContact?.trim() && a.spouseContactKind)
+        await saveFamilyContact(
+          ctx,
+          user._id,
+          a.spouseContactKind,
+          a.spouseContact,
+        );
+      await matchArrivingMember(ctx, user._id);
+      const updated = (await ctx.db.get(household._id))!;
+      const currentMonth = shiftMonth(approvalStart(Date.now()), -1);
+      if (!updated.exempt && !updated.billingHouseholdId) {
+        for (const month of coverageMonths(
+          duesStart > currentMonth ? duesStart : currentMonth,
+          12,
+        )) {
+          const closed = await ctx.db
+            .query("accountingPeriods")
+            .withIndex("by_month", (q) => q.eq("month", month))
+            .unique();
+          if (closed) {
+            await audit(
+              ctx,
+              user._id,
+              "member.closed-period-follow-up",
+              household._id,
+              `Enrollment remains active; ${month} needs an open-period accounting correction.`,
+            );
+            continue;
+          }
+          await ensureCharge(ctx, user._id, household._id, month);
+        }
+      }
+      await audit(
+        ctx,
+        user._id,
+        "member.self-enrolled",
+        id,
+        "Official membership active immediately; $20 monthly per family. No bank debit or card charge authorized.",
+      );
     }
     await audit(ctx, user._id, old ? "member.updated" : "member.applied", id);
     return id;

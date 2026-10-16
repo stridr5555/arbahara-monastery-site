@@ -13,15 +13,20 @@ const interests = [
 export function Profile({
   profile,
   email,
+  onEnrolled,
 }: {
   profile: Doc<"members"> | null;
   email: string;
+  onEnrolled?: () => void;
 }) {
   const save = useMutation(api.members.save),
     [step, setStep] = useState(0),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [saved, setSaved] = useState(false);
+  const [spouseKind, setSpouseKind] = useState<"email" | "phone">("phone");
+  const [spouseContact, setSpouseContact] = useState("");
+  const [familyConsent, setFamilyConsent] = useState(false);
   const [values, setValues] = useState({
     name: profile?.name || "",
     baptismalName: profile?.baptismalName || "",
@@ -69,14 +74,13 @@ export function Profile({
           <span lang="am">እንኳን ወደ መንፈሳዊ ቤተሰባችን በሰላም መጡ።</span>
         </h2>
         <p>
-          Your profile has been saved for the monastery office to review.
-          Household approval and payment are separate. If you already belong to
-          a household on our roster, ask the office to link it before a second
-          household is approved.
+          Your membership is active. Family dues are $20 per month total, not
+          per spouse. No office approval is needed. Bank payment setup is a
+          separate step and this registration has not charged you.
         </p>
         <div className="actions">
-          <a className="button" href="/members?view=calendar">
-            Find our next gathering
+          <a className="button" href="/members?view=bank-setup">
+            Continue to ACH setup
           </a>
           <a className="button secondary" href="/members?view=give">
             Explore optional giving
@@ -100,11 +104,32 @@ export function Profile({
       </h2>
       <p lang="am">የአባልነት ምዝገባ</p>
       <p>
-        A few details help us welcome your household. General membership is $20
-        per family per Gregorian month after approval, not per spouse; exempt
-        households remain exempt. Giving is not required to submit this
-        application.
+        Register to become an official member immediately. Dues are $20 per
+        month for the whole family, not per spouse. New families begin dues this
+        Gregorian month; existing family coverage and exemptions stay in place.
+        Next, we will guide you directly to secure ACH setup. Registration
+        itself does not authorize a bank debit or card charge.
       </p>
+      <div className="membership-choice">
+        <h3>Prefer to donate without becoming a paying member?</h3>
+        <p>
+          You are welcome to support the monastery without enrolling for dues.
+        </p>
+        <div className="actions">
+          <a
+            className="button secondary"
+            href="/members?view=give&method=card&fund=general"
+          >
+            Donate by card through Stripe
+          </a>
+          <a
+            className="button secondary"
+            href="/members?view=give&method=zelle&fund=general"
+          >
+            Donate through Zelle
+          </a>
+        </div>
+      </div>
       <ol className="signup-steps">
         {[
           "Your household / ቤተሰብ",
@@ -140,8 +165,21 @@ export function Profile({
           }
           setBusy(true);
           try {
-            await save({ ...values, consent: true });
-            setSaved(true);
+            await save({
+              ...values,
+              consent: true,
+              enroll: true,
+              ...(spouseContact.trim()
+                ? {
+                    spouseContactKind: spouseKind,
+                    spouseContact,
+                    familyConsent,
+                  }
+                : {}),
+            });
+            if ((!profile || profile.status === "pending") && onEnrolled)
+              onEnrolled();
+            else setSaved(true);
           } catch (error) {
             setError(message(error));
           } finally {
@@ -170,9 +208,51 @@ export function Profile({
                 "የባለቤት የክርስትና ስም",
               )}
             </div>
+            <label>
+              Find your spouse by / <span lang="am">ባለቤትዎን ያገናኙ</span>
+              <select
+                value={spouseKind}
+                onChange={(e) => {
+                  setSpouseKind(e.target.value as "email" | "phone");
+                  setSpouseContact("");
+                  setFamilyConsent(false);
+                }}
+              >
+                <option value="phone">Phone number</option>
+                <option value="email">Email address</option>
+              </select>
+            </label>
+            <label>
+              {spouseKind === "phone"
+                ? "Spouse’s phone number (optional)"
+                : "Spouse’s email address (optional)"}
+              <input
+                name="spouseContact"
+                type={spouseKind === "phone" ? "tel" : "email"}
+                value={spouseContact}
+                maxLength={254}
+                autoComplete="off"
+                onChange={(e) => setSpouseContact(e.target.value)}
+              />
+            </label>
+            {spouseContact.trim() && (
+              <label className="check-label">
+                <input
+                  type="checkbox"
+                  required
+                  checked={familyConsent}
+                  onChange={(e) => setFamilyConsent(e.target.checked)}
+                />
+                I confirm this person is my spouse and want one $20 monthly
+                family dues account. An exact, unique match links family billing
+                automatically, without spouse or office approval. Our private
+                account and bank records remain separate.
+              </label>
+            )}
             <p className="small">
-              One household, one membership obligation. Adding a spouse here
-              does not create a second bill or grant account access.
+              Use your spouse’s registered email or phone number, not only their
+              name. If no unique match exists yet, the contact is saved for a
+              later match. Your membership does not wait for the match.
             </p>
           </>
         ) : step === 1 ? (
@@ -248,6 +328,7 @@ export function Profile({
                 "Baptismal name / የክርስትና ስም": values.baptismalName,
                 "Spouse / ባለቤት": values.spouseName,
                 "Spouse baptismal name": values.spouseBaptismalName,
+                "Spouse email or phone": spouseContact,
                 "Email / ኢሜይል": email,
                 "Phone / ስልክ": values.phone,
                 "Address / አድራሻ": `${values.address} ${values.city}`,
@@ -268,8 +349,9 @@ export function Profile({
               . <span lang="am">መረጃውን አረጋግጫለሁ።</span>
             </label>
             <p>
-              New household dues start the month after approval. This
-              application does not authorize a bank debit or card charge.
+              By submitting, you choose official membership at $20 per month for
+              your whole family, with no approval wait. Next: secure ACH setup.
+              This registration does not authorize a bank debit or card charge.
             </p>
           </>
         )}
@@ -288,7 +370,7 @@ export function Profile({
             {busy
               ? "Saving…"
               : step === 2
-                ? "Submit application / ላክ"
+                ? "Become a member & continue to ACH / ላክ"
                 : "Continue / ቀጥል"}
           </button>
         </div>

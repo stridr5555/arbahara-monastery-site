@@ -23,6 +23,7 @@ import type * as calendarRecords from "../calendarRecords.js";
 import type * as crons from "../crons.js";
 import type * as donations from "../donations.js";
 import type * as events from "../events.js";
+import type * as familyBilling from "../familyBilling.js";
 import type * as finance from "../finance.js";
 import type * as households from "../households.js";
 import type * as http from "../http.js";
@@ -58,6 +59,7 @@ declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   donations: typeof donations;
   events: typeof events;
+  familyBilling: typeof familyBilling;
   finance: typeof finance;
   households: typeof households;
   http: typeof http;
