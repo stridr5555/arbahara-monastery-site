@@ -18,8 +18,11 @@ type Step =
 export function SignIn() {
   const { signIn } = useAuthActions();
   const providers = useQuery(api.authOptions.available);
+  const donationOnly =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("view") === "give";
   const [email, setEmail] = useState("");
-  const [step, setStep] = useState<Step>("signIn");
+  const [step, setStep] = useState<Step>(donationOnly ? "signIn" : "signUp");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -31,9 +34,6 @@ export function SignIn() {
   const needsPassword =
     step === "signIn" || step === "signUp" || step === "reset-verification";
   const newPassword = step === "signUp" || step === "reset-verification";
-  const donationOnly =
-    typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).get("view") === "give";
   function changeStep(next: Step) {
     setStep(next);
     setError("");
@@ -63,7 +63,7 @@ export function SignIn() {
         <h2>
           Your membership.
           <br />
-          Your giving.
+          {donationOnly ? "Your giving." : "Your family."}
           <br />
           Our shared life.
         </h2>
@@ -81,24 +81,13 @@ export function SignIn() {
             dues payments through your bank to avoid paying twice.
           </p>
         ) : null}
-        <p>
-          Prefer not to become a paying member? Donate through Stripe or Zelle
-          instead. A donation does not enroll you for membership dues.
-        </p>
-        <div className="actions">
-          <a
-            className="button secondary"
-            href="/donate?method=card&fund=general"
-          >
-            Donate by card through Stripe
-          </a>
-          <a
-            className="button secondary"
-            href="/donate?method=zelle&fund=general"
-          >
-            Donate through Zelle
-          </a>
-        </div>
+        {!donationOnly ? (
+          <p>
+            Start by creating your secure account below. After email
+            verification, complete your family profile to activate membership.
+            Optional donations are available after membership registration.
+          </p>
+        ) : null}
         <a className="text-link" href="/visit">
           Need help? Contact the office <ArrowRight size={16} />
         </a>
@@ -145,8 +134,8 @@ export function SignIn() {
                 needsCode
                   ? "That code could not be verified. Check it or request a new code."
                   : step === "signUp"
-                    ? "We could not create this password. If you already have one, sign in or reset it. Otherwise, try again later."
-                    : "We could not sign you in. Check your email and password. If you used email codes before, choose Create or set a password.",
+                    ? "We could not create your account. If you already have an account, choose Sign in or Forgot password. Otherwise, try again later."
+                    : "We could not sign you in. Check your email and password, or choose Forgot password. If you previously used email codes only, create an account using the same email.",
               );
           } finally {
             setBusy(false);
@@ -158,7 +147,9 @@ export function SignIn() {
           {step === "signIn"
             ? "Welcome to Arbahara"
             : step === "signUp"
-              ? "Create or set a password"
+              ? donationOnly
+                ? "Create a giving account"
+                : "Create membership"
               : step === "reset"
                 ? "Reset your password"
                 : step === "reset-verification"
@@ -169,14 +160,17 @@ export function SignIn() {
           {step === "signIn"
             ? "Sign in with your password or a connected account."
             : step === "signUp"
-              ? "Use your existing member email to keep your membership, gifts, and tickets together. We will verify your email once before you sign in."
+              ? donationOnly
+                ? "Create a secure account to keep your giving records together. This does not enroll you for family membership dues."
+                : "First, create your secure account. We will verify your email, then guide you through your family membership profile. Dues are $20 per month per family; creating an account alone does not activate membership or authorize payment. Already on the roster? Use the email the monastery has for you."
               : step === "reset"
                 ? "Enter your account email. If a password account exists, we will send a reset code."
                 : step === "reset-verification"
                   ? "Enter the reset code from your email and choose a new password. If no email arrives, check spam or create a password if you previously used email codes."
                   : "Enter the 8-digit code from your email. After this one-time check, use your password to sign in."}
         </p>
-        {step === "signIn" && (providers?.google || providers?.facebook) ? (
+        {(step === "signIn" || step === "signUp") &&
+        (providers?.google || providers?.facebook) ? (
           <>
             <div className="social-signin">
               {providers.google ? (
@@ -297,7 +291,9 @@ export function SignIn() {
             : step === "signIn"
               ? "Sign in"
               : step === "signUp"
-                ? "Create password"
+                ? donationOnly
+                  ? "Create giving account"
+                  : "Create membership"
                 : step === "reset"
                   ? "Send reset code"
                   : step === "reset-verification"
@@ -318,21 +314,25 @@ export function SignIn() {
               </button>
               <button
                 type="button"
-                className="text-button"
+                className="button secondary full"
                 disabled={busy}
                 onClick={() => changeStep("signUp")}
               >
-                Create or set a password
+                {donationOnly ? "Create giving account" : "Create membership"}
               </button>
             </>
           ) : (
             <button
               type="button"
-              className="text-button"
+              className={
+                step === "signUp" ? "button secondary full" : "text-button"
+              }
               disabled={busy}
               onClick={() => changeStep("signIn")}
             >
-              Back to sign in
+              {step === "signUp"
+                ? "Already have an account? Sign in"
+                : "Back to sign in"}
             </button>
           )}
           {needsCode ? (
