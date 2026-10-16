@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { api } from "../../convex/_generated/api";
 import { ErrorMessage } from "../components/Live";
+import { memberSignInReturn } from "../lib/memberNavigation";
 
 type Step =
   "signIn" | "signUp" | "reset" | "reset-verification" | "email-verification";
@@ -30,6 +31,9 @@ export function SignIn() {
   const needsPassword =
     step === "signIn" || step === "signUp" || step === "reset-verification";
   const newPassword = step === "signUp" || step === "reset-verification";
+  const donationOnly =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("view") === "give";
   function changeStep(next: Step) {
     setStep(next);
     setError("");
@@ -42,14 +46,8 @@ export function SignIn() {
     setBusy(true);
     setError("");
     try {
-      const params = new URLSearchParams(window.location.search);
-      const view = params.get("view") === "give" ? "give" : "profile";
-      const method = params.get("method") === "card" ? "card" : "zelle";
       await signIn(provider, {
-        redirectTo:
-          view === "give"
-            ? `/members?view=give&method=${method}&fund=general`
-            : "/members?view=profile",
+        redirectTo: memberSignInReturn(window.location.search),
       });
     } catch {
       setError(
@@ -70,9 +68,9 @@ export function SignIn() {
           Our shared life.
         </h2>
         <p>
-          Become an official member with no office approval wait. Dues are $20
-          per month for the whole family. After registration, continue directly
-          to secure ACH setup.
+          {donationOnly
+            ? "You are here to donate only. Sign in to continue with Stripe or Zelle. Signing in does not enroll you as a paying member or create a $20 monthly dues obligation."
+            : "Become an official member with no office approval wait. Dues are $20 per month for the whole family. After registration, continue directly to secure ACH setup."}
         </p>
         <p>
           Prefer not to become a paying member? Donate through Stripe or Zelle
