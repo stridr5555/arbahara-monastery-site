@@ -17,6 +17,11 @@ import {
 } from "./familyBilling";
 import { approvalStart, shiftMonth, coverageMonths } from "./ledger";
 import { ensureCharge } from "./finance";
+import {
+  declaration,
+  memberVisibleDeclaration,
+  saveDeclaration,
+} from "./duesReports";
 
 export const me = query({
   args: {},
@@ -52,6 +57,7 @@ export const save = mutation({
     ),
     spouseContact: v.optional(v.string()),
     familyConsent: v.optional(v.boolean()),
+    duesDeclaration: v.optional(declaration),
   },
   handler: async (ctx, a) => {
     const user = await requireUser(ctx);
@@ -230,6 +236,8 @@ export const save = mutation({
         "Official membership active immediately; $20 monthly per family. No bank debit or card charge authorized.",
       );
     }
+    if (a.duesDeclaration)
+      await saveDeclaration(ctx, user._id, a.duesDeclaration);
     await audit(ctx, user._id, old ? "member.updated" : "member.applied", id);
     return id;
   },
@@ -328,8 +336,13 @@ export const exportMine = query({
           .withIndex("by_household", (q) => q.eq("householdId", household._id))
           .collect()
       : [];
+    const declaration = await ctx.db
+      .query("duesDeclarations")
+      .withIndex("by_user", (q) => q.eq("userId", u._id))
+      .unique();
     return {
-      schemaVersion: 3,
+      schemaVersion: 4,
+      duesDeclaration: memberVisibleDeclaration(declaration),
       exportedAt: new Date().toISOString(),
       email: u.email,
       formerHouseholdRecords: await Promise.all(

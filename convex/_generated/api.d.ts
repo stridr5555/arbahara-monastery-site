@@ -22,6 +22,7 @@ import type * as calendarActions from "../calendarActions.js";
 import type * as calendarRecords from "../calendarRecords.js";
 import type * as crons from "../crons.js";
 import type * as donations from "../donations.js";
+import type * as duesReports from "../duesReports.js";
 import type * as events from "../events.js";
 import type * as familyBilling from "../familyBilling.js";
 import type * as finance from "../finance.js";
@@ -58,6 +59,7 @@ declare const fullApi: ApiFromModules<{
   calendarRecords: typeof calendarRecords;
   crons: typeof crons;
   donations: typeof donations;
+  duesReports: typeof duesReports;
   events: typeof events;
   familyBilling: typeof familyBilling;
   finance: typeof finance;

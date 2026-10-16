@@ -7,7 +7,7 @@ export function Privacy() {
   return (
     <div className="wrap narrow">
       <PageIntro title="Your trust matters.">
-        Privacy notice · Updated October 13, 2026
+        Privacy notice · Updated October 15, 2026
       </PageIntro>
       <div className="prose">
         <h2>Information we keep</h2>
@@ -22,6 +22,15 @@ export function Privacy() {
           and provider or transfer reference. Event records include
           registrations, attendee names, and check-in history. Administrative
           changes create an audit record.
+        </p>
+        <p>
+          When you report family dues previously paid by Zelle, check, or cash,
+          we keep your answer and any payment amount, date, coverage and
+          reference you provide. Authorized finance staff use this self-report
+          to check existing records and avoid duplicate collections during the
+          move to ACH. A declaration is not proof of payment or debit
+          authorization. Your billing-only spouse connection does not give your
+          spouse access to your report.
         </p>
         <h2>Why we use it</h2>
         <p>

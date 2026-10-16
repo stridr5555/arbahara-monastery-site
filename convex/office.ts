@@ -44,6 +44,12 @@ export const workQueue = query({
         .take(101),
     ]);
     return {
+      duesReports: (
+        await ctx.db
+          .query("duesDeclarations")
+          .withIndex("by_status", (q) => q.eq("status", "pending"))
+          .take(101)
+      ).length,
       households: households.length,
       gifts: gifts.length,
       requests: requests.length,
