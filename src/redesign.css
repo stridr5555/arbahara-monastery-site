@@ -1473,6 +1473,38 @@ a:focus-visible {
   border: 2px solid #a66b24;
   background: #f5e8cf;
 }
+.establishment-target > strong {
+  display: block;
+  color: var(--clay-dark);
+  font: 500 clamp(56px, 8vw, 98px)/1.1 var(--serif);
+  margin: 12px 0 24px;
+}
+.establishment-target {
+  border-top: 4px solid #a66b24;
+}
+.allocation-stage {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 6px;
+}
+.allocation-reference {
+  border: 1px solid var(--line);
+  padding: 18px;
+  margin-top: 24px;
+}
+.allocation-reference summary {
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.allocation-reference summary:focus-visible {
+  outline: 2px solid var(--clay-dark);
+  outline-offset: 4px;
+}
+.allocation-table th:first-child {
+  width: 70%;
+}
 .estimate-priority h3,
 .estimate-overview h3,
 .estimate-methodology h3 {
