@@ -46,8 +46,15 @@ function Dashboard() {
     ["family", "Family connection"],
     ["bank-setup", "Bank payment setup"],
     ["profile", "Household profile"],
-    ["give", "Make an offering"],
-    ["giving", "Giving history"],
+    ...(staff ||
+    me.profile?.status === "active" ||
+    view === "give" ||
+    view === "giving"
+      ? [
+          ["give", "Make an offering"],
+          ["giving", "Giving history"],
+        ]
+      : []),
     ["tickets", "My tickets"],
     ["events", "Gatherings"],
     ["account", "Account"],
@@ -166,9 +173,36 @@ function Dashboard() {
             ) : view === "family" ? (
               <FamilyConnection />
             ) : view === "bank-setup" ? (
-              <Suspense fallback={<p>Checking secure bank setup…</p>}>
-                <ManualAch />
-              </Suspense>
+              <>
+                <Suspense fallback={<p>Checking secure bank setup…</p>}>
+                  <ManualAch />
+                </Suspense>
+                {me.profile?.status === "active" ? (
+                  <section className="panel">
+                    <h2>An optional gift, after joining</h2>
+                    <p>
+                      Your membership is active. If you would also like to
+                      support the monastery, you can give separately through
+                      Stripe or Zelle. Donations are optional and separate from
+                      your $20 monthly family dues.
+                    </p>
+                    <div className="actions">
+                      <a
+                        className="button secondary"
+                        href="/members?view=give&method=card&fund=general"
+                      >
+                        Donate by card through Stripe
+                      </a>
+                      <a
+                        className="button secondary"
+                        href="/members?view=give&method=zelle&fund=general"
+                      >
+                        Donate through Zelle
+                      </a>
+                    </div>
+                  </section>
+                ) : null}
+              </>
             ) : view === "profile" ? (
               <Profile
                 profile={me.profile}

@@ -119,26 +119,6 @@ export function Profile({
         Next, we will guide you directly to secure ACH setup. Registration
         itself does not authorize a bank debit or card charge.
       </p>
-      <div className="membership-choice">
-        <h3>Prefer to donate without becoming a paying member?</h3>
-        <p>
-          You are welcome to support the monastery without enrolling for dues.
-        </p>
-        <div className="actions">
-          <a
-            className="button secondary"
-            href="/members?view=give&method=card&fund=general"
-          >
-            Donate by card through Stripe
-          </a>
-          <a
-            className="button secondary"
-            href="/members?view=give&method=zelle&fund=general"
-          >
-            Donate through Zelle
-          </a>
-        </div>
-      </div>
       <ol className="signup-steps">
         {[
           "Your household / ቤተሰብ",
