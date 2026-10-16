@@ -1,0 +1,143 @@
+{
+  "source": "https://docs.google.com/document/d/1ar4FB1dn25miUdcNpG9LlaZytBXKm8j7G60_NEmKbS4/edit",
+  "generatedAt": "2026-10-15",
+  "tool": "Built-in image_gen.imagegen; one reference-based generation per project",
+  "usage": "Illustrative future proposals only, not actual property photographs or approved plans.",
+  "sharedPrompt": "Regenerate the supplied reference as one standalone large landscape photographic/editorial concept. Preserve recognizable subject and key design features; realistic textures, respectful warm lighting, wooded monastery setting, subject complete and large with generous framing. No captions, prices, UI, watermarks, collage, branded equipment or claim of completed work. Quiet mostly flat Texas grounds requested; backgrounds remain artistic concepts and do not establish the real property layout.",
+  "processing": "Sharp: resize to 1536px wide, WebP quality86; thumbnails 240x160 cover, WebP quality78.",
+  "assets": [
+    {
+      "id": "fire-water-tank",
+      "sourceDocxImage": "word/media/image15.png",
+      "promptSubject": "A dedicated red cylindrical emergency fire water reserve tank, pipework and shutoff valves; retain the full tank and its identity from the reference.",
+      "final": "assets/images/planning/fire-water-tank.webp",
+      "thumbnail": "assets/images/planning/fire-water-tank-thumb.webp"
+    },
+    {
+      "id": "septic-tank",
+      "sourceDocxImage": "word/media/image8.png",
+      "promptSubject": "A concrete septic tank with two inspection risers and connecting pipes shown within a clean excavation, preserving the source object's readable form. Concept art, not an installation guide.",
+      "final": "assets/images/planning/septic-tank.webp",
+      "thumbnail": "assets/images/planning/septic-tank-thumb.webp"
+    },
+    {
+      "id": "public-bathrooms",
+      "sourceDocxImage": "word/media/image10.png",
+      "promptSubject": "The proposed small separate men's and women's public bathroom building, two wooden doors with simple universal male/female symbols, accessible approach and railings; preserve the reference building.",
+      "final": "assets/images/planning/public-bathrooms.webp",
+      "thumbnail": "assets/images/planning/public-bathrooms-thumb.webp"
+    },
+    {
+      "id": "temporary-liturgy-temple",
+      "sourceDocxImage": "word/media/image13.png",
+      "promptSubject": "The modest proposed temporary white liturgy chapel with green roof trim, a golden Ethiopian Orthodox cross, wooden doors and Ethiopian icon panels around the entrance. Preserve the chapel design, not a permanent cathedral.",
+      "final": "assets/images/planning/temporary-liturgy-temple.webp",
+      "thumbnail": "assets/images/planning/temporary-liturgy-temple-thumb.webp"
+    },
+    {
+      "id": "entrance-road-parking",
+      "sourceDocxImage": "word/media/image14.png",
+      "promptSubject": "The proposed entrance gates, access road and 50-space parking area, preserving the reference's clear arrival route and planted parking layout; show an inviting accessible arrival, not a surveyed site plan.",
+      "final": "assets/images/planning/entrance-road-parking.webp",
+      "thumbnail": "assets/images/planning/entrance-road-parking-thumb.webp"
+    },
+    {
+      "id": "aquifer-well",
+      "sourceDocxImage": "word/media/image19.png",
+      "promptSubject": "The proposed aquifer wellhead with blue pressure vessel, pump, pipework and modest shelter, preserving the supplied equipment composition. No claim that water has been found or tested.",
+      "final": "assets/images/planning/aquifer-well.webp",
+      "thumbnail": "assets/images/planning/aquifer-well-thumb.webp"
+    },
+    {
+      "id": "holy-water-rooms",
+      "sourceDocxImage": "word/media/image4.png",
+      "promptSubject": "The proposed Ethiopian Orthodox holy-water baptismal room with reverent sacred icon imagery, carved cross, warm stone surfaces, flowing water and a floor drain, preserving the reference's spiritual purpose and rich artwork. No worshippers or medical claims.",
+      "final": "assets/images/planning/holy-water-rooms.webp",
+      "thumbnail": "assets/images/planning/holy-water-rooms-thumb.webp"
+    },
+    {
+      "id": "cross-water-fountain",
+      "sourceDocxImage": "word/media/image2.png",
+      "promptSubject": "The proposed carved stone cross water fountain with a low rounded basin and gently flowing water; preserve the source cross proportions, the full basin and reflective devotional mood.",
+      "final": "assets/images/planning/cross-water-fountain.webp",
+      "thumbnail": "assets/images/planning/cross-water-fountain-thumb.webp"
+    },
+    {
+      "id": "lake-safety-fence",
+      "sourceDocxImage": "word/media/image9.png",
+      "promptSubject": "A protective black metal fence and gate along the bank of the monastery lake. Preserve the vertical rail design and peaceful water setting; this is a proposed child-safety boundary, not a certification of safety.",
+      "final": "assets/images/planning/lake-safety-fence.webp",
+      "thumbnail": "assets/images/planning/lake-safety-fence-thumb.webp"
+    },
+    {
+      "id": "lake-restoration",
+      "sourceDocxImage": "word/media/image11.png",
+      "promptSubject": "A peaceful lake with restored wooded banks and clean open water, preserving the reference's lake and trees. The focus is the lake ecosystem and care for its shoreline, not an invented building or surveyed property.",
+      "final": "assets/images/planning/lake-restoration.webp",
+      "thumbnail": "assets/images/planning/lake-restoration-thumb.webp"
+    },
+    {
+      "id": "three-cows",
+      "sourceDocxImage": "word/media/image5.png",
+      "promptSubject": "Exactly three healthy cows in a peaceful wooded pasture: one brown-and-white, one brown, one black-and-white. Preserve the agricultural subject and natural countryside.",
+      "final": "assets/images/planning/three-cows.webp",
+      "thumbnail": "assets/images/planning/three-cows-thumb.webp"
+    },
+    {
+      "id": "tractor-lawn-mower",
+      "sourceDocxImage": "word/media/image17.png",
+      "promptSubject": "An orange compact tractor with a lawn-mowing deck, fully visible on well-kept monastery grounds. Preserve equipment type and remove brand lettering.",
+      "final": "assets/images/planning/tractor-lawn-mower.webp",
+      "thumbnail": "assets/images/planning/tractor-lawn-mower-thumb.webp"
+    },
+    {
+      "id": "fruit-trees",
+      "sourceDocxImage": "word/media/image18.png",
+      "promptSubject": "Rows of young staked fruit trees in an orchard, preserving the source orchard layout. The proposal is for seventy trees, not a claim that every tree must be visible in this scene.",
+      "final": "assets/images/planning/fruit-trees.webp",
+      "thumbnail": "assets/images/planning/fruit-trees-thumb.webp"
+    },
+    {
+      "id": "park-benches",
+      "sourceDocxImage": "word/media/image7.png",
+      "promptSubject": "Inviting wooden park benches beside a quiet path on wooded grounds, one beautifully detailed bench in the foreground and others along the path. The proposal is fifteen benches.",
+      "final": "assets/images/planning/park-benches.webp",
+      "thumbnail": "assets/images/planning/park-benches-thumb.webp"
+    },
+    {
+      "id": "holy-icons",
+      "sourceDocxImage": "word/media/image16.png",
+      "promptSubject": "Exactly ten framed Ethiopian Orthodox holy icons arranged in two rows of five, preserving the supplied sacred artwork's respectful subjects and traditional character, with soft warm devotional light.",
+      "final": "assets/images/planning/holy-icons.webp",
+      "thumbnail": "assets/images/planning/holy-icons-thumb.webp"
+    },
+    {
+      "id": "persian-rugs",
+      "sourceDocxImage": "word/media/image12.png",
+      "promptSubject": "Seven distinct richly patterned Persian floral rugs, some rolled and some draped, preserving the reference textile colors, craftsmanship and devotional furnishing context.",
+      "final": "assets/images/planning/persian-rugs.webp",
+      "thumbnail": "assets/images/planning/persian-rugs-thumb.webp"
+    },
+    {
+      "id": "priests-relocation",
+      "sourceDocxImage": "word/media/image1.png",
+      "promptSubject": "Exactly two Ethiopian Orthodox priests seen from behind in black clerical robes, carrying travel bags toward a modest monastery doorway. Preserve the reference's welcoming relocation theme. Fictional illustrative figures, not portraits of actual clergy.",
+      "final": "assets/images/planning/priests-relocation.webp",
+      "thumbnail": "assets/images/planning/priests-relocation-thumb.webp"
+    },
+    {
+      "id": "temporary-prayer-house",
+      "sourceDocxImage": "word/media/image6.png",
+      "promptSubject": "A small simple white temporary prayer house with a wooden porch and an Orthodox cross, with a welcoming quiet devotional interior visible at the doorway. Preserve its modest scale and the reference design.",
+      "final": "assets/images/planning/temporary-prayer-house.webp",
+      "thumbnail": "assets/images/planning/temporary-prayer-house-thumb.webp"
+    },
+    {
+      "id": "temporary-dormitory",
+      "sourceDocxImage": "word/media/image3.png",
+      "promptSubject": "A modest proposed two-story modular dormitory around a courtyard, exterior walkways and multiple room doors, preserving the source building's clear temporary accommodation layout. The planning proposal is forty rooms; this is not a surveyed or approved floor plan.",
+      "final": "assets/images/planning/temporary-dormitory.webp",
+      "thumbnail": "assets/images/planning/temporary-dormitory-thumb.webp"
+    }
+  ]
+}

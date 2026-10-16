@@ -16,11 +16,8 @@ import {
   tourChapter,
   tourChapters,
 } from "../lib/landTour";
-import {
-  constructionProjects,
-  constructionSource,
-  constructionTotal,
-} from "../lib/construction";
+import { constructionTotal } from "../lib/construction";
+import { ConstructionBudget } from "./ConstructionBudget";
 import LandScene from "./LandScene";
 const dollars = (n: number) =>
   new Intl.NumberFormat("en-US", {
@@ -340,68 +337,7 @@ export function LandJourney({ full = false }: { full?: boolean }) {
           </p>
         </section>
       ) : null}
-      {full ? (
-        <section className="construction-budget wrap" id="project-budget">
-          <div className="section-heading">
-            <div>
-              <span className="section-label">Service-readiness proposal</span>
-              <h2>
-                A faithful plan.
-                <br />
-                An open account.
-              </h2>
-            </div>
-            <div>
-              <strong>{dollars(constructionTotal)}</strong>
-              <p>19 estimated needs · not expenses incurred</p>
-            </div>
-          </div>
-          <div className="table-scroll">
-            <table>
-              <caption>
-                Monastery service-readiness estimates from the supplied budget
-              </caption>
-              <thead>
-                <tr>
-                  <th>Project</th>
-                  <th className="numeric">Estimated cost</th>
-                </tr>
-              </thead>
-              <tbody>
-                {constructionProjects.map(([name, cost]) => (
-                  <tr key={name}>
-                    <td>{name}</td>
-                    <td className="numeric">{dollars(cost)}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Total estimated need</th>
-                  <th className="numeric">{dollars(constructionTotal)}</th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          <p>
-            These are estimates from the monastery’s planning document, not
-            bids, money raised or completed work. All work depends on design,
-            funding, professional assessment and approvals. The permanent campus
-            vision is separate from these temporary service-readiness needs.
-          </p>
-          <a
-            className="text-link"
-            href={constructionSource}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Read the supplied budget <ArrowRight size={17} />
-          </a>
-          <a className="button" href="/donate?fund=construction">
-            Support the vision <ArrowRight size={17} />
-          </a>
-        </section>
-      ) : null}
+      {full ? <ConstructionBudget /> : null}
     </section>
   );
 }
