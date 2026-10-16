@@ -110,7 +110,9 @@ export async function translationSources(directory = "src") {
       "bankRecords",
       "finance",
     "spouses",
-    "households",
+      "households",
+      "familyBilling",
+      "members",
     ]) {
       const ast = parse(await fs.readFile(`convex/${file}.ts`, "utf8"), {
         sourceType: "module",

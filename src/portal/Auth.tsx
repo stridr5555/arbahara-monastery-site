@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { api } from "../../convex/_generated/api";
 import { ErrorMessage } from "../components/Live";
+import { memberSignInReturn } from "../lib/memberNavigation";
 
 type Step =
   "signIn" | "signUp" | "reset" | "reset-verification" | "email-verification";
@@ -30,6 +31,9 @@ export function SignIn() {
   const needsPassword =
     step === "signIn" || step === "signUp" || step === "reset-verification";
   const newPassword = step === "signUp" || step === "reset-verification";
+  const donationOnly =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("view") === "give";
   function changeStep(next: Step) {
     setStep(next);
     setError("");
@@ -42,7 +46,9 @@ export function SignIn() {
     setBusy(true);
     setError("");
     try {
-      await signIn(provider, { redirectTo: "/members" });
+      await signIn(provider, {
+        redirectTo: memberSignInReturn(window.location.search),
+      });
     } catch {
       setError(
         "We could not connect to that provider. Please try again or use your password.",
@@ -62,12 +68,28 @@ export function SignIn() {
           Our shared life.
         </h2>
         <p>
-          Sign in to apply for membership, keep your giving records together,
-          and reserve tickets for published gatherings.
+          {donationOnly
+            ? "You are here to donate only. Sign in to continue with Stripe or Zelle. Signing in does not enroll you as a paying member or create a $20 monthly dues obligation."
+            : "Become an official member with no office approval wait. Dues are $20 per month for the whole family. After registration, continue directly to secure ACH setup."}
         </p>
         <p>
-          You do not need to make a donation to become part of the community.
+          Prefer not to become a paying member? Donate through Stripe or Zelle
+          instead. A donation does not enroll you for membership dues.
         </p>
+        <div className="actions">
+          <a
+            className="button secondary"
+            href="/donate?method=card&fund=general"
+          >
+            Donate by card through Stripe
+          </a>
+          <a
+            className="button secondary"
+            href="/donate?method=zelle&fund=general"
+          >
+            Donate through Zelle
+          </a>
+        </div>
         <a className="text-link" href="/visit">
           Need help? Contact the office <ArrowRight size={16} />
         </a>

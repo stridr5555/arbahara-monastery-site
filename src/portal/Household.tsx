@@ -47,10 +47,27 @@ export function HouseholdDues({ compact = false }: { compact?: boolean }) {
       <a className="text-link" href="/members?view=family">
         Connect with your spouse · one family membership
       </a>
-      {household.status !== "active" ? (
+      {household.billingHouseholdId ? (
+        <>
+          <p>
+            <strong>
+              Your spouse is linked automatically. Family dues are $20 per month
+              total.
+            </strong>
+          </p>
+          <p>
+            Future dues are assessed once on the family’s primary billing
+            record. Your sign-in, personal giving, bank details and earlier
+            payment records remain private and separate. Membership is active
+            without an approval wait.
+          </p>
+          {!compact && <ManualAch />}
+        </>
+      ) : household.status !== "active" ? (
         <p>
-          Your application is awaiting office review. Approval does not require
-          an offering. New dues begin the Gregorian month after approval.
+          Complete your official membership registration to activate your
+          membership immediately. There is no office approval wait.
+          <a href="/members?view=profile"> Continue registration</a>
         </p>
       ) : household.exempt ? (
         <p>

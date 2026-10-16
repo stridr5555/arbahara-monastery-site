@@ -40,7 +40,10 @@ export default function RecordPayment() {
     [saved, setSaved] = useState<Payment | null>(null);
   const form = useRef<HTMLFormElement>(null);
   const household = households?.find((h) => h._id === householdId);
-  const found = households?.filter((h) => householdMatches(h, search)) || [];
+  const found =
+    households?.filter(
+      (h) => !h.billingHouseholdId && householdMatches(h, search),
+    ) || [];
   return (
     <section className="panel">
       <h2>Record a received payment</h2>

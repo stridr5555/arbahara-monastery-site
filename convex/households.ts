@@ -64,6 +64,12 @@ export const list = query({
     return Promise.all(
       rows.map(async (h) => ({
         ...h,
+        billingFamilyName: h.billingHouseholdId
+          ? rows.find((p) => p._id === h.billingHouseholdId)?.name
+          : undefined,
+        billingContacts: rows
+          .filter((p) => p.billingHouseholdId === h._id)
+          .map((p) => ({ name: p.name, email: p.email, phone: p.phone })),
         linkedAccounts: await Promise.all(
           (
             await ctx.db
@@ -269,7 +275,12 @@ export const extendDues = internalMutation({
       .paginate({ cursor: a.cursor, numItems: 10 });
     const current = shiftMonth(approvalStart(Date.now()), -1);
     for (const household of page.page) {
-      if (household.exempt || !household.duesStart) continue;
+      if (
+        household.exempt ||
+        household.billingHouseholdId ||
+        !household.duesStart
+      )
+        continue;
       const old = await ctx.db
         .query("duesCharges")
         .withIndex("by_household_month", (q) =>

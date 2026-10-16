@@ -12,6 +12,7 @@ export const workQueue = query({
       ready,
       phoneFamilies,
       reviewedFamilies,
+      automaticFamilies,
     ] = await Promise.all([
       ctx.db
         .query("households")
@@ -37,13 +38,22 @@ export const workQueue = query({
         .query("spouseConnections")
         .withIndex("by_status", (q) => q.eq("status", "household_review"))
         .take(101),
+      ctx.db
+        .query("familyBillingMatches")
+        .withIndex("by_status", (q) => q.eq("status", "linked"))
+        .take(101),
     ]);
     return {
       households: households.length,
       gifts: gifts.length,
       requests: requests.length,
       ready: ready.length,
-      families: Math.min(101, phoneFamilies.length + reviewedFamilies.length),
+      families: Math.min(
+        101,
+        phoneFamilies.length +
+          reviewedFamilies.length +
+          automaticFamilies.filter((r) => r.reconciliationRequired).length,
+      ),
     };
   },
 });

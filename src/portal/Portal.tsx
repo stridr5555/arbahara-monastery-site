@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { useConvex, useConvexAuth, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "../../convex/_generated/api";
@@ -27,6 +27,11 @@ function Dashboard() {
   );
   const [error, setError] = useState("");
   const [exporting, setExporting] = useState(false);
+  const [justEnrolled, setJustEnrolled] = useState(false);
+  useEffect(() => {
+    if (justEnrolled && view === "bank-setup")
+      document.getElementById("ach-setup-heading")?.focus();
+  }, [justEnrolled, view]);
   if (!me)
     return (
       <p className="empty" role="status">
@@ -53,6 +58,10 @@ function Dashboard() {
     const u = new URL(window.location.href);
     u.searchParams.set("view", next);
     history.replaceState(null, "", u);
+  };
+  const completeEnrollment = () => {
+    setJustEnrolled(true);
+    choose("bank-setup");
   };
   return (
     <>
@@ -87,7 +96,17 @@ function Dashboard() {
           </nav>
           <div className="portal-main">
             <ErrorMessage message={error} />
-            {view === "overview" ? (
+            {(!me.profile || me.profile.status === "pending") &&
+            !staff &&
+            ["overview", "profile", "dues", "family", "bank-setup"].includes(
+              view,
+            ) ? (
+              <Profile
+                profile={me.profile}
+                email={me.email!}
+                onEnrolled={completeEnrollment}
+              />
+            ) : view === "overview" ? (
               <>
                 <h2>Peace be with your household.</h2>
                 <p className="lead">
@@ -151,7 +170,11 @@ function Dashboard() {
                 <ManualAch />
               </Suspense>
             ) : view === "profile" ? (
-              <Profile profile={me.profile} email={me.email!} />
+              <Profile
+                profile={me.profile}
+                email={me.email!}
+                onEnrolled={completeEnrollment}
+              />
             ) : view === "give" ? (
               <MemberGive />
             ) : view === "giving" ? (

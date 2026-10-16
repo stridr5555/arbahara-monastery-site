@@ -96,5 +96,6 @@ describe("Illustrated service-readiness budget", () => {
     expect(html).toContain(
       'id="planning-toggle-entrance-road-parking" aria-expanded="true"',
     );
+    expect(html).not.toContain("Hover over a picture");
   });
 });
