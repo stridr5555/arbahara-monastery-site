@@ -24,6 +24,14 @@ export default function ManualAchAdmin({ role }: { role: string }) {
         bank-approved debit authorization, then add the payor in Chase. No
         status here initiates a collection or marks dues paid.
       </p>
+      <p className="notice">
+        Before agreeing on a collection start date, check Previously paid dues
+        and existing receipts for Zelle, check or cash coverage. Do not collect
+        twice for the same months.{" "}
+        <a href="/members?view=admin&office=dues-reports">
+          Review previous-dues reports
+        </a>
+      </p>
       {savedNotice ? <p role="status">{savedNotice}</p> : null}
       <div className="office-form-grid">
         <label>
