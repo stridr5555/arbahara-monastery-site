@@ -8,6 +8,11 @@ export default function OfficeHome({
   const queue = useQuery(api.office.workQueue);
   const actions = [
     [
+      "dues-reports",
+      "Check previously paid dues",
+      "Reconcile members’ Zelle, check and cash reports against existing records before agreeing to ACH start dates.",
+    ],
+    [
       "record",
       "Record a received payment",
       "Cash, Zelle, check, bank ACH or card settlement. Review the member and dues coverage before saving.",
@@ -56,6 +61,11 @@ export default function OfficeHome({
       ) : (
         <ul className="office-work-list">
           {[
+            [
+              "dues-reports",
+              "Previous dues needing reconciliation",
+              queue.duesReports,
+            ],
             ["households", "Households awaiting review", queue.households],
             ["family", "Family connections needing review", queue.families],
             [

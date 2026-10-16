@@ -4,6 +4,29 @@ import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
   ...authTables,
+  duesDeclarations: defineTable({
+    userId: v.id("users"),
+    householdId: v.id("households"),
+    answer: v.union(v.literal("yes"), v.literal("no"), v.literal("unsure")),
+    method: v.optional(
+      v.union(v.literal("zelle"), v.literal("check"), v.literal("cash")),
+    ),
+    amountCents: v.optional(v.number()),
+    date: v.optional(v.string()),
+    coverage: v.optional(v.string()),
+    reference: v.optional(v.string()),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("reviewed"),
+      v.literal("not_needed"),
+    ),
+    updatedAt: v.number(),
+    reviewedAt: v.optional(v.number()),
+    reviewedBy: v.optional(v.id("users")),
+    reviewNote: v.optional(v.string()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_status", ["status"]),
   familyBillingMatches: defineTable({
     requesterId: v.id("users"),
     spouseUserId: v.optional(v.id("users")),

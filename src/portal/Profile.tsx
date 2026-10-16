@@ -3,6 +3,12 @@ import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
 import { ErrorMessage, message } from "../components/Live";
+import {
+  AchTransition,
+  DuesDeclarationFields,
+  duesPayload,
+  emptyDuesAnswer,
+} from "./DuesDeclaration";
 const interests = [
   "Prayer and worship",
   "Volunteering",
@@ -27,6 +33,9 @@ export function Profile({
   const [spouseKind, setSpouseKind] = useState<"email" | "phone">("phone");
   const [spouseContact, setSpouseContact] = useState("");
   const [familyConsent, setFamilyConsent] = useState(false);
+  const needsDuesAnswer = !profile || profile.status === "pending";
+  const lastStep = needsDuesAnswer ? 3 : 2;
+  const [duesAnswer, setDuesAnswer] = useState(emptyDuesAnswer);
   const [values, setValues] = useState({
     name: profile?.name || "",
     baptismalName: profile?.baptismalName || "",
@@ -134,6 +143,7 @@ export function Profile({
         {[
           "Your household / ቤተሰብ",
           "Stay connected / አድራሻ",
+          ...(needsDuesAnswer ? ["Previous dues / ያለፈ መዋጮ"] : []),
           "Review / ማረጋገጫ",
         ].map((label, i) => (
           <li key={label} aria-current={step === i ? "step" : undefined}>
@@ -154,7 +164,15 @@ export function Profile({
         onSubmit={async (e) => {
           e.preventDefault();
           setError("");
-          if (step < 2) {
+          if (needsDuesAnswer && step === 2) {
+            try {
+              duesPayload(duesAnswer);
+            } catch (error) {
+              setError(message(error));
+              return;
+            }
+          }
+          if (step < lastStep) {
             setStep(step + 1);
             return;
           }
@@ -169,6 +187,9 @@ export function Profile({
               ...values,
               consent: true,
               enroll: true,
+              ...(needsDuesAnswer
+                ? { duesDeclaration: duesPayload(duesAnswer) }
+                : {}),
               ...(spouseContact.trim()
                 ? {
                     spouseContactKind: spouseKind,
@@ -315,6 +336,14 @@ export function Profile({
               ))}
             </fieldset>
           </>
+        ) : needsDuesAnswer && step === 2 ? (
+          <>
+            <DuesDeclarationFields
+              value={duesAnswer}
+              onChange={setDuesAnswer}
+            />
+            <AchTransition />
+          </>
         ) : (
           <>
             <h3>
@@ -332,6 +361,19 @@ export function Profile({
                 "Email / ኢሜይል": email,
                 "Phone / ስልክ": values.phone,
                 "Address / አድራሻ": `${values.address} ${values.city}`,
+                ...(needsDuesAnswer
+                  ? {
+                      "Previous family dues":
+                        duesAnswer.answer === "yes"
+                          ? `Reported paid · ${duesAnswer.method}${duesAnswer.amount ? ` · $${duesAnswer.amount}` : ""}`
+                          : duesAnswer.answer === "no"
+                            ? "Not already paid"
+                            : "Not sure — office help requested",
+                      "Coverage reported": duesAnswer.coverage,
+                      "Payment date reported": duesAnswer.date,
+                      "Payment details reported": duesAnswer.reference,
+                    }
+                  : {}),
               }).map(([label, value]) => (
                 <div key={label}>
                   <dt>{label}</dt>
@@ -369,7 +411,7 @@ export function Profile({
           <button className="button" disabled={busy}>
             {busy
               ? "Saving…"
-              : step === 2
+              : step === lastStep
                 ? "Become a member & continue to ACH / ላክ"
                 : "Continue / ቀጥል"}
           </button>

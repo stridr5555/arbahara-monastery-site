@@ -11,6 +11,7 @@ import {
 import { encryptBankDetails } from "../lib/bankEncryption";
 import { ErrorMessage, message } from "../components/Live";
 import { money } from "./Giving";
+import { AchTransition, DuesHistoryReport } from "./DuesDeclaration";
 export const achLabels: Record<AchState, string> = {
   submitted: "Awaiting office review",
   needs_information: "Office needs more information",
@@ -64,6 +65,8 @@ export function ManualAch() {
         agreed collection dates. Submitting this request does not start payments
         or cover dues.
       </p>
+      <AchTransition />
+      <DuesHistoryReport />
       <ol className="office-steps">
         <li>Submit bank details</li>
         <li>Office reviews authorization</li>

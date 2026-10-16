@@ -72,6 +72,15 @@ export function SignIn() {
             ? "You are here to donate only. Sign in to continue with Stripe or Zelle. Signing in does not enroll you as a paying member or create a $20 monthly dues obligation."
             : "Become an official member with no office approval wait. Dues are $20 per month for the whole family. After registration, continue directly to secure ACH setup."}
         </p>
+        {!donationOnly ? (
+          <p>
+            Moving from Zelle, check, or cash? Tell us which family dues you
+            already paid during registration. We are moving to bank-based ACH
+            for a safer, more reliable collection process. Once your ACH
+            authorization and start date are confirmed, stop any monthly Zelle
+            dues payments through your bank to avoid paying twice.
+          </p>
+        ) : null}
         <p>
           Prefer not to become a paying member? Donate through Stripe or Zelle
           instead. A donation does not enroll you for membership dues.

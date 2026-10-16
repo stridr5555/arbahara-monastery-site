@@ -16,6 +16,7 @@ const ManualAchAdmin = lazy(() => import("./ManualAchAdmin"));
 const OfficeHome = lazy(() => import("./OfficeHome"));
 const RecordPayment = lazy(() => import("./RecordPayment"));
 const FamilyAdmin = lazy(() => import("./FamilyAdmin"));
+const DuesReportsAdmin = lazy(() => import("./DuesReportsAdmin"));
 export default function AdminRouter({
   role,
   initialView,
@@ -31,6 +32,7 @@ export default function AdminRouter({
       ? [
           ["home", "Office tasks"],
           ["record", "Record payment"],
+          ["dues-reports", "Previously paid dues"],
           ["households", "Households"],
           ["family", "Family connections"],
           ["manual-ach", "Bank setup"],
@@ -115,6 +117,8 @@ export default function AdminRouter({
             <OfficeHome choose={choose} />
           ) : tab === "record" ? (
             <RecordPayment />
+          ) : tab === "dues-reports" ? (
+            <DuesReportsAdmin onRecord={() => choose("record")} />
           ) : tab === "family" ? (
             <FamilyAdmin role={role} />
           ) : tab === "manual-ach" ? (
