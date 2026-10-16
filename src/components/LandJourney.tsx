@@ -16,7 +16,7 @@ import {
   tourChapter,
   tourChapters,
 } from "../lib/landTour";
-import { constructionTotal } from "../lib/construction";
+import { estimateTotals } from "../lib/constructionEstimates";
 import { ConstructionBudget } from "./ConstructionBudget";
 import LandScene from "./LandScene";
 const dollars = (n: number) =>
@@ -238,8 +238,11 @@ export function LandJourney({ full = false }: { full?: boolean }) {
       <aside className="land-budget tour-budget-strip" id="future">
         <h3>Preparing for service</h3>
         <div>
-          <strong>{dollars(constructionTotal)}</strong>
-          <p>estimated need</p>
+          <strong>{dollars(estimateTotals.normalized)}</strong>
+          <p>
+            2026 normalized estimate · economical{" "}
+            {dollars(estimateTotals.economical)}
+          </p>
         </div>
         <a
           className="text-link"
