@@ -341,7 +341,8 @@ export const exportMine = query({
       .withIndex("by_user", (q) => q.eq("userId", u._id))
       .unique();
     return {
-      schemaVersion: 4,
+      schemaVersion: 5,
+      smsConsentHistory: await ctx.db.query("smsConsentEvents").withIndex("by_user", q => q.eq("userId", u._id)).collect(),
       duesDeclaration: memberVisibleDeclaration(declaration),
       exportedAt: new Date().toISOString(),
       email: u.email,

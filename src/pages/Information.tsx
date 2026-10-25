@@ -1,3 +1,4 @@
+import { smsPrograms } from "../../convex/smsProgram";
 import { useState } from "react";
 import { PageIntro, LinkButton } from "../components/Layout";
 import { site } from "../content";
@@ -7,7 +8,7 @@ export function Privacy() {
   return (
     <div className="wrap narrow">
       <PageIntro title="Your trust matters.">
-        Privacy notice · Updated October 15, 2026
+        Privacy notice · Updated October 25, 2026
       </PageIntro>
       <div className="prose">
         <h2>Information we keep</h2>
@@ -98,6 +99,13 @@ export function Privacy() {
           external resource or payment link subjects that visit to the
           provider’s privacy practices.
         </p>
+        <section data-no-translate lang="en" id="sms">
+          <h2>Optional text message preferences</h2>
+          <p>Text messaging is not active. The website has separate optional choices for membership and meeting notices, including dues reminders, and for donation and fundraising reminders. Providing a membership phone number, joining, or donating does not create SMS consent.</p>
+          <p>If you opt in when enrollment opens, we record your account identifier, the mobile number you enter, the category you choose, the exact disclosure and its version, the source page and policy links, and the server time. We retain a history of consent changes and withdrawals. Authorized administrators operate the member-record system described above; consent records are stored in Convex.</p>
+          <p>We do not sell or share mobile numbers, SMS opt-in data, or SMS consent records with third parties for their marketing. Service providers may process this information as needed to operate the program: Convex stores consent records, and Twilio handles messaging delivery and opt-out processing when messaging is enabled. This service-provider processing does not authorize third-party marketing use.</p>
+          <p>When inbound processing is enabled, Twilio supplies callback metadata. The handler keeps account and message identifiers, sender and destination numbers, event classification, and server time to process opt-outs and prevent duplicate handling; it does not retain free-text message bodies. You can withdraw either category independently on the <a href="/sms">text preferences page</a>. Withdrawal does not affect membership or other services. Your portal data download includes your consent history. Contact <a href={`mailto:${site.email}`}>{site.email}</a> for access, correction, deletion, and retention questions. The website does not verify possession of your mobile number by text.</p>
+        </section>
         <h2>Storage on your device</h2>
         <p>
           The portal stores authentication tokens on your device to maintain
@@ -140,7 +148,7 @@ export function Terms() {
   return (
     <div className="wrap narrow">
       <PageIntro title="Website & giving terms">
-        Updated September 23, 2026
+        Updated October 25, 2026
       </PageIntro>
       <div className="prose">
         <h2>Use of the website</h2>
@@ -172,6 +180,14 @@ export function Terms() {
           requests, or restricted gifts, contact the office; a refund is not
           automatic.
         </p>
+        <section data-no-translate lang="en" id="sms">
+          <h2>Optional SMS terms</h2>
+          <p>Text messaging is not active. When enrollment opens, each optional choice applies only to its stated category and the mobile number you provide. Neither category is required for membership, donations, purchases, or other services. Donating does not enroll you in text messages.</p>
+          {Object.values(smsPrograms).map(program => <section key={program.id} id={`sms-${program.id}`}>
+            <h3>{program.title}</h3><p>{program.disclosure}</p>
+          </section>)}
+          <p>Manage or withdraw each category independently at <a href="/sms">text preferences</a>. The program's cancellation instruction is STOP and its help instruction is HELP; inbound keyword handling must be enabled before messaging starts. For help now, email <a href={`mailto:${site.email}`}>{site.email}</a> or call <a href="tel:+12148031347">214-803-1347</a>. See the <a href="/privacy#sms">Privacy Policy</a> for consent records and your requests.</p>
+        </section>
         <h2>Events and tickets</h2>
         <p>
           Tickets are for the named event and are subject to its published

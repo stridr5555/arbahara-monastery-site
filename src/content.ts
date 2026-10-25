@@ -227,6 +227,10 @@ export const pageMeta: Record<string, { title: string; description: string }> =
       description:
         "Secure member sign-in for membership, giving records, and event tickets.",
     },
+    "/sms": {
+      title: "Optional text messages | Arbahara",
+      description: "Optional text messages",
+    },
     "/privacy": {
       title: "Privacy notice | Arbahara",
       description:

@@ -24,6 +24,11 @@ export async function translationSources(directory = "src") {
       return;
     texts.add(value);
   }
+  function excluded(p) {
+    return !!p.findParent(a => a.isJSXElement() && a.node.openingElement.attributes.some(
+      attr => attr.type === "JSXAttribute" && attr.name.name === "data-no-translate",
+    ));
+  }
   async function scan(dir) {
     for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
       if (entry.name === "i18n") continue;
@@ -36,9 +41,11 @@ export async function translationSources(directory = "src") {
         });
         traverse(ast, {
           JSXText(p) {
+            if (excluded(p)) return;
             add(p.node.value);
           },
           StringLiteral(p) {
+            if (excluded(p)) return;
             const parent = p.parent;
             if (parent.type === "JSXAttribute") {
               if (
@@ -73,6 +80,7 @@ export async function translationSources(directory = "src") {
             add(p.node.value);
           },
           TemplateLiteral(p) {
+            if (excluded(p)) return;
             // Interpolation values remain untouched; translate only the wrapper.
             // Ignore styling/URLs and templates consisting only of record data.
             const literal = p.node.quasis

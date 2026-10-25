@@ -35,6 +35,10 @@ import type * as office from "../office.js";
 import type * as paymentRecords from "../paymentRecords.js";
 import type * as payments from "../payments.js";
 import type * as security from "../security.js";
+import type * as smsConsent from "../smsConsent.js";
+import type * as smsInbound from "../smsInbound.js";
+import type * as smsInboundActions from "../smsInboundActions.js";
+import type * as smsProgram from "../smsProgram.js";
 import type * as spouses from "../spouses.js";
 import type * as tokenVault from "../tokenVault.js";
 
@@ -72,6 +76,10 @@ declare const fullApi: ApiFromModules<{
   paymentRecords: typeof paymentRecords;
   payments: typeof payments;
   security: typeof security;
+  smsConsent: typeof smsConsent;
+  smsInbound: typeof smsInbound;
+  smsInboundActions: typeof smsInboundActions;
+  smsProgram: typeof smsProgram;
   spouses: typeof spouses;
   tokenVault: typeof tokenVault;
 }>;
