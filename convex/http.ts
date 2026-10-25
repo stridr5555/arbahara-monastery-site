@@ -1,3 +1,4 @@
+import { eligibility } from "./smsEligibilityHttp";
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
@@ -152,4 +153,5 @@ http.route({
     }
   }),
 });
+http.route({ path: "/sms/eligibility", method: "POST", handler: eligibility });
 export default http;

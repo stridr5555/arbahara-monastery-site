@@ -1,6 +1,6 @@
 // Changing any disclosure requires a new version. No sender is implemented here.
 const common = {
-  version: "2026-10-25-v1",
+  version: "2026-10-25-contact-2",
   sender: "+18668276926",
   source: "https://www.haramonastery.org/sms",
   privacyUrl: "https://www.haramonastery.org/privacy",
@@ -8,7 +8,7 @@ const common = {
 } as const;
 
 const ending =
-  "Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help. For support, contact support@haramonastery.org or call 214-803-1347. SMS consent is optional and is not required for membership, donations, purchases, or other services. I have read the Privacy Policy and SMS terms linked below.";
+  "Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help. For support, contact support@haramonastery.org or call 469-212-6370. SMS consent is optional and is not required for membership, donations, purchases, or other services. I have read the Privacy Policy and SMS terms linked below.";
 export const smsPrograms = {
   informational: {
     ...common,

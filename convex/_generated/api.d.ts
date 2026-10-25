@@ -36,9 +36,12 @@ import type * as paymentRecords from "../paymentRecords.js";
 import type * as payments from "../payments.js";
 import type * as security from "../security.js";
 import type * as smsConsent from "../smsConsent.js";
+import type * as smsEligibility from "../smsEligibility.js";
+import type * as smsEligibilityHttp from "../smsEligibilityHttp.js";
 import type * as smsInbound from "../smsInbound.js";
 import type * as smsInboundActions from "../smsInboundActions.js";
 import type * as smsProgram from "../smsProgram.js";
+import type * as smsReadiness from "../smsReadiness.js";
 import type * as spouses from "../spouses.js";
 import type * as tokenVault from "../tokenVault.js";
 
@@ -77,9 +80,12 @@ declare const fullApi: ApiFromModules<{
   payments: typeof payments;
   security: typeof security;
   smsConsent: typeof smsConsent;
+  smsEligibility: typeof smsEligibility;
+  smsEligibilityHttp: typeof smsEligibilityHttp;
   smsInbound: typeof smsInbound;
   smsInboundActions: typeof smsInboundActions;
   smsProgram: typeof smsProgram;
+  smsReadiness: typeof smsReadiness;
   spouses: typeof spouses;
   tokenVault: typeof tokenVault;
 }>;

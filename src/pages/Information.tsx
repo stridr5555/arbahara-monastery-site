@@ -186,7 +186,7 @@ export function Terms() {
           {Object.values(smsPrograms).map(program => <section key={program.id} id={`sms-${program.id}`}>
             <h3>{program.title}</h3><p>{program.disclosure}</p>
           </section>)}
-          <p>Manage or withdraw each category independently at <a href="/sms">text preferences</a>. The program's cancellation instruction is STOP and its help instruction is HELP; inbound keyword handling must be enabled before messaging starts. For help now, email <a href={`mailto:${site.email}`}>{site.email}</a> or call <a href="tel:+12148031347">214-803-1347</a>. See the <a href="/privacy#sms">Privacy Policy</a> for consent records and your requests.</p>
+          <p>Manage or withdraw each category independently at <a href="/sms">text preferences</a>. The program's cancellation instruction is STOP and its help instruction is HELP; inbound keyword handling must be enabled before messaging starts. For help now, email <a href={`mailto:${site.email}`}>{site.email}</a> or call <a href="tel:+14692126370">469-212-6370</a>. See the <a href="/privacy#sms">Privacy Policy</a> for consent records and your requests.</p>
         </section>
         <h2>Events and tickets</h2>
         <p>
