@@ -3,6 +3,7 @@ import { Layout, PageIntro } from "./components/Layout";
 import { Home } from "./pages/Home";
 import { Monastery, Faith, Visit, Gallery } from "./pages/Community";
 import { Archive } from "./pages/Archive";
+import { Sms } from "./pages/Sms";
 import { Give } from "./pages/Give";
 import {
   Announcements,
@@ -76,6 +77,9 @@ export function App({ path }: { path: string }) {
       break;
     case "/donate":
       page = <Give />;
+      break;
+    case "/sms":
+      page = <Sms />;
       break;
     case "/privacy":
       page = <Privacy />;

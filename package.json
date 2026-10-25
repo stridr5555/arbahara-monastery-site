@@ -34,7 +34,8 @@
     "react-dom": "^19.3.0",
     "react-plaid-link": "^5.0.0",
     "stripe": "^22.6.2",
-    "three": "^0.186.1"
+    "three": "^0.186.1",
+    "twilio": "^6.2.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

@@ -1,0 +1,66 @@
+# Toll-free SMS consent and inbound operations
+
+Base: `9f574e90936c98216b8b918352b5b6f4cd5afef9`. The owner authorized publication after confirming monitored support and the mobile-consent privacy commitment. The tested patch has been integrated into the original checkout while preserving unrelated audio deletions and its handoff file. Production backend `energetic-orca-365` is deployed and optional consent collection is enabled. Inbound/custom-HELP processing remains disabled pending approved runtime bindings. No live Twilio configuration, verification submission, texts or campaigns were performed by this website task.
+
+## Implemented
+
+- `/sms`: public, prerendered English disclosure and separate unchecked optional choices for informational membership/meeting/dues notices and fundraising/donation reminders. Public footer and membership-form links expose the flow without making membership depend on SMS.
+- Separate category-specific disclosure text/version, user ID, normalized destination, source, policy links and server time in current records plus append-only events. Declining does not call the opt-in mutation. Existing membership consent, imported records, spouse links and donations never backfill SMS consent.
+- Authenticated opt-in, independent withdrawals, identity isolation, stale-version rejection, duplicate-save protection, phone validation, rate limits and own-data export. Changing the membership phone never transfers SMS consent; explicitly choosing another SMS number records withdrawal of the previous number for that category.
+- Existing `/privacy` and `/terms` retain unrelated content and gain messaging sections. The owner confirmed monitored support and no sale/sharing of mobile opt-in data for third-party marketing; the privacy policy states that commitment while preserving necessary service-provider processing. No legal entity/tax assertion was invented.
+- Added a signed `/sms/inbound` HTTP handler, using the official Twilio SDK validator in an internal Node action and internal database mutations. Account, destination, canonical URL, optional Messaging Service and message-identity checks occur before writes. Durable MessageSid deduplication prevents duplicate actions/replies. STOP records global number suppression and withdraws every current matching category/account, including unknown-number suppression without creating member records. START/UNSTOP only updates carrier eligibility; YES does not. Explicit website reconsent is required after unblock.
+- Collection defaults OFF unless the Convex backend variable `SMS_CONSENT_COLLECTION_ENABLED` is exactly `true`. Withdrawal remains available while collection is off. Inbound processing defaults OFF unless `SMS_TWILIO_INBOUND_ENABLED` is exactly `true`. Custom HELP TwiML defaults OFF unless separately enabled with approved response text. There is no outgoing API client, sending engine, phone-possession verification, or deployed sender integration. The non-secret production collection flag was enabled after authorization. No credentials were created, persistently configured or copied.
+- Consent sections stay in English with `data-no-translate` to avoid creating unreviewed translated consent evidence. The translation-source checker now honors that existing runtime exclusion. Two page metadata translations were added and need ordinary editorial review.
+
+## Verified existing destinations
+
+- Public calendar: https://www.haramonastery.org/calendar (confirmed in live Chrome; monthly Mahiber and Ziker calendar renders).
+- Public giving: https://www.haramonastery.org/donate (confirmed live).
+- `src/portal/Household.tsx` shows dues balances by month, including Outstanding, Upcoming and Covered, through `/members?view=dues`. This is evidence of a dues balance view, NOT evidence of scheduled dues reminders or a reminder inbox. Application samples should say “review your family dues” rather than claim a reminder is waiting in the portal. No actual member data was accessed to verify this.
+
+## Release and review requirements
+
+1. Registration reviewers must align categories, actual opt-in channel and representative outgoing messages with this released flow. The saved application is historical intended use, not current owner approval. The volume estimate of 1,000/month is program-wide; it is not a per-person frequency promise. The draft says frequency varies.
+2. Owner confirmed support@haramonastery.org monitoring and the no-sale/no-third-party-marketing-sharing commitment. Retention questions go through the published support channel. This confirmation does not establish Twilio approval or completed inbound configuration.
+3. Disclosure version `2026-10-25-v1` is shared between the released English text and server evidence. Any subsequent wording change requires a new version in `convex/smsProgram.ts`. Review any future Amharic version independently and record its exact text/version.
+4. Deploy schema/functions and frontend in a non-production environment with collection OFF, verify authenticated opt-in/withdrawal and downloads, then review screenshots and public policy URLs. The isolated checkout has no copied environment or credentials. Do not point test mutations at production.
+5. When specifically authorized to collect consent while messaging is still inactive, set the backend collection variable to `true`. The page still explicitly says messaging is inactive and no texts are sent. Enabling actual messaging is a separate reviewed release requiring updated truthful status copy.
+
+## Required sender/STOP/HELP integration before messaging
+
+Parent verified +1 866-827-6926 has messaging disabled after rejected toll-free verification, no Messaging Service, and blank primary/backup inbound webhooks. Voice is enabled. This is not A2P 10DLC. Existing historical voice recipients must not be imported as SMS subscribers.
+
+The inbound handler is now implemented privately. Pending deployment is not a code blocker. The exact remaining boundary is the actual SMS broadcaster: this repository contains no outgoing SMS engine, so no claim is made that an external broadcaster consults these records.
+
+### Implemented callback behavior
+
+- Direct HTTPS POST at the chosen Convex site's `/sms/inbound`; only form-encoded requests up to 64 KiB are accepted. Exact configured callback URL is used for signature validation; Host/forwarded headers are not trusted. All form fields participate in SDK validation; ambiguous duplicate fields are rejected. Signature, account, destination, optional service and message ID must validate before a database write.
+- The private Node action calls `twilio.validateRequest` only, without creating an API client. Its internal mutation stores callback metadata, not free-text bodies or secret headers. MessageSid replay is a no-op. Storage failure returns a failure status rather than acknowledging success.
+- STOP and authenticated `OptOutType=STOP` atomically suppress the phone globally and withdraw both consent categories for every matching website account. Unknown numbers are suppressed without creating users. The indexed current-consent lookup also lets the future sender inspect the destination; event history includes provider MessageSid.
+- START or UNSTOP marks carrier eligibility unblocked but leaves application suppression and category withdrawals in place. A subsequent explicit website choice clears application suppression only after carrier unblock and creates only that chosen category's new consent. YES cannot unblock, including a callback labeled START whose body is YES. Replaying an old STOP MessageSid after reconsent does not withdraw again; a new STOP does.
+- HELP is recorded without changing consent. Custom HELP TwiML requires both a separate enable flag and reviewed server-side text. Twilio's `OptOutType` means it already replied, so the handler returns empty TwiML for these events. STOP/START never generate a custom reply. Suppressed phones do not get a custom HELP reply. Duplicated HELP callbacks never return a second custom reply. No actual reply was sent during tests or production verification.
+- Acknowledgment loss after a committed HELP event can mean a retry receives empty TwiML; this intentionally favors avoiding duplicate custom replies over guaranteed HELP delivery. Do not claim delivery based on recording an event.
+
+### Exact configuration and review steps still required
+
+1. Select the actual SMS sender service/project with the parent. Bind existing credentials in that authorized deployment's secret store: `TWILIO_SMS_ACCOUNT_SID`, `TWILIO_SMS_AUTH_TOKEN`, and `TWILIO_SMS_WEBHOOK_URL` (exact direct HTTPS Convex-site URL ending `/sms/inbound`, including any query string). Set `TWILIO_SMS_MESSAGING_SERVICE_SID` only if the callback actually comes from the chosen service. No credential was read, copied or provisioned for this task.
+2. Deploy the schema, functions and frontend first in a non-production environment. Leave `SMS_CONSENT_COLLECTION_ENABLED`, `SMS_TWILIO_INBOUND_ENABLED`, and `SMS_TWILIO_HELP_REPLY_ENABLED` unset/false pending approval. Private tests stub these values only inside synthetic test processes.
+3. Confirm the monitored help contact and approve support text. For custom HELP, configure `SMS_TWILIO_HELP_REPLY_TEXT` and then separately enable `SMS_TWILIO_HELP_REPLY_ENABLED`. Alternatively use reviewed Messaging Service Advanced Opt-Out replies; the application will avoid duplicates when `OptOutType` is present. Current code does not claim HELP is live.
+4. After parent approval, configure the toll-free number's inbound POST callback to the exact reviewed endpoint and enable inbound processing. Configure the backup callback deliberately; do not point it at an unrelated or unsigned handler. Verify which STOP events the carrier/Twilio forwards in the selected configuration. This task did not change live callbacks.
+5. Toll-free carrier STOP protection remains in effect independently. Only START/UNSTOP fully undo that carrier blocking; YES does not. Source: https://www.twilio.com/docs/messaging/tutorials/advanced-opt-out . Signature validation source: https://www.twilio.com/docs/usage/security#validating-requests .
+6. Before enabling any outgoing messaging in the separate broadcaster, require current explicit category consent for the exact number/account and no global application suppression at the actual send boundary. Also respect carrier eligibility and provider failures. Apply this to broadcasts, imports, exports and queued sends, failing closed when consent storage is unavailable. This necessary external integration remains pending; no sending engine was added here.
+7. Verify deployment configuration and end-to-end integration separately before representing the program as operational or resubmitting verification. No live texts are authorized by this code draft.
+
+### Private verification
+
+- Convex-test covers authenticated consent, exact evidence, independent categories, withdrawals, default collection gate, no backfill, invalid/stale input, isolation, phone changes and own-data exports.
+- Signed synthetic HTTP callbacks cover configuration gates, signatures, tampering including future fields, wrong account/destination/service/URL, forwarded-host spoofing, invalid identities/content/duplicate fields/oversize bodies, cross-account STOP, unknown numbers, START/UNSTOP versus YES, new consent after unblock, deduplication and HELP response gating/escaping/provider-handled behavior. No HTTP request went to Twilio.
+- Desktop Chrome fixture uses the actual `ConnectedPreferences` component with synthetic authenticated hooks and an in-memory store, no backend URL or credentials. It verifies independent opt-in confirmations and withdrawal of informational consent while fundraising remains consented. This is a UI fixture, not a real login/deployed-backend test.
+- The same fixture was inspected at 390×844: readable controls/disclosure, no horizontal overflow (document width 375 vs viewport 390), no relevant application console errors. Viewport override was reset. Existing unrelated wallet-extension console noise was excluded.
+- `twilio` 6.2.0 was added with lifecycle scripts disabled. Dependency audit reports four advisories in pre-existing Vite/Vitest/Nodemailer dependencies; none attributed to Twilio. Those unrelated dependencies were not upgraded in this patch.
+
+Publication, privacy commitments, support monitoring, live callback configuration, application resubmission and sending remain subject to parent/owner review.
+
+## External broadcaster verification
+
+The existing Windows project at `Documents/Client Projects/Telegram Voice Broadcast` is linked to Vercel project `telegram-twilio-voice-broadcast` (`prj_VSW9Snrp8HBOEd5h8TKVSNR0ymFK`). Its local `lib/twilio-broadcast.js` has an SMS branch invoking `client.messages.create` without a consent/suppression check; `api/telegram.js` defaults to call mode but supports an SMS mode. Therefore website STOP handling alone cannot establish sender enforcement. Do not activate this SMS branch until the actual deployed sender checks current consent and global suppression. Recipient records were not accessed. Deployment metadata inspection and current-mode verification are recorded separately in the task result.

@@ -129,4 +129,27 @@ http.route({
     }
   }),
 });
+http.route({
+  path: "/sms/inbound",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const headers = { "Content-Type": "text/xml; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
+    const empty = '<?xml version="1.0" encoding="UTF-8"?><Response/>';
+    if (!(request.headers.get("content-type") || "").toLowerCase().startsWith("application/x-www-form-urlencoded"))
+      return new Response(empty, { status: 415, headers });
+    if (Number(request.headers.get("content-length") || "0") > 65536)
+      return new Response(empty, { status: 413, headers });
+    const signature = request.headers.get("x-twilio-signature");
+    if (!signature) return new Response(empty, { status: 403, headers });
+    const body = await request.text();
+    if (body.length > 65536) return new Response(empty, { status: 413, headers });
+    try {
+      const result = await ctx.runAction(internal.smsInboundActions.accept, { url: request.url, body, signature });
+      return new Response(result.twiml, { status: result.status, headers });
+    } catch {
+      // No acknowledgement on failed storage; allow Twilio's retry/fallback policy.
+      return new Response(empty, { status: 503, headers });
+    }
+  }),
+});
 export default http;

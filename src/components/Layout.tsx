@@ -168,6 +168,7 @@ export function Footer() {
         <span>{site.mailing}</span>
         <div>
           <LanguageSwitcher />
+          <a href="/sms" data-no-translate>Optional SMS</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
           <a href="/visit#accessibility">Accessibility</a>

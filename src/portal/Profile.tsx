@@ -377,6 +377,7 @@ export function Profile({
             </p>
           </>
         )}
+        <p data-no-translate lang="en">Text messages are optional and separate from membership. <a href="/sms">Review optional SMS choices</a>.</p>
         <ErrorMessage message={error} />
         <div className="actions">
           {step > 0 ? (
