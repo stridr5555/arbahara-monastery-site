@@ -16,6 +16,8 @@ describe("Public SMS evidence", () => {
     expect(html).toContain("Membership and meeting notices");
     expect(html).toContain("Donation and fundraising reminders");
     expect(html).toContain("Text messaging is not active");
+    expect(html).toContain("469-212-6370");
+    expect(html).not.toContain("214-803-1347");
     expect(html).not.toContain("SMS enrollment is closed");
     expect(html).not.toContain("when enrollment opens");
     expect(renderToStaticMarkup(createElement<{ collecting: boolean }>(SmsChoices, { collecting: false }))).toContain("SMS enrollment is closed");
