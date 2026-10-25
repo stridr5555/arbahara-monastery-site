@@ -17,6 +17,7 @@ describe("Public SMS evidence", () => {
     expect(html).toContain("Donation and fundraising reminders");
     expect(html).toContain("Text messaging is not active");
     expect(html).not.toContain("SMS enrollment is closed");
+    expect(html).not.toContain("when enrollment opens");
     expect(renderToStaticMarkup(createElement<{ collecting: boolean }>(SmsChoices, { collecting: false }))).toContain("SMS enrollment is closed");
     expect(html).toContain("services remain available without SMS consent");
     expect(html).toContain('href="/privacy"');

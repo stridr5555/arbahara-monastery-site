@@ -137,7 +137,7 @@ export function SmsChoices(controls: Controls = {}) {
       {!controls.authenticated ? (
         <p>
           <a href="/members">Sign in or create an account</a> to manage your own
-          preference when enrollment opens. Creating an account does not enroll
+          optional choices. Creating an account does not enroll
           you in SMS.
         </p>
       ) : null}
