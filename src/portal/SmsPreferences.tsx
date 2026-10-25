@@ -141,7 +141,7 @@ export function SmsChoices(controls: Controls = {}) {
           you in SMS.
         </p>
       ) : null}
-      {!controls.collecting ? (
+      {controls.collecting === false ? (
         <p>
           SMS enrollment is closed. The optional choices below show the
           disclosures.

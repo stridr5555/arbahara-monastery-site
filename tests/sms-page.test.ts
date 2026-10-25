@@ -2,6 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { Sms } from "../src/pages/Sms";
+import { SmsChoices } from "../src/portal/SmsPreferences";
 import { Privacy, Terms } from "../src/pages/Information";
 describe("Public SMS evidence", () => {
   it("shows both disclosures without login, with unchecked optional choices and working policy targets", () => {
@@ -15,6 +16,8 @@ describe("Public SMS evidence", () => {
     expect(html).toContain("Membership and meeting notices");
     expect(html).toContain("Donation and fundraising reminders");
     expect(html).toContain("Text messaging is not active");
+    expect(html).not.toContain("SMS enrollment is closed");
+    expect(renderToStaticMarkup(createElement<{ collecting: boolean }>(SmsChoices, { collecting: false }))).toContain("SMS enrollment is closed");
     expect(html).toContain("services remain available without SMS consent");
     expect(html).toContain('href="/privacy"');
     const terms = renderToStaticMarkup(createElement(Terms));
