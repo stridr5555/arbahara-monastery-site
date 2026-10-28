@@ -8,6 +8,7 @@ import { Give } from "./pages/Give";
 import {
   Announcements,
   FoundingAnnouncement,
+  GrandOpeningAnnouncement,
 } from "./pages/Announcements";
 import {
   Privacy,
@@ -74,6 +75,9 @@ export function App({ path }: { path: string }) {
       break;
     case "/announcements/establishment-of-abuna-hara-dengeel-monastery":
       page = <FoundingAnnouncement />;
+      break;
+    case "/announcements/grand-opening-ceremony":
+      page = <GrandOpeningAnnouncement />;
       break;
     case "/donate":
       page = <Give />;
