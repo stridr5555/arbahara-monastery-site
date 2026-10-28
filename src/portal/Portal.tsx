@@ -131,7 +131,7 @@ function Dashboard() {
                       className="text-link"
                       href={`/announcements/${announcements[0].slug}`}
                     >
-                      Read the founding announcement
+                      Read the latest announcement
                     </a>
                   </section>
                   <GivingHistory compact />

@@ -44,7 +44,7 @@ export function Home() {
           <h2 id="latest-announcement">{announcements[0].title}</h2>
           <p className="lead">{announcements[0].excerpt}</p>
           <TextLink href={`/announcements/${announcements[0].slug}`}>
-            Read our founding announcement
+            Read the latest announcement
           </TextLink>
         </div>
       </section>

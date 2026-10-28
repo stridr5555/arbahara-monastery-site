@@ -7,7 +7,10 @@ export function Announcements() {
       <PageIntro title="Announcements & reflections">
         News, pastoral messages, and milestones from the life of our monastery.
       </PageIntro>
-      <section className="announcement-list" aria-label="Published announcements">
+      <section
+        className="announcement-list"
+        aria-label="Published announcements"
+      >
         {announcements.map((announcement, index) => (
           <article className="announcement-card" key={announcement.slug}>
             <div className="announcement-card-meta">
@@ -21,6 +24,16 @@ export function Announcements() {
             <div>
               <h2>{announcement.title}</h2>
               <p>{announcement.excerpt}</p>
+              {announcement.photos ? (
+                <img
+                  className="announcement-card-photo"
+                  src={announcement.photos[2].src}
+                  alt={announcement.photos[2].alt}
+                  width={announcement.photos[2].width}
+                  height={announcement.photos[2].height}
+                  loading="lazy"
+                />
+              ) : null}
               <TextLink href={`/announcements/${announcement.slug}`}>
                 Read the announcement
               </TextLink>
@@ -33,7 +46,9 @@ export function Announcements() {
 }
 
 export function FoundingAnnouncement() {
-  const announcement = announcements[0];
+  const announcement = announcements.find(
+    (post) => post.slug === "establishment-of-abuna-hara-dengeel-monastery",
+  )!;
   return (
     <div className="wrap announcement-post-page">
       <nav className="post-breadcrumb" aria-label="Breadcrumb">
@@ -58,7 +73,10 @@ export function FoundingAnnouncement() {
           <p>{announcement.paragraphs[5]}</p>
         </div>
       </article>
-      <aside className="announcement-response" aria-label="Respond to the appeal">
+      <aside
+        className="announcement-response"
+        aria-label="Respond to the appeal"
+      >
         <Cross />
         <div>
           <span className="section-label">Answer the appeal</span>
@@ -70,6 +88,126 @@ export function FoundingAnnouncement() {
           <div className="actions">
             <LinkButton href="/donate">Make an offering</LinkButton>
             <TextLink href="/monastery">See the monastery vision</TextLink>
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+export function GrandOpeningAnnouncement() {
+  const post = announcements.find(
+    (entry) => entry.slug === "grand-opening-ceremony",
+  )!;
+  const hero = post.photos![2];
+  return (
+    <div className="wrap announcement-post-page ceremony-page">
+      <nav className="post-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/announcements">Announcements</a>
+      </nav>
+      <article className="announcement-post ceremony-post">
+        <header>
+          <span className="section-label">Grand Opening Ceremony</span>
+          <h1>{post.title}</h1>
+          <time dateTime={post.published}>{post.displayDate}</time>
+          <p className="lead">
+            A small gathering. A generous beginning. A shared journey of faith.
+          </p>
+        </header>
+        <div className="ceremony-opening">
+          <div>
+            <p className="ceremony-invocation">{post.paragraphs[0]}</p>
+            <p>{post.paragraphs[1]}</p>
+            <dl
+              className="ceremony-milestones"
+              aria-label="Grand Opening milestones"
+            >
+              <div>
+                <dt>Around 50</dt>
+                <dd>People gathered</dd>
+              </div>
+              <div>
+                <dt>$50,000</dt>
+                <dd>Raised for the monastery</dd>
+              </div>
+            </dl>
+          </div>
+          <figure>
+            <img
+              src={hero.src}
+              alt={hero.alt}
+              width={hero.width}
+              height={hero.height}
+              fetchPriority="high"
+            />
+            <figcaption>{hero.caption}</figcaption>
+          </figure>
+        </div>
+        <div className="ceremony-story">
+          <h2>Small in number, generous in spirit</h2>
+          <p>{post.paragraphs[2]}</p>
+          <h2>A blessing for our beginning</h2>
+          <p>{post.paragraphs[3]}</p>
+          <h2>Fellowship beneath the tents</h2>
+          <p>{post.paragraphs[4]}</p>
+          <p>{post.paragraphs[5]}</p>
+        </div>
+        <section
+          className="ceremony-photographs"
+          aria-labelledby="ceremony-photographs-heading"
+        >
+          <span className="section-label">Our shared memory</span>
+          <h2 id="ceremony-photographs-heading">
+            Moments from the Grand Opening
+          </h2>
+          <p>
+            Seven photographs from our community’s gathering. The clergy
+            photograph above and the six moments below preserve the ceremony,
+            the feast, and the fellowship.
+          </p>
+          <div className="ceremony-photo-grid">
+            {post
+              .photos!.filter((photo) => photo.src !== hero.src)
+              .map((photo) => (
+                <figure key={photo.src}>
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    width={photo.width}
+                    height={photo.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>{photo.caption}</figcaption>
+                </figure>
+              ))}
+          </div>
+        </section>
+        <div className="ceremony-story ceremony-closing">
+          <h2>The work before us</h2>
+          <p>{post.paragraphs[6]}</p>
+        </div>
+      </article>
+      <aside
+        className="announcement-response"
+        aria-label="Continue the journey"
+      >
+        <Cross />
+        <div>
+          <span className="section-label">With gratitude and hope</span>
+          <h2>Help nurture this beginning.</h2>
+          <p>
+            Join us in prayer, learn about the monastery’s plans, or support the
+            work with an offering.
+          </p>
+          <div className="actions">
+            <LinkButton href="/monastery">
+              Explore the monastery vision
+            </LinkButton>
+            <TextLink href="/donate">Make an offering</TextLink>
+            <TextLink href="/announcements">All announcements</TextLink>
           </div>
         </div>
       </aside>

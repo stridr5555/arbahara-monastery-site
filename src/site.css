@@ -499,6 +499,42 @@ small {
   max-width: 650px;
   color: var(--muted);
 }
+.announcement-card-photo {
+  display: block;
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  margin: 24px 0;
+}
+.ceremony-post { max-width: 1120px; }
+.ceremony-post > header h1 { font-size: clamp(2.4rem, 5vw, 4.4rem); }
+.ceremony-post > header .lead { max-width: 650px; margin: 24px auto 0; }
+.ceremony-opening { display: grid; grid-template-columns: 1fr .85fr; gap: 64px; align-items: center; margin-block: 54px 72px; }
+.ceremony-opening p, .ceremony-story p { font-size: 19px; line-height: 1.85; }
+.ceremony-invocation { font-family: var(--serif); font-style: italic; color: var(--clay-dark); }
+.ceremony-opening figure, .ceremony-photo-grid figure { margin: 0; min-width: 0; }
+.ceremony-opening img { display: block; width: 100%; max-width: 440px; height: auto; margin-inline: auto; }
+.ceremony-page figcaption { font-size: 14px; line-height: 1.65; color: var(--muted); margin-top: 14px; }
+.ceremony-milestones { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; border-block: 1px solid var(--line); padding-block: 24px; margin-top: 32px; }
+.ceremony-milestones dt { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); color: var(--clay-dark); }
+.ceremony-milestones dd { margin: 8px 0 0; font-size: 14px; }
+.ceremony-story { max-width: 760px; margin-inline: auto; }
+.ceremony-story h2, .ceremony-photographs h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin: 42px 0 18px; }
+.ceremony-photographs { border-top: 1px solid var(--line); margin-top: 64px; padding-top: 40px; }
+.ceremony-photographs > p { max-width: 760px; color: var(--muted); line-height: 1.8; }
+.ceremony-photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; align-items: start; margin-top: 32px; }
+.ceremony-photo-grid img { display: block; width: auto; max-width: 100%; height: auto; margin-inline: auto; }
+.ceremony-closing { border-top: 1px solid var(--line); margin-top: 64px; }
+@media (max-width: 800px) {
+  .ceremony-opening { grid-template-columns: 1fr; gap: 32px; margin-block: 32px 42px; }
+  .ceremony-photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .ceremony-photo-grid { grid-template-columns: 1fr; gap: 32px; }
+  .ceremony-post > header { padding-bottom: 28px; }
+  .ceremony-opening p, .ceremony-story p { font-size: 17px; }
+  .ceremony-milestones { gap: 12px; }
+}
 .story-split {
   display: grid;
   grid-template-columns: 0.82fr 1fr;

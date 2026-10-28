@@ -27,7 +27,7 @@ for (const [path, meta] of Object.entries(pageMeta)) {
   const canonical = `https://www.haramonastery.org${path === "/" ? "" : path}`;
   html = html.replace(
     "</head>",
-    `<link rel="canonical" href="${canonical}"/><meta property="og:title" content="${escape(meta.title)}"/><meta property="og:description" content="${escape(meta.description)}"/><meta property="og:url" content="${canonical}"/><meta property="og:type" content="website"/><meta property="og:image" content="https://www.haramonastery.org/assets/property/land-01.webp"/>${path === "/members" ? '<meta name="robots" content="noindex,nofollow"/>' : ""}</head>`,
+    `<link rel="canonical" href="${canonical}"/><meta property="og:title" content="${escape(meta.title)}"/><meta property="og:description" content="${escape(meta.description)}"/><meta property="og:url" content="${canonical}"/><meta property="og:type" content="${path.startsWith("/announcements/") ? "article" : "website"}"/><meta property="og:image" content="https://www.haramonastery.org${escape(meta.image || "/assets/property/land-01.webp")}"/>${path === "/members" ? '<meta name="robots" content="noindex,nofollow"/>' : ""}</head>`,
   );
   const outputPath = `dist/${path === "/" ? "index" : path.slice(1)}.html`;
   await mkdir(dirname(outputPath), { recursive: true });
