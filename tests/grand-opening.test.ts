@@ -16,10 +16,42 @@ describe("Grand Opening announcement", () => {
     expect(post.displayDate).toBe("Published October 27, 2026");
     expect(post.paragraphs.join(" ")).toContain("About 50 people");
     expect(post.paragraphs.join(" ")).toContain("$50,000");
+    expect(post.paragraphs.join(" ")).toContain(
+      "specifically for the House of Prayer",
+    );
+    expect(post.paragraphs.join(" ")).toContain(
+      "Construction is expected to begin soon",
+    );
+    expect(post.paragraphs.join(" ")).toContain(
+      "another $50,000 is needed to finish it",
+    );
     expect(post.paragraphs.join(" ")).toContain("blessed the feast");
     expect(post.paragraphs.join(" ")).toContain(
       "Israel’s journey before entering the Promised Land",
     );
+  });
+  it("guides supporters to membership registration before donating", () => {
+    const html = renderToStaticMarkup(createElement(GrandOpeningAnnouncement));
+    expect(html).toContain('href="/members"');
+    expect(html).toContain("Become a member to donate");
+    expect(html).toContain(
+      "Create your membership, then make an optional donation",
+    );
+    expect(html).not.toContain('href="/donate');
+    expect(post.excerpt).toContain("House of Prayer");
+    expect(post.excerpt).toContain("another $50,000");
+    expect(
+      pageMeta["/announcements/grand-opening-ceremony"].description,
+    ).toContain("remaining $50,000");
+  });
+  it("keeps the animated article readable before JavaScript and includes a motion control", () => {
+    const html = renderToStaticMarkup(createElement(GrandOpeningAnnouncement));
+    expect(html).toContain("announcement-progress");
+    expect(html).toContain("Animations off");
+    expect(html).toContain("ceremony-ornament");
+    expect(html.split('class="ceremony-photo-frame"').length - 1).toBe(6);
+    expect(html).not.toContain("opacity:0");
+    expect(html).not.toContain("visibility:hidden");
   });
   it("displays each of the seven supplied photographs exactly once, with captions and accessible alternatives", () => {
     const html = renderToStaticMarkup(createElement(GrandOpeningAnnouncement));

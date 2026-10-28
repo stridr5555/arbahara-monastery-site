@@ -1,12 +1,20 @@
+import { useRef } from "react";
 import { announcements } from "../content";
 import { Cross, LinkButton, PageIntro, TextLink } from "../components/Layout";
+import { MotionToggle } from "../components/Motion";
+import { useAnnouncementMotion } from "../components/AnnouncementMotion";
 
 export function Announcements() {
+  const root = useRef<HTMLDivElement>(null);
+  useAnnouncementMotion(root);
   return (
-    <div className="wrap announcements-page">
-      <PageIntro title="Announcements & reflections">
-        News, pastoral messages, and milestones from the life of our monastery.
-      </PageIntro>
+    <div className="wrap announcements-page" ref={root}>
+      <div className="announcements-page-heading">
+        <PageIntro title="Announcements & reflections">
+          News, pastoral messages, and milestones from the life of our
+          monastery.
+        </PageIntro>
+      </div>
       <section
         className="announcement-list"
         aria-label="Published announcements"
@@ -46,11 +54,14 @@ export function Announcements() {
 }
 
 export function FoundingAnnouncement() {
+  const root = useRef<HTMLDivElement>(null);
+  useAnnouncementMotion(root);
   const announcement = announcements.find(
     (post) => post.slug === "establishment-of-abuna-hara-dengeel-monastery",
   )!;
   return (
-    <div className="wrap announcement-post-page">
+    <div className="wrap announcement-post-page" ref={root}>
+      <div className="announcement-progress" aria-hidden="true" />
       <nav className="post-breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a>
         <span aria-hidden="true">/</span>
@@ -96,12 +107,15 @@ export function FoundingAnnouncement() {
 }
 
 export function GrandOpeningAnnouncement() {
+  const root = useRef<HTMLDivElement>(null);
+  useAnnouncementMotion(root);
   const post = announcements.find(
     (entry) => entry.slug === "grand-opening-ceremony",
   )!;
   const hero = post.photos![2];
   return (
-    <div className="wrap announcement-post-page ceremony-page">
+    <div className="wrap announcement-post-page ceremony-page" ref={root}>
+      <div className="announcement-progress" aria-hidden="true" />
       <nav className="post-breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a>
         <span aria-hidden="true">/</span>
@@ -109,12 +123,20 @@ export function GrandOpeningAnnouncement() {
       </nav>
       <article className="announcement-post ceremony-post">
         <header>
+          <div className="ceremony-ornament" aria-hidden="true">
+            <span />
+            <Cross />
+            <span />
+          </div>
           <span className="section-label">Grand Opening Ceremony</span>
           <h1>{post.title}</h1>
           <time dateTime={post.published}>{post.displayDate}</time>
           <p className="lead">
             A small gathering. A generous beginning. A shared journey of faith.
           </p>
+          <div className="announcement-motion-control">
+            <MotionToggle />
+          </div>
         </header>
         <div className="ceremony-opening">
           <div>
@@ -130,7 +152,7 @@ export function GrandOpeningAnnouncement() {
               </div>
               <div>
                 <dt>$50,000</dt>
-                <dd>Raised for the monastery</dd>
+                <dd>Raised for the House of Prayer</dd>
               </div>
             </dl>
           </div>
@@ -148,6 +170,9 @@ export function GrandOpeningAnnouncement() {
         <div className="ceremony-story">
           <h2>Small in number, generous in spirit</h2>
           <p>{post.paragraphs[2]}</p>
+          <p>
+            <TextLink href="/members">Become a member to donate</TextLink>
+          </p>
           <h2>A blessing for our beginning</h2>
           <p>{post.paragraphs[3]}</p>
           <h2>Fellowship beneath the tents</h2>
@@ -172,21 +197,23 @@ export function GrandOpeningAnnouncement() {
               .photos!.filter((photo) => photo.src !== hero.src)
               .map((photo) => (
                 <figure key={photo.src}>
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    width={photo.width}
-                    height={photo.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div className="ceremony-photo-frame">
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      width={photo.width}
+                      height={photo.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
                   <figcaption>{photo.caption}</figcaption>
                 </figure>
               ))}
           </div>
         </section>
         <div className="ceremony-story ceremony-closing">
-          <h2>The work before us</h2>
+          <h2>Help complete the House of Prayer</h2>
           <p>{post.paragraphs[6]}</p>
         </div>
       </article>
@@ -197,16 +224,14 @@ export function GrandOpeningAnnouncement() {
         <Cross />
         <div>
           <span className="section-label">With gratitude and hope</span>
-          <h2>Help nurture this beginning.</h2>
+          <h2>Another $50,000 will help finish the House of Prayer.</h2>
           <p>
-            Join us in prayer, learn about the monastery’s plans, or support the
-            work with an offering.
+            Create your membership, then make an optional donation through the
+            member portal. Already a member? Sign in from the same page to give.
           </p>
           <div className="actions">
-            <LinkButton href="/monastery">
-              Explore the monastery vision
-            </LinkButton>
-            <TextLink href="/donate">Make an offering</TextLink>
+            <LinkButton href="/members">Become a member to donate</LinkButton>
+            <TextLink href="/monastery">Explore the monastery vision</TextLink>
             <TextLink href="/announcements">All announcements</TextLink>
           </div>
         </div>

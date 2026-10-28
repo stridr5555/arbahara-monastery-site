@@ -48,15 +48,15 @@ export const announcements: Announcement[] = [
     published: "2026-10-27",
     displayDate: "Published October 27, 2026",
     excerpt:
-      "About 50 people gathered for our monastery’s Grand Opening, sharing prayer and a blessed feast beneath the tents. Together, this small gathering raised $50,000 for the work ahead.",
+      "About 50 people gathered for our monastery’s Grand Opening and raised $50,000 for the House of Prayer. Construction is expected to begin soon, and we are seeking another $50,000 in donations to complete it.",
     paragraphs: [
       "In the name of the Father, and of the Son, and of the Holy Spirit, one God.",
       "With hearts full of thanksgiving, we celebrate the Grand Opening Ceremony of the Monastery of Abuna Hara Dengeel. This joyful gathering commemorated the beginning of our monastery’s life together: a place being prepared for prayer, worship, hospitality, and the generations to come.",
-      "About 50 people came together for the ceremony. Though our gathering was small, its generosity was remarkable: together, we raised $50,000 for the monastery. We are deeply grateful to everyone who gave, served, prayed, and helped make this beginning possible.",
+      "About 50 people came together for the ceremony. Though our gathering was small, its generosity was remarkable: together, we raised $50,000 specifically for the House of Prayer. Construction is expected to begin soon, and another $50,000 is needed to finish it. We are deeply grateful to everyone who gave, served, prayed, and helped make this beginning possible.",
       "We were blessed by the presence of clergy, who joined us in prayer and blessed the feast. Their presence helped make the occasion a deeply meaningful beginning, bringing our spiritual family together in gratitude to God.",
       "Afterward, we sat and ate outside beneath the tents, sharing food and fellowship on the monastery grounds. These simple shelters called to mind Israel’s journey before entering the Promised Land: a people traveling in faith, sustained along the way, with hope for what lay ahead. For our community, the meal was a reminder that we can begin walking together even while our permanent places of worship and gathering are still being prepared.",
       "We are very pleased with the ceremony and thankful for the care that went into it—from preparing the feast and arranging the tents to welcoming families and supporting the work of the monastery. The photographs below preserve moments from this shared beginning.",
-      "This Grand Opening is a beginning, not the completion of our work. With the guidance of our clergy and the prayers and generosity of our spiritual family, we look forward to caring for this land and preparing a lasting home for worship and service. May God bless all who have helped establish the Monastery of Abuna Hara Dengeel, and guide the work still before us. Amen.",
+      "Our next step is to build the House of Prayer, a place for our spiritual family to gather in worship. With $50,000 already raised, we are actively seeking donations for the remaining $50,000 needed to complete it. Please help us carry this beginning forward through your prayers and generosity. May God bless all who have helped establish the Monastery of Abuna Hara Dengeel, and guide the work still before us. Amen.",
     ],
     photos: [
       {
@@ -293,7 +293,7 @@ export const pageMeta: Record<
   "/announcements/grand-opening-ceremony": {
     title: "Grand Opening Ceremony | Arbahara Monastery",
     description:
-      "Remember our monastery’s Grand Opening: about 50 people gathered with clergy for prayer and a blessed feast under tents, raising $50,000 for the work ahead. See seven photographs from the ceremony.",
+      "Our Grand Opening brought about 50 people together and raised $50,000 for the House of Prayer. Construction is expected to begin soon; help raise the remaining $50,000 needed to complete it.",
     image: "/assets/images/grand-opening/clergy-at-the-ceremony.webp",
   },
   "/gallery": {

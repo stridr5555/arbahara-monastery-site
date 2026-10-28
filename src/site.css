@@ -507,12 +507,19 @@ small {
   margin: 24px 0;
 }
 .ceremony-post { max-width: 1120px; }
+.announcement-progress { position: fixed; z-index: 80; top: 0; left: 0; right: 0; height: 3px; background: var(--clay-dark); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+.ceremony-ornament { display: flex; align-items: center; justify-content: center; gap: 20px; color: var(--clay-dark); margin-bottom: 28px; }
+.ceremony-ornament span { width: 70px; height: 1px; background: var(--line); }
+.ceremony-ornament svg { width: 27px; height: 36px; }
+.announcement-motion-control { margin-top: 22px; }
+.announcement-motion-control .motion-toggle { font-size: 12px; border-bottom: 1px solid var(--line); padding: 8px 12px; }
 .ceremony-post > header h1 { font-size: clamp(2.4rem, 5vw, 4.4rem); }
 .ceremony-post > header .lead { max-width: 650px; margin: 24px auto 0; }
 .ceremony-opening { display: grid; grid-template-columns: 1fr .85fr; gap: 64px; align-items: center; margin-block: 54px 72px; }
 .ceremony-opening p, .ceremony-story p { font-size: 19px; line-height: 1.85; }
 .ceremony-invocation { font-family: var(--serif); font-style: italic; color: var(--clay-dark); }
 .ceremony-opening figure, .ceremony-photo-grid figure { margin: 0; min-width: 0; }
+.ceremony-opening figure { padding: 12px 12px 18px; background: var(--soft); box-shadow: 0 18px 45px -28px #382c22; }
 .ceremony-opening img { display: block; width: 100%; max-width: 440px; height: auto; margin-inline: auto; }
 .ceremony-page figcaption { font-size: 14px; line-height: 1.65; color: var(--muted); margin-top: 14px; }
 .ceremony-milestones { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; border-block: 1px solid var(--line); padding-block: 24px; margin-top: 32px; }
@@ -522,9 +529,16 @@ small {
 .ceremony-story h2, .ceremony-photographs h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin: 42px 0 18px; }
 .ceremony-photographs { border-top: 1px solid var(--line); margin-top: 64px; padding-top: 40px; }
 .ceremony-photographs > p { max-width: 760px; color: var(--muted); line-height: 1.8; }
-.ceremony-photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; align-items: start; margin-top: 32px; }
+.ceremony-photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px 28px; align-items: start; margin-top: 40px; perspective: 1200px; }
+.ceremony-photo-frame { padding: 8px; overflow: hidden; background: var(--soft); box-shadow: 0 14px 32px -23px #382c22; }
+.ceremony-photo-grid figure { transform-origin: center bottom; }
+.ceremony-photo-grid figcaption { padding-inline: 8px; }
 .ceremony-photo-grid img { display: block; width: auto; max-width: 100%; height: auto; margin-inline: auto; }
 .ceremony-closing { border-top: 1px solid var(--line); margin-top: 64px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  html[data-motion="on"] .ceremony-photo-frame { transition: box-shadow .4s ease, translate .4s ease; }
+  html[data-motion="on"] .ceremony-photo-grid figure:hover .ceremony-photo-frame { translate: 0 -5px; box-shadow: 0 22px 38px -23px #382c22; }
+}
 @media (max-width: 800px) {
   .ceremony-opening { grid-template-columns: 1fr; gap: 32px; margin-block: 32px 42px; }
   .ceremony-photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -534,6 +548,8 @@ small {
   .ceremony-post > header { padding-bottom: 28px; }
   .ceremony-opening p, .ceremony-story p { font-size: 17px; }
   .ceremony-milestones { gap: 12px; }
+  .ceremony-page .announcement-response { grid-template-columns: 1fr; padding: 28px 24px; gap: 18px; }
+  .ceremony-page .announcement-response h2 { font-size: 30px; }
 }
 .story-split {
   display: grid;
