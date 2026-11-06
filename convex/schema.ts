@@ -195,6 +195,16 @@ export default defineSchema({
     carrierStatus: v.union(v.literal("blocked"), v.literal("unblocked")),
     lastMessageSid: v.string(), updatedAt: v.number(),
   }).index("by_phone", ["phone"]),
+  // Private external permission evidence; never presented as a website opt-in.
+  smsExistingPermissions: defineTable({
+    phone: v.string(),
+    programId: v.literal("informational"),
+    status: v.union(v.literal("consented"), v.literal("withdrawn")),
+    source: v.literal("owner-confirmed-existing-sms-permission"),
+    snapshotDigest: v.string(),
+    recordedAt: v.number(),
+    withdrawnAt: v.optional(v.number()),
+  }).index("by_phone", ["phone"]).index("by_phone_program", ["phone", "programId"]).index("by_snapshot", ["snapshotDigest"]),
   smsConsents: defineTable({
     userId: v.id("users"),
     programId: v.union(v.literal("informational"), v.literal("fundraising")),
