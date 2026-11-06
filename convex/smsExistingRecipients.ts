@@ -15,7 +15,7 @@ async function snapshot() {
   if (!account || !/^AC[0-9a-f]{32}$/i.test(account) || !token)
     throw new ConvexError("Monastery provider binding unavailable.");
   const headers = {
-    Authorization: `Basic ${Buffer.from(`${account}:${token}`).toString("base64")}`,
+    Authorization: `Basic ${btoa(`${account}:${token}`)}`,
   };
   async function get(url: string): Promise<any> {
     const response = await fetch(url, {
