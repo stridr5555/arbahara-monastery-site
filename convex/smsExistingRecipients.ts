@@ -84,8 +84,7 @@ async function snapshot() {
     !phones.length ||
     phones.length > 200 ||
     !meta ||
-    raw.length !== phones.length ||
-    phones.some((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p))
+    raw.length !== phones.length
   )
     throw new ConvexError(
       `Recipient snapshot needs review; nothing imported. ${JSON.stringify({ chunks: chunks.length, rawCount: raw.length, distinctCount: phones.length, hasMetadata: !!meta, invalidCount: phones.filter((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p)).length })}`,
@@ -100,7 +99,14 @@ async function snapshot() {
   ]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
-  return { phones, digest };
+  const validPhones = phones.filter((p) => /^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p));
+  const invalid = phones
+    .filter((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p))
+    .map((p) => ({
+      last4: p.slice(-4),
+      reason: "Does not match the broadcaster's +1 area/exchange format",
+    }));
+  return { phones, validPhones, invalid, digest };
 }
 
 export const preview = internalAction({
@@ -109,6 +115,8 @@ export const preview = internalAction({
     const result = await snapshot();
     return {
       recipients: result.phones.length,
+      validRecipients: result.validPhones.length,
+      invalid: result.invalid,
       digest: result.digest,
       program: "informational",
       sends: 0,
@@ -196,10 +204,18 @@ export const importConfirmed = internalAction({
       throw new ConvexError(
         "Recipient list changed; confirmation must be reviewed again.",
       );
-    return ctx.runMutation(internal.smsExistingRecipients.apply, {
-      phones: result.phones,
-      digest: result.digest,
-    });
+    const applied = await ctx.runMutation(
+      internal.smsExistingRecipients.apply,
+      {
+        phones: result.validPhones,
+        digest: result.digest,
+      },
+    );
+    return {
+      ...applied,
+      listedRecipients: result.phones.length,
+      invalidRecipients: result.invalid.length,
+    };
   },
 });
 
