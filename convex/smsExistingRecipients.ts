@@ -69,20 +69,27 @@ async function snapshot() {
     .join(",")
     .split(/[,;\s]+/)
     .filter(Boolean);
-  const phones = [...new Set<string>(raw)].sort();
-  const total = Number(
-    (variables.variables || []).find(
-      (x: any) => x.key === "VOICE_RECIPIENTS_META",
-    )?.value,
+  // Match the existing broadcaster's normalization, without dropping any token.
+  const normalized = raw.map((value: string) => {
+    if (value.includes("*")) return "";
+    const clean = value.trim().replace(/[^+0-9]/g, "");
+    return clean && !clean.startsWith("+") ? `+${clean}` : clean;
+  });
+  const phones = [...new Set<string>(normalized)].sort();
+  // The legacy bot treats META as a presence marker, not necessarily a count.
+  const meta = (variables.variables || []).find(
+    (x: any) => x.key === "VOICE_RECIPIENTS_META",
   );
   if (
     !phones.length ||
     phones.length > 200 ||
-    total !== phones.length ||
+    !meta ||
     raw.length !== phones.length ||
     phones.some((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p))
   )
-    throw new ConvexError("Recipient snapshot needs review; nothing imported.");
+    throw new ConvexError(
+      `Recipient snapshot needs review; nothing imported. ${JSON.stringify({ chunks: chunks.length, rawCount: raw.length, distinctCount: phones.length, hasMetadata: !!meta, invalidCount: phones.filter((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p)).length })}`,
+    );
   const digest = [
     ...new Uint8Array(
       await crypto.subtle.digest(

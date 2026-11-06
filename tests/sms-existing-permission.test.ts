@@ -176,8 +176,8 @@ describe("Owner-confirmed existing SMS permission", () => {
       if (url.includes("Variables"))
         return Response.json({
           variables: [
-            { key: "VOICE_RECIPIENTS_000", value: phone },
-            { key: "VOICE_RECIPIENTS_META", value: "1" },
+            { key: "VOICE_RECIPIENTS_000", value: phone.slice(1) },
+            { key: "VOICE_RECIPIENTS_META", value: "legacy-marker" },
           ],
         });
       if (url.includes("Environments"))
