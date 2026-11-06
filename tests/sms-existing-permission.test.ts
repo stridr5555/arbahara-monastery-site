@@ -176,8 +176,11 @@ describe("Owner-confirmed existing SMS permission", () => {
       if (url.includes("Variables"))
         return Response.json({
           variables: [
-            { key: "VOICE_RECIPIENTS_000", value: phone },
-            { key: "VOICE_RECIPIENTS_META", value: "1" },
+            {
+              key: "VOICE_RECIPIENTS_000",
+              value: `${phone.slice(1)},+11115550101`,
+            },
+            { key: "VOICE_RECIPIENTS_META", value: "legacy-marker" },
           ],
         });
       if (url.includes("Environments"))
@@ -198,7 +201,8 @@ describe("Owner-confirmed existing SMS permission", () => {
     vi.stubGlobal("fetch", fetcher);
     const preview = await t.action(internal.smsExistingRecipients.preview, {});
     expect(preview).toMatchObject({
-      recipients: 1,
+      recipients: 2,
+      validRecipients: 1,
       program: "informational",
       sends: 0,
     });
@@ -213,6 +217,21 @@ describe("Owner-confirmed existing SMS permission", () => {
     expect(
       await t.run((ctx) => ctx.db.query("smsExistingPermissions").collect()),
     ).toEqual([]);
-    expect(fetcher).toHaveBeenCalledTimes(8);
+    expect(preview.invalid).toHaveLength(1);
+    expect(
+      await t.action(internal.smsExistingRecipients.importConfirmed, {
+        expectedDigest: preview.digest,
+        ownerConfirmed: true,
+      }),
+    ).toMatchObject({
+      added: 1,
+      listedRecipients: 2,
+      invalidRecipients: 1,
+      sends: 0,
+    });
+    expect(
+      await t.run((ctx) => ctx.db.query("smsExistingPermissions").collect()),
+    ).toHaveLength(1);
+    expect(fetcher).toHaveBeenCalledTimes(12);
   });
 });

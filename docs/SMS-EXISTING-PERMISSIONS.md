@@ -18,7 +18,10 @@ Actual recipients stay exclusively in private backend storage, never Git.
 The operator-only `smsExistingRecipients:preview` reads the monastery's existing
 production broadcaster store through the existing Twilio server binding. It
 checks ownership of the prepared SMS sender, validates the recipient count,
-rejects pagination/invalid/duplicate numbers and returns a count and digest only.
+rejects pagination/duplicates and returns counts, a digest and masked format issues.
+Legacy normalization matches the existing bot; its metadata is a presence marker.
+Malformed destinations remain in the source list unchanged and are reported,
+not silently dropped or granted permission. Only valid destinations are imported.
 No credential or recipient list is exported. All provider requests are reads.
 
 `smsExistingRecipients:importConfirmed` requires explicit owner confirmation and

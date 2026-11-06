@@ -15,7 +15,7 @@ async function snapshot() {
   if (!account || !/^AC[0-9a-f]{32}$/i.test(account) || !token)
     throw new ConvexError("Monastery provider binding unavailable.");
   const headers = {
-    Authorization: `Basic ${Buffer.from(`${account}:${token}`).toString("base64")}`,
+    Authorization: `Basic ${btoa(`${account}:${token}`)}`,
   };
   async function get(url: string): Promise<any> {
     const response = await fetch(url, {
@@ -69,20 +69,26 @@ async function snapshot() {
     .join(",")
     .split(/[,;\s]+/)
     .filter(Boolean);
-  const phones = [...new Set<string>(raw)].sort();
-  const total = Number(
-    (variables.variables || []).find(
-      (x: any) => x.key === "VOICE_RECIPIENTS_META",
-    )?.value,
+  // Match the existing broadcaster's normalization, without dropping any token.
+  const normalized = raw.map((value: string) => {
+    if (value.includes("*")) return "";
+    const clean = value.trim().replace(/[^+0-9]/g, "");
+    return clean && !clean.startsWith("+") ? `+${clean}` : clean;
+  });
+  const phones = [...new Set<string>(normalized)].sort();
+  // The legacy bot treats META as a presence marker, not necessarily a count.
+  const meta = (variables.variables || []).find(
+    (x: any) => x.key === "VOICE_RECIPIENTS_META",
   );
   if (
     !phones.length ||
     phones.length > 200 ||
-    total !== phones.length ||
-    raw.length !== phones.length ||
-    phones.some((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p))
+    !meta ||
+    raw.length !== phones.length
   )
-    throw new ConvexError("Recipient snapshot needs review; nothing imported.");
+    throw new ConvexError(
+      `Recipient snapshot needs review; nothing imported. ${JSON.stringify({ chunks: chunks.length, rawCount: raw.length, distinctCount: phones.length, hasMetadata: !!meta, invalidCount: phones.filter((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p)).length })}`,
+    );
   const digest = [
     ...new Uint8Array(
       await crypto.subtle.digest(
@@ -93,7 +99,14 @@ async function snapshot() {
   ]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
-  return { phones, digest };
+  const validPhones = phones.filter((p) => /^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p));
+  const invalid = phones
+    .filter((p) => !/^\+1[2-9]\d{2}[2-9]\d{6}$/.test(p))
+    .map((p) => ({
+      last4: p.slice(-4),
+      reason: "Does not match the broadcaster's +1 area/exchange format",
+    }));
+  return { phones, validPhones, invalid, digest };
 }
 
 export const preview = internalAction({
@@ -102,6 +115,8 @@ export const preview = internalAction({
     const result = await snapshot();
     return {
       recipients: result.phones.length,
+      validRecipients: result.validPhones.length,
+      invalid: result.invalid,
       digest: result.digest,
       program: "informational",
       sends: 0,
@@ -189,10 +204,18 @@ export const importConfirmed = internalAction({
       throw new ConvexError(
         "Recipient list changed; confirmation must be reviewed again.",
       );
-    return ctx.runMutation(internal.smsExistingRecipients.apply, {
-      phones: result.phones,
-      digest: result.digest,
-    });
+    const applied = await ctx.runMutation(
+      internal.smsExistingRecipients.apply,
+      {
+        phones: result.validPhones,
+        digest: result.digest,
+      },
+    );
+    return {
+      ...applied,
+      listedRecipients: result.phones.length,
+      invalidRecipients: result.invalid.length,
+    };
   },
 });
 
