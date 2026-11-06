@@ -31,6 +31,14 @@ export const allowed = internalQuery({
         Number(b.status === "withdrawn") - Number(a.status === "withdrawn"),
     );
     const latest = records[0];
+    // A later withdrawal always wins over an external historical permission.
+    if (latest?.status === "withdrawn") return false;
+    if (args.programId === "informational") {
+      const existing = await ctx.db.query("smsExistingPermissions")
+        .withIndex("by_phone_program", q => q.eq("phone", args.phone).eq("programId", "informational"))
+        .unique();
+      if (existing?.status === "consented") return true;
+    }
     if (!latest || latest.status !== "consented") return false;
     const current = latest.disclosureVersion === program.version && latest.disclosureText === program.disclosure;
     // Support-contact correction only: retain prior explicit consent and exact old evidence.

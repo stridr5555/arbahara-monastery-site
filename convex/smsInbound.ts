@@ -45,6 +45,12 @@ export const record = internalMutation({
       else await ctx.db.insert("smsPhoneSuppressions", state);
     }
     if (args.kind === "STOP") {
+      const existing = await ctx.db.query("smsExistingPermissions")
+        .withIndex("by_phone", q => q.eq("phone", args.phone)).collect();
+      for (const permission of existing) {
+        if (permission.status === "consented")
+          await ctx.db.patch(permission._id, { status: "withdrawn", withdrawnAt: recordedAt });
+      }
       const consents = await ctx.db
         .query("smsConsents")
         .withIndex("by_phone", (q) => q.eq("phone", args.phone))

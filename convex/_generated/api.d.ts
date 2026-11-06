@@ -38,6 +38,7 @@ import type * as security from "../security.js";
 import type * as smsConsent from "../smsConsent.js";
 import type * as smsEligibility from "../smsEligibility.js";
 import type * as smsEligibilityHttp from "../smsEligibilityHttp.js";
+import type * as smsExistingRecipients from "../smsExistingRecipients.js";
 import type * as smsInbound from "../smsInbound.js";
 import type * as smsInboundActions from "../smsInboundActions.js";
 import type * as smsProgram from "../smsProgram.js";
@@ -82,6 +83,7 @@ declare const fullApi: ApiFromModules<{
   smsConsent: typeof smsConsent;
   smsEligibility: typeof smsEligibility;
   smsEligibilityHttp: typeof smsEligibilityHttp;
+  smsExistingRecipients: typeof smsExistingRecipients;
   smsInbound: typeof smsInbound;
   smsInboundActions: typeof smsInboundActions;
   smsProgram: typeof smsProgram;
