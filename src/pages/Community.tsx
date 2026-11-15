@@ -1,6 +1,6 @@
 import { DepthFrame } from "../components/Motion";
 import { ArrowUpRight, MapPin, Mail, Phone } from "lucide-react";
-import { site, phases, resources, invocation } from "../content";
+import { site, phases, resources, invocation, announcements } from "../content";
 import { PageIntro, TextLink, LinkButton } from "../components/Layout";
 import { LandJourney } from "../components/LandJourney";
 import { MediaProcession } from "../components/MediaProcession";
@@ -348,6 +348,7 @@ export function Gallery() {
           aria-label="Photographs and films sections"
         >
           {[
+            ["documents", "Documents"],
             ["community-photographs", "Community photographs"],
             ["property-photographs", "Property photographs"],
             ["sacred-art", "Sacred art"],
@@ -358,6 +359,50 @@ export function Gallery() {
             </a>
           ))}
         </nav>
+      </div>
+      <div className="wrap">
+        <section
+          className="collection-section gallery-documents"
+          id="documents"
+          aria-labelledby="documents-heading"
+        >
+          <h2 id="documents-heading">Documents</h2>
+          <p>Important documents from the monastery, to read or download.</p>
+          <div className="gallery-document-list">
+            {announcements
+              .filter((post) => post.document)
+              .map((post) => (
+                <article className="gallery-document" key={post.slug}>
+                  <a
+                    href={`/announcements/${post.slug}`}
+                    aria-label={`Read the document: ${post.title}`}
+                  >
+                    <img
+                      src={post.document!.thumbnail}
+                      alt={post.document!.alt}
+                      width={480}
+                      height={Math.round(
+                        (480 * post.document!.height) / post.document!.width,
+                      )}
+                      loading="lazy"
+                    />
+                  </a>
+                  <div>
+                    <h3>{post.title}</h3>
+                    <p className="announcement-amharic-title" lang="am">
+                      {post.amharicTitle}
+                    </p>
+                    <TextLink href={`/announcements/${post.slug}`}>
+                      Read the document
+                    </TextLink>
+                    <TextLink href={post.document!.pdf} external>
+                      Open the PDF
+                    </TextLink>
+                  </div>
+                </article>
+              ))}
+          </div>
+        </section>
       </div>
       <MediaProcession />
       <div className="wrap" id="community">

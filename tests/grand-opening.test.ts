@@ -12,7 +12,7 @@ import { Home } from "../src/pages/Home";
 describe("Grand Opening announcement", () => {
   const post = announcements.find((a) => a.slug === "grand-opening-ceremony")!;
   it("publishes the owner’s report without inventing an event date", () => {
-    expect(announcements[0]).toBe(post);
+    expect(announcements).toContain(post);
     expect(post.displayDate).toBe("Published October 27, 2026");
     expect(post.paragraphs.join(" ")).toContain("About 50 people");
     expect(post.paragraphs.join(" ")).toContain("$50,000");
@@ -74,7 +74,7 @@ describe("Grand Opening announcement", () => {
   });
   it("links the newest post from the homepage and lists both announcements", () => {
     expect(renderToStaticMarkup(createElement(Home))).toContain(
-      "/announcements/grand-opening-ceremony",
+      `/announcements/${announcements[0].slug}`,
     );
     const list = renderToStaticMarkup(createElement(Announcements));
     expect(list).toContain("/announcements/grand-opening-ceremony");

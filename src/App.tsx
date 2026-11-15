@@ -9,6 +9,7 @@ import {
   Announcements,
   FoundingAnnouncement,
   GrandOpeningAnnouncement,
+  PromiseAnnouncement,
 } from "./pages/Announcements";
 import {
   Privacy,
@@ -75,6 +76,9 @@ export function App({ path }: { path: string }) {
       break;
     case "/announcements/establishment-of-abuna-hara-dengeel-monastery":
       page = <FoundingAnnouncement />;
+      break;
+    case "/announcements/promise-made-to-abuna-hara-dengeel":
+      page = <PromiseAnnouncement />;
       break;
     case "/announcements/grand-opening-ceremony":
       page = <GrandOpeningAnnouncement />;
