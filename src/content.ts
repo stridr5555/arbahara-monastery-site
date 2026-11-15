@@ -26,9 +26,20 @@ export const appeal = [
   "This work depends on your prayers and generous contributions. We appeal to your conscience and faith to help us move forward with the development of this house of God: preparing a place to gather, caring for the land, and building for those who will come after us.",
   "May the Lord reward your faithfulness and bless your generosity a hundredfold. May He remember you and your families in His mercy, and establish the work of our hands. Amen.",
 ];
+export type AnnouncementDocument = {
+  pdf: string;
+  pdfSize: string;
+  image: string;
+  thumbnail: string;
+  width: number;
+  height: number;
+  alt: string;
+};
 export type Announcement = {
   slug: string;
   title: string;
+  amharicTitle?: string;
+  document?: AnnouncementDocument;
   published: string;
   displayDate: string;
   excerpt: string;
@@ -42,6 +53,27 @@ export type Announcement = {
   }[];
 };
 export const announcements: Announcement[] = [
+  {
+    slug: "promise-made-to-abuna-hara-dengeel",
+    title: "Promise Made to Abuna Hara Dengeel",
+    amharicTitle: "ቸሩ አምላካችን መድኃኔዓለም ለጻድቁ አባታችን ለአቡነ ሐራ ድንግል የገባው ቃል ኪዳን",
+    published: "2026-11-15",
+    displayDate: "Published November 15, 2026",
+    excerpt:
+      "An important document for our spiritual family: the promise made to Abuna Hara Dengeel. Read it on this website or download the PDF to keep and share.",
+    paragraphs: [],
+    document: {
+      pdf: "/assets/docs/announcements/promise-made-to-abuna-hara-dengeel.pdf",
+      pdfSize: "5.7 MB",
+      image:
+        "/assets/docs/announcements/promise-made-to-abuna-hara-dengeel.webp",
+      thumbnail:
+        "/assets/docs/announcements/promise-made-to-abuna-hara-dengeel-thumb.webp",
+      width: 1400,
+      height: 1812,
+      alt: "The one-page document “Promise Made to Abuna Hara Dengeel”, written in Amharic beneath the monastery’s seal, with a decorative border.",
+    },
+  },
   {
     slug: "grand-opening-ceremony",
     title: "Our Grand Opening: a beginning blessed by prayer",
@@ -289,6 +321,12 @@ export const pageMeta: Record<
     title: "A new sanctuary for our spiritual family | Arbahara",
     description:
       "The founding announcement of the Monastery of Abuna Hara Dengeel and an invitation to help build this house of God.",
+  },
+  "/announcements/promise-made-to-abuna-hara-dengeel": {
+    title: "Promise Made to Abuna Hara Dengeel | Arbahara",
+    description:
+      "Read or download the document of the promise made to Abuna Hara Dengeel, shared by the Monastery of Abuna Hara Dengeel.",
+    image: "/assets/docs/announcements/promise-made-to-abuna-hara-dengeel.webp",
   },
   "/announcements/grand-opening-ceremony": {
     title: "Grand Opening Ceremony | Arbahara Monastery",

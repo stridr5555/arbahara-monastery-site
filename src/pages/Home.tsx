@@ -42,6 +42,11 @@ export function Home() {
         </div>
         <div>
           <h2 id="latest-announcement">{announcements[0].title}</h2>
+          {announcements[0].amharicTitle ? (
+            <p className="announcement-amharic-title" lang="am">
+              {announcements[0].amharicTitle}
+            </p>
+          ) : null}
           <p className="lead">{announcements[0].excerpt}</p>
           <TextLink href={`/announcements/${announcements[0].slug}`}>
             Read the latest announcement

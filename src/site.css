@@ -3039,3 +3039,132 @@ html[data-motion="off"] *:after {
     transform: none !important;
   }
 }
+
+/* Announcement documents (Promise Made to Abuna Hara Dengeel) */
+.announcement-amharic-title,
+.document-amharic-title {
+  font-family: "Noto Sans Ethiopic", var(--sans);
+  color: var(--clay-dark);
+  line-height: 1.6;
+}
+.announcement-feature .announcement-amharic-title,
+.announcement-card .announcement-amharic-title {
+  color: var(--clay-dark);
+  font-size: 18px;
+  margin: -6px 0 14px;
+}
+.announcement-card-document {
+  display: block;
+  width: 180px;
+  max-width: 100%;
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgb(28 27 24 / 0.08);
+}
+.announcement-card-document img,
+.gallery-document img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.document-post > header {
+  padding-bottom: 34px;
+}
+.document-amharic-title {
+  max-width: 720px;
+  margin: 18px auto 14px;
+  font-size: 21px;
+}
+.document-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 28px;
+  margin: 34px 0;
+}
+.document-actions .button {
+  gap: 10px;
+}
+.document-actions .text-link {
+  min-height: 48px;
+}
+.document-size {
+  color: var(--muted);
+  font-size: 13px;
+}
+.document-sheet {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.document-sheet a {
+  display: block;
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 50px rgb(28 27 24 / 0.12);
+}
+.document-sheet img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.document-sheet figcaption {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+.gallery-document-list {
+  display: grid;
+  gap: 32px;
+  margin-top: 28px;
+}
+.gallery-document {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.gallery-document > a {
+  display: block;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgb(28 27 24 / 0.08);
+}
+.gallery-document h3 {
+  margin: 0 0 6px;
+}
+.gallery-document .announcement-amharic-title {
+  font-size: 17px;
+  margin: 0 0 14px;
+}
+.gallery-document .text-link {
+  margin-right: 24px;
+}
+@media (max-width: 760px) {
+  .document-amharic-title {
+    font-size: 18px;
+  }
+  .document-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin: 24px 0;
+  }
+  .document-actions .button {
+    width: 100%;
+  }
+  .document-actions .text-link,
+  .document-size {
+    justify-content: center;
+    text-align: center;
+  }
+  .gallery-document {
+    grid-template-columns: 112px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .gallery-document .text-link {
+    display: flex;
+    margin-right: 0;
+  }
+}
