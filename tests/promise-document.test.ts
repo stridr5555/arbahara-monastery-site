@@ -56,6 +56,43 @@ describe("Promise Made to Abuna Hara Dengeel document", () => {
     );
   });
 
+  it("hosts the Hara Promise recording with a phone-friendly fallback", () => {
+    const audio = post.document!.audio!;
+    expect(audio.title).toBe("Hara Promise");
+    expect(audio.src).toMatch(/\.m4a$/);
+    expect(audio.fallback).toMatch(/\.mp3$/);
+    for (const file of [audio.src, audio.fallback]) {
+      expect(existsSync(asset(file))).toBe(true);
+      expect(statSync(asset(file)).size).toBeLessThan(2_000_000);
+    }
+    expect(readFileSync(asset(audio.src)).subarray(4, 8).toString()).toBe(
+      "ftyp",
+    );
+  });
+
+  it("puts a playable recording above the document everywhere it shows", () => {
+    const audio = post.document!.audio!;
+    const pages = {
+      page: [PromiseAnnouncement, `src="${post.document!.image}"`],
+      list: [Announcements, `src="${post.document!.thumbnail}"`],
+      gallery: [Gallery, `src="${post.document!.thumbnail}"`],
+      home: [Home, `href="${path}"`],
+    } as const;
+    for (const [name, [component, marker]] of Object.entries(pages)) {
+      const html = renderToStaticMarkup(createElement(component));
+      const player = html.indexOf("<audio");
+      expect(player, name).toBeGreaterThan(-1);
+      expect(html, name).toContain(`src="${audio.src}"`);
+      expect(html, name).toContain(`src="${audio.fallback}"`);
+      expect(html, name).toContain('preload="none"');
+      expect(player, name).toBeLessThan(html.indexOf(marker));
+    }
+    const page = renderToStaticMarkup(createElement(PromiseAnnouncement));
+    expect(page.indexOf("<audio")).toBeLessThan(
+      page.indexOf("Download the PDF"),
+    );
+  });
+
   it("copies no contact details from the document onto the page", () => {
     const html = renderToStaticMarkup(createElement(PromiseAnnouncement));
     expect(html).not.toMatch(

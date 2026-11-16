@@ -4,6 +4,7 @@ import { ProcessionHero } from "../components/ProcessionHero";
 import { NextGatherings } from "../components/ChurchCalendar";
 import { LandJourney } from "../components/LandJourney";
 import { MediaProcession } from "../components/MediaProcession";
+import { DocumentAudio } from "../components/DocumentAudio";
 export function Home() {
   return (
     <div className="procession-home">
@@ -48,6 +49,9 @@ export function Home() {
             </p>
           ) : null}
           <p className="lead">{announcements[0].excerpt}</p>
+          {announcements[0].document?.audio ? (
+            <DocumentAudio audio={announcements[0].document.audio} />
+          ) : null}
           <TextLink href={`/announcements/${announcements[0].slug}`}>
             Read the latest announcement
           </TextLink>

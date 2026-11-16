@@ -26,7 +26,14 @@ export const appeal = [
   "This work depends on your prayers and generous contributions. We appeal to your conscience and faith to help us move forward with the development of this house of God: preparing a place to gather, caring for the land, and building for those who will come after us.",
   "May the Lord reward your faithfulness and bless your generosity a hundredfold. May He remember you and your families in His mercy, and establish the work of our hands. Amen.",
 ];
+export type AnnouncementAudio = {
+  title: string;
+  src: string;
+  fallback: string;
+  duration: string;
+};
 export type AnnouncementDocument = {
+  audio?: AnnouncementAudio;
   pdf: string;
   pdfSize: string;
   image: string;
@@ -63,6 +70,12 @@ export const announcements: Announcement[] = [
       "An important document for our spiritual family: the promise made to Abuna Hara Dengeel. Read it on this website or download the PDF to keep and share.",
     paragraphs: [],
     document: {
+      audio: {
+        title: "Hara Promise",
+        src: "/assets/docs/announcements/hara-promise.m4a",
+        fallback: "/assets/docs/announcements/hara-promise.mp3",
+        duration: "1:54",
+      },
       pdf: "/assets/docs/announcements/promise-made-to-abuna-hara-dengeel.pdf",
       pdfSize: "5.7 MB",
       image:
