@@ -5,6 +5,7 @@ import { PageIntro, TextLink, LinkButton } from "../components/Layout";
 import { LandJourney } from "../components/LandJourney";
 import { MediaProcession } from "../components/MediaProcession";
 import { Teleconference } from "../components/Teleconference";
+import { DocumentAudio } from "../components/DocumentAudio";
 export function Monastery() {
   return (
     <>
@@ -373,6 +374,9 @@ export function Gallery() {
               .filter((post) => post.document)
               .map((post) => (
                 <article className="gallery-document" key={post.slug}>
+                  {post.document!.audio ? (
+                    <DocumentAudio audio={post.document!.audio} />
+                  ) : null}
                   <a
                     href={`/announcements/${post.slug}`}
                     aria-label={`Read the document: ${post.title}`}

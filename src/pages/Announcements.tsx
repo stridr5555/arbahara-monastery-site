@@ -4,6 +4,7 @@ import { Download, FileText } from "lucide-react";
 import { Cross, LinkButton, PageIntro, TextLink } from "../components/Layout";
 import { MotionToggle } from "../components/Motion";
 import { useAnnouncementMotion } from "../components/AnnouncementMotion";
+import { DocumentAudio } from "../components/DocumentAudio";
 
 export function Announcements() {
   const root = useRef<HTMLDivElement>(null);
@@ -38,6 +39,9 @@ export function Announcements() {
                 </p>
               ) : null}
               <p>{announcement.excerpt}</p>
+              {announcement.document?.audio ? (
+                <DocumentAudio audio={announcement.document.audio} />
+              ) : null}
               {announcement.document ? (
                 <a
                   className="announcement-card-document"
@@ -290,6 +294,7 @@ export function PromiseAnnouncement() {
           </p>
           <time dateTime={post.published}>{post.displayDate}</time>
         </header>
+        {doc.audio ? <DocumentAudio audio={doc.audio} /> : null}
         <div className="document-actions">
           <a
             className="button"
